@@ -1,0 +1,10 @@
+input_features:
+    path: ./data/train.csv
+    type: csv
+
+model:
+    type: linear_regression
+#output_features:
+#    -
+#        name: class
+#        type: category
