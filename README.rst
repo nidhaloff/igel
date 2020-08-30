@@ -30,7 +30,7 @@ A machine learning tool that allows to train/fit, test and use models without wr
 
 .. note::
 
-    The project is under heavy development. Feel free to open an issue if you encountered any
+    The project is still under heavy development. Feel free to open an issue if you encountered any
 
 Intro
 --------
@@ -91,3 +91,9 @@ TODO
 -----
 - add option as arguments to the models
 - add multiple file support
+
+Contributors
+------------
+
+None yet. Why not be the first?
+Contributions are always welcome. Please check the contribution guidelines first.
