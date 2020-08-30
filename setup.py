@@ -15,7 +15,7 @@ with open('HISTORY.rst') as history_file:
 with open('requirements.txt') as f:
     requirements = [req.strip() for req in f]
 
-setup_requirements = ['pytest-runner', ]
+setup_requirements = ['pytest-runner', *requirements]
 
 test_requirements = ['pytest>=3', ]
 
