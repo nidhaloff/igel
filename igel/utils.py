@@ -26,6 +26,6 @@ def extract_params(config):
 
 
 def _reshape(arr):
-    if arr.shape == 1:
-        arr.reshape(-1, 1)
+    if len(arr.shape) <= 1:
+        arr = arr.reshape(-1, 1)
     return arr

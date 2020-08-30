@@ -7,7 +7,10 @@ from pathlib import Path
 from igel.utils import read_yaml, extract_params, _reshape
 from igel.data import models_dict
 from igel.helpers.logs import create_logger
+import json
+import warnings
 
+warnings.filterwarnings("ignore")
 logger = create_logger(__name__)
 
 
@@ -41,6 +44,9 @@ class IgelModel(object):
 
         else:
             self.model_path = dict_args.get('model_path')
+            with open(self.res_path / 'description.json', 'r') as f:
+                dic = json.load(f)
+                self.target = dic.get("target")
 
     def _create_model(self, model_type, model_algorithm):
         assert model_type in self.model_types, "model type is not supported"
@@ -110,9 +116,6 @@ class IgelModel(object):
     def fit(self):
         model_class = self._create_model(self.model_type, self.algorithm)
         self.model = model_class()
-        if not self.model:
-            raise Exception("model is not defined")
-
         logger.info(f"executing a {self.model.__class__.__name__} algorithm ..")
         x, y = self._prepare_fit_data()
         self.model.fit(x, y)
@@ -120,13 +123,32 @@ class IgelModel(object):
         if saved:
             logger.info(f"model saved successfully and can be found in the {self.stats_dir} folder")
 
+        fit_description = {
+            "model": self.model.__class__.__name__,
+            "data_path": self.data_path,
+            "results_path": str(self.res_path),
+            "model_path": str(self.res_path),
+            "target": self.target
+        }
+
+        try:
+            json_file = self.res_path / "description.json"
+            logger.info(f"saving fit description to {json_file}")
+            with open(json_file, 'w', encoding='utf-8') as f:
+                json.dump(fit_description, f, ensure_ascii=False, indent=4)
+        except Exception as e:
+            logger.exception(f"Error while storing the fit description file: {e}")
+
     def predict(self):
         try:
             model = self._load_model(f=self.model_path)
             x_val = self._prepare_val_data()
             y_pred = model.predict(x_val)
-            logger.info(f"predictions shape: {y_pred.shape}")
-            df_pred = pd.DataFrame.from_dict({"predictions": y_pred.flatten()})
+            y_pred = _reshape(y_pred)
+            logger.info(f"predictions array type: {type(y_pred)}")
+            logger.info(f"predictions shape: {y_pred.shape} | shape len: {len(y_pred.shape)}")
+            logger.info(f"predict on targets: {self.target}")
+            df_pred = pd.DataFrame.from_dict({self.target[i]: y_pred[:, i] if len(y_pred.shape) > 1 else y_pred for i in range(len(self.target))})
 
             path = self.res_path / 'predictions.csv'
             logger.info(f"saving the predictions to {path}")

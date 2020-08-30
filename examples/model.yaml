@@ -1,7 +1,7 @@
 # model definition
 model:
     type: regression
-    algorithm: linear
+    algorithm: forest
 
 # target you want to predict
 target:

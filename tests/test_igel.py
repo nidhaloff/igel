@@ -4,8 +4,6 @@
 
 import pytest
 
-from igel import cli
-
 
 @pytest.fixture
 def response():

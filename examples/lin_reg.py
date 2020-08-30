@@ -1,34 +1,25 @@
-from igel import read_yaml
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_squared_error
-import pandas as pd
-import pickle
+from igel import IgelModel
 
-config = read_yaml('./model.yaml')
-print(config)
 
-model_type = config['model']['type']
-print("model: ", model_type)
-target = config['target']
+"""
+In Terminal:
 
-data_path = config['input_features']['path']
-data = pd.read_csv(data_path)
-print("data columns: ", data.columns)
-print("data shape: ", data.shape)
+for fitting a model:
+--------------------
 
-y = data.pop(target).to_numpy().reshape(-1, 1)
-print("y shape : ", y.shape)
-print("data shape: ", data.shape)
+igel fit --data_path 'examples/data/example.csv' --model_definition_file 'examples/model.yaml'
 
-if model_type == "linear_regression":
-    print("model type is: ", model_type)
-    model = LinearRegression()
-else:
-    model = LinearRegression()
+for using a pre-fitted model for prediction:
+---------------------------------------------
+igel predict --data_path 'examples/data/test_example.csv'
 
-model.fit(data, y)
-print("coefficients: ", model.coef_)
+"""
+fit_config_yaml = {'data_path': 'examples/data/example.csv',
+                   'model_definition_file': 'examples/model.yaml'}
 
-preds = model.predict(data)
-print("MSE: ", mean_squared_error(y, preds))
-print(preds[:10], y[:10])
+predict_config_yaml = {
+    'data_path': 'examples/data/test_example.csv'
+}
+
+reg = IgelModel('fit', **fit_config_yaml)
+reg.fit()
