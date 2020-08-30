@@ -20,7 +20,7 @@ igel
 
 
 
-a machine learning tool that allows to fit, test and use models without writing code
+A machine learning tool that allows to train/fit, test and use models without writing code
 
 
 * Free software: MIT license
@@ -34,7 +34,7 @@ a machine learning tool that allows to fit, test and use models without writing 
 Intro
 --------
 
-igel is built on top of scikit-learn. It provides a simple way to use machine learning model without writing
+igel is built on top of scikit-learn. It provides a simple way to use machine learning without writing
 a **single line of code**
 
 All you need is a yaml file, where you need to describe what you are trying to do. That's it!
