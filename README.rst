@@ -3,7 +3,7 @@ igel
 ====
 
 .. image:: assets/logo.png
-    :width: 100
+    :width: 100%
     :align: center
     :alt: igel-icon
 
