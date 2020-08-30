@@ -78,3 +78,4 @@ Check the examples folder, where you can use the csv data to run a simple exampl
 TODO
 -----
 - add option as arguments to the models
+- add multiple file support
