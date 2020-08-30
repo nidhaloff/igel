@@ -19,9 +19,11 @@ with open('requirements.txt') as f:
 
     test_requirements = ['pytest>=3', *requirements]
 
+print("requirements: ", requirements)
+
 setup(
-    author=__author__,
-    author_email=__email__,
+    author="Nidhal Baccouri",
+    author_email="nidhalbacc@gmail.com",
     python_requires='>=3.5',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
@@ -52,6 +54,6 @@ setup(
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/nidhaloff/igel',
-    version=__version__,
+    version='0.0.3',
     zip_safe=False,
 )
