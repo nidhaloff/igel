@@ -12,12 +12,14 @@ with open('README.rst') as readme_file:
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
-with open('requirements.txt') as f:
-    requirements = [req.strip() for req in f]
+requirements = [
+    'pandas==1.1.1',
+    'PyYAML==5.3.1',
+    'scikit-learn==0.23.2'
+]
 
-    setup_requirements = ['pytest-runner', *requirements]
-
-    test_requirements = ['pytest>=3', *requirements]
+setup_requirements = ['pytest-runner', *requirements]
+test_requirements = ['pytest>=3', *requirements]
 
 print("requirements: ", requirements)
 
