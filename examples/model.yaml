@@ -4,4 +4,5 @@ model:
     algorithm: linear
 
 # target you want to predict
-target: GPA
+target:
+    - GPA

@@ -2,7 +2,6 @@
 import sys
 import argparse
 from igel import IgelModel
-from collections import defaultdict
 
 
 class CLI(object):
@@ -45,7 +44,10 @@ class CLI(object):
         return cmd
 
     def fit(self):
-        IgelModel(self.cmd, **self.dict_args)
+        IgelModel(self.cmd.command, **self.dict_args).fit()
+
+    def predict(self):
+        IgelModel(self.cmd.command, **self.dict_args).predict()
 
 
 def main():
