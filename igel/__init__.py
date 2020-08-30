@@ -1,6 +1,6 @@
 """Top-level package for igel."""
 from igel.utils import read_yaml
-from .igel import Igel
+from .igel import IgelModel
 
 
 __author__ = """Nidhal Baccouri"""

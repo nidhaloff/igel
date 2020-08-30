@@ -5,24 +5,22 @@ import pandas as pd
 import pickle
 import os
 from pathlib import Path
-from igel.utils import models_map, read_yaml
+from igel.utils import read_yaml
 
 
-class Igel(object):
-    def __init__(self, f):
-        config = read_yaml(f)
-        print("config: ", config)
-        data_path, model_type, target = self.extract_params(config)
-        self.dataset = pd.read_csv(data_path)
-        self.model_type = model_type
-        print("data columns: ", self.dataset.columns)
-        print("data shape: ", self.dataset.shape)
+class IgelModel(object):
+    def __init__(self, command, **dict_args):
+        print("dict args: ", dict_args)
+        if 'data_path' not in dict_args.keys():
+            raise Exception("you need to provide the path for the data!")
+        if 'model_path' not in dict_args.keys():
+            raise Exception("you need to provide the path to the yaml file!")
 
-        y = self.dataset.pop(target).to_numpy()
-        self.y = y.reshape(-1, 1) if len(y.shape) == 1 else y
-        self.X = self.dataset.to_numpy()
-        self.stats_dir = Path(os.getcwd()) / 'train_results'
-        self.save_to = Path(self.stats_dir) / 'model.sav'
+        data_path = dict_args.get('data_path')
+        model_path = dict_args.get('model_path')
+
+        self.config = read_yaml(model_path)
+        # print("config: ", self.config)
 
     def extract_params(self, config):
         model_type = config['model']['type']
@@ -62,6 +60,6 @@ class Igel(object):
 
 
 if __name__ == '__main__':
-    reg = Igel(f='/home/nidhal/my_projects/igel/examples/model.yaml')
+    reg = IgelModel(f='/home/nidhal/my_projects/igel/examples/model.yaml')
     reg.fit()
     reg.predict()

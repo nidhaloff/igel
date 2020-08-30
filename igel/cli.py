@@ -1,7 +1,8 @@
 """Console script for igel."""
 import sys
 import argparse
-from igel import Igel
+from igel import IgelModel
+from collections import defaultdict
 
 
 class CLI(object):
@@ -15,27 +16,36 @@ class CLI(object):
     """
 
     def __init__(self):
-        parser = argparse.ArgumentParser(
+        self.parser = argparse.ArgumentParser(
             description='igel cli runner',
             usage='''igel <command> [<args>]
-Available sub-commands:
-   fit                 fits a model
-   predict             Predicts using a pre-fitted model
+                    Available sub-commands:
+                       fit                 fits a model
+                       predict             Predicts using a pre-fitted model
 ''')
-        parser.add_argument('command', help='Subcommand to run')
+        self.parser.add_argument('command', help='Subcommand to run')
+        self.cmd = self.parse_command()
+        self.args = sys.argv[2:]
+        self.dict_args = self.convert_args_to_dict()
+        getattr(self, self.cmd.command)()
+
+    def convert_args_to_dict(self):
+        dict_args = {self.args[i].replace('-', ''): self.args[i + 1] for i in range(0, len(self.args) - 1, 2)}
+        return dict_args
+
+    def parse_command(self):
         # parse_args defaults to [1:] for args, but you need to
         # exclude the rest of the args too, or validation will fail
-        args = parser.parse_args(sys.argv[1:2])
-        print("command here is : ", args.command)
-        if not hasattr(self, args.command):
+        cmd = self.parser.parse_args(sys.argv[1:2])
+        if not hasattr(self, cmd.command):
             print('Unrecognized command')
-            parser.print_help()
+            self.parser.print_help()
             exit(1)
         # use dispatch pattern to invoke method with same name
-        getattr(self, args.command)()
+        return cmd
 
     def fit(self):
-        Igel()
+        IgelModel(self.cmd, **self.dict_args)
 
 
 def main():

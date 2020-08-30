@@ -1,4 +1,7 @@
+# model definition
 model:
-    type: linear_regression
+    type: regression
+    algorithm: linear
 
+# target you want to predict
 target: GPA

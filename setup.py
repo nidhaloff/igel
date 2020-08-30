@@ -3,6 +3,8 @@
 """The setup script."""
 
 from setuptools import setup, find_packages
+from igel import __version__, __email__, __author__
+
 
 with open('README.rst') as readme_file:
     readme = readme_file.read()
@@ -10,15 +12,16 @@ with open('README.rst') as readme_file:
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
-requirements = ['Click>=7.0', ]
+with open('requirements.txt') as f:
+    requirements = [req.strip() for req in f]
 
 setup_requirements = ['pytest-runner', ]
 
 test_requirements = ['pytest>=3', ]
 
 setup(
-    author="Nidhal Baccouri",
-    author_email='nidhalbacc@gmail.com',
+    author=__author__,
+    author_email=__email__,
     python_requires='>=3.5',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
@@ -48,6 +51,6 @@ setup(
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/nidhaloff/igel',
-    version='0.0.2',
+    version=__version__,
     zip_safe=False,
 )
