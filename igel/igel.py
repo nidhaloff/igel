@@ -20,7 +20,8 @@ class IgelModel(object):
     target = None
     features = None
     stats_dir = 'model_results'
-    res_path = None
+    res_path = Path(os.getcwd()) / stats_dir
+    save_to = 'model.sav'
 
     def __init__(self, command, **dict_args):
         logger.info(f"dict args: { dict_args}")
@@ -37,7 +38,7 @@ class IgelModel(object):
             logger.info(f"model configuration: {self.model_config}")
 
             self.model_type, self.target, self.algorithm = extract_params(self.model_config)
-            self.save_to = 'model.sav'
+
         else:
             self.model_path = dict_args.get('model_path')
 
@@ -60,14 +61,19 @@ class IgelModel(object):
             logger.warning("Creation of the directory %s failed" % self.stats_dir)
         else:
             logger.info("Successfully created the directory %s " % self.stats_dir)
-            pickle.dump(model, open(self.res_path / self.save_to, 'wb'))
+            pickle.dump(model, open(self.res_path / save_to, 'wb'))
             return True
 
     def _load_model(self, f=None):
         try:
             if not f:
-                model = pickle.load(open(self.res_path / self.save_to, 'rb'))
+                path = self.res_path / self.save_to
+                logger.info(f"result path: {self.res_path} | saved to: {self.save_to}")
+                # exit()
+                logger.info(f"loading model form {path} ")
+                model = pickle.load(open(path, 'rb'))
             else:
+                logger.info(f"loading from {f}")
                 model = pickle.load(open(f, 'rb'))
             return model
         except FileNotFoundError:
@@ -97,7 +103,7 @@ class IgelModel(object):
         try:
             x_val = pd.read_csv(self.data_path)
             logger.info(f"shape of the prediction data: {x_val.shape}")
-            return x_val
+            return _reshape(x_val)
         except Exception as e:
             logger.exception(f"exception while preparing prediction data: {e}")
 
@@ -119,8 +125,12 @@ class IgelModel(object):
             model = self._load_model(f=self.model_path)
             x_val = self._prepare_val_data()
             y_pred = model.predict(x_val)
-            df_pred = pd.DataFrame.from_dict({"predictions": y_pred})
-            df_pred.to_csv(self.res_path / 'predictions.csv')
+            logger.info(f"predictions shape: {y_pred.shape}")
+            df_pred = pd.DataFrame.from_dict({"predictions": y_pred.flatten()})
+
+            path = self.res_path / 'predictions.csv'
+            logger.info(f"saving the predictions to {path}")
+            df_pred.to_csv(path)
 
         except Exception as e:
             logger.exception(f"Error while preparing predictions: {e}")
