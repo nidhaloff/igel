@@ -2,7 +2,7 @@
 igel
 ====
 
-.. image:: assets/logo.png
+.. image:: https://github.com/nidhaloff/igel/blob/master/assets/logo.png
     :width: 50
     :align: center
     :alt: igel-icon
