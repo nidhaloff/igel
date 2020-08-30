@@ -2,10 +2,6 @@
 igel
 ====
 
-.. image:: https://github.com/nidhaloff/igel/blob/master/assets/logo.png
-    :width: 50
-    :align: center
-    :alt: igel-icon
 
 .. image:: https://img.shields.io/pypi/v/igel.svg
         :target: https://pypi.python.org/pypi/igel
