@@ -1,8 +1,7 @@
 """Top-level package for igel."""
-from igel.utils import read_yaml
 from .igel import IgelModel
 
 
 __author__ = """Nidhal Baccouri"""
 __email__ = 'nidhalbacc@gmail.com'
-__version__ = '0.0.2'
+__version__ = '0.0.3'
