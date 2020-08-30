@@ -6,7 +6,6 @@ import os
 from pathlib import Path
 from igel.utils import read_yaml, extract_params, _reshape
 from igel.data import models_dict
-from igel.helpers.logs import create_logger
 import json
 import warnings
 import logging
