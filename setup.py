@@ -3,7 +3,6 @@
 """The setup script."""
 
 from setuptools import setup, find_packages
-from igel import __version__, __email__, __author__
 
 
 with open('README.rst') as readme_file:
@@ -18,8 +17,8 @@ requirements = [
     'scikit-learn==0.23.2'
 ]
 
-setup_requirements = ['pytest-runner', *requirements]
-test_requirements = ['pytest>=3', *requirements]
+setup_requirements = ['pytest-runner',]
+test_requirements = ['pytest>=3']
 
 print("requirements: ", requirements)
 
