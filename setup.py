@@ -48,7 +48,7 @@ setup(
     include_package_data=True,
     keywords='igel',
     name='igel',
-    package_data={'igel': ['helpers/*', ]},
+    # package_data={'igel': ['helpers/*', ]},
     packages=find_packages(include=['igel', 'igel.*']),
     setup_requires=setup_requirements,
     test_suite='tests',

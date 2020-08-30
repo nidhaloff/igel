@@ -9,9 +9,12 @@ from igel.data import models_dict
 from igel.helpers.logs import create_logger
 import json
 import warnings
+import logging
 
 warnings.filterwarnings("ignore")
-logger = create_logger(__name__)
+# logger = create_logger(__name__)
+logging.basicConfig(format='%(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 
 class IgelModel(object):
