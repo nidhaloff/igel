@@ -20,22 +20,61 @@ igel
 
 
 
-a machine learning tool that allows to train, test and use models without writing code
+a machine learning tool that allows to fit, test and use models without writing code
 
 
 * Free software: MIT license
 * Documentation: https://igel.readthedocs.io.
 
 
-Features
+.. note::
+
+    The project is under heavy development. Feel free to open an issue if you encountered any
+
+Intro
 --------
 
-* TODO
+igel is built on top of scikit-learn. It provides a simple way to use machine learning model without writing
+a **single line of code**
 
-Credits
--------
+All you need is a yaml file, where you need to describe what you are trying to do. That's it!
 
-This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
+Quick Start
+------------
 
-.. _Cookiecutter: https://github.com/audreyr/cookiecutter
-.. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
+- First step is to provide a yaml file:
+
+.. code-block:: yaml
+
+        # model definition
+        model:
+            type: regression
+            algorithm: forest
+
+        # target you want to predict
+        target:
+            - GPA
+
+In the example above, we declare that we have a regression
+problem and we want to use the random forest model
+to solve it. Furthermore, the target we want to
+predict is GPA (since I'm using this simple dataset: https://www.kaggle.com/luddarell/101-simple-linear-regressioncsv)
+
+- Run this command in Terminal, where you provide the **path to your dataset** and the **path to the yaml file**
+
+.. code-block:: console
+
+    $ igel fit --data_path 'path_to_your_csv_dataset' --model_definition_file 'path_to_your_yaml_file'
+
+
+That's it. Your "trained" model can be now found in the model_results folder
+(automatically created for you in your current working directory).
+Furthermore, a description can be found in the description.json file inside the model_results folder.
+
+Examples
+----------
+Check the examples folder, where you can use the csv data to run a simple example from terminal
+
+TODO
+-----
+- add option as arguments to the models
