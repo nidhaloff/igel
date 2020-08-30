@@ -40,6 +40,17 @@ a **single line of code**
 
 All you need is a yaml file, where you need to describe what you are trying to do. That's it!
 
+Installation
+-------------
+
+- The easiest way is to install igel using `pip <https://packaging.python.org/guides/tool-recommendations/>`_
+
+.. code-block:: console
+
+    $ pip install igel
+
+- Check the docs for other ways to install igel from source
+
 Quick Start
 ------------
 
@@ -59,8 +70,8 @@ Quick Start
 In the example above, we declare that we have a regression
 problem and we want to use the random forest model
 to solve it. Furthermore, the target we want to
-predict is GPA (since I'm using this simple dataset: https://www.kaggle.com/luddarell/101-simple-linear-regressioncsv)
-
+predict is GPA (since I'm using this simple `dataset <https://www.kaggle.com/luddarell/101-simple-linear-regressioncsv>`_ )
+`
 - Run this command in Terminal, where you provide the **path to your dataset** and the **path to the yaml file**
 
 .. code-block:: console
