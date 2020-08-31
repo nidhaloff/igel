@@ -11,8 +11,7 @@ import warnings
 import logging
 
 warnings.filterwarnings("ignore")
-# logger = create_logger(__name__)
-logging.basicConfig(format='%(levelname)s - %(message)s')
+logging.basicConfig(format='%(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
@@ -38,7 +37,7 @@ class IgelModel(object):
         self.data_path = dict_args.get('data_path')
 
         if self.command == "fit":
-            self.model_definition_file = dict_args.get('model_definition_file')
+            self.model_definition_file = dict_args.get('yaml_path')
             self.model_config = read_yaml(self.model_definition_file)
             logger.info(f"model configuration: {self.model_config}")
 

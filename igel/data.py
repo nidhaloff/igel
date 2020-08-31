@@ -12,21 +12,21 @@ from sklearn.neural_network import MLPRegressor, MLPClassifier
 models_dict = {
     "regression": {
         "linear": LinearRegression,
-        "tree": DecisionTreeRegressor,
-        "forest": RandomForestRegressor,
+        "decision tree": DecisionTreeRegressor,
+        "random forest": RandomForestRegressor,
         "extra trees": ExtraTreesRegressor,
         "svm": SVR,
-        "neighbor": KNeighborsRegressor,
-        "nn": MLPRegressor
+        "nearest neighbor": KNeighborsRegressor,
+        "neural network": MLPRegressor
     },
     "classification": {
-        "linear": LogisticRegression,
-        "tree": DecisionTreeClassifier,
-        "forest": RandomForestClassifier,
+        "logistic": LogisticRegression,
+        "decision tree": DecisionTreeClassifier,
+        "random forest": RandomForestClassifier,
         "extra trees": ExtraTreesClassifier,
         "svm": SVC,
-        "neighbor": KNeighborsClassifier,
-        "nn": MLPClassifier
+        "nearest neighbor": KNeighborsClassifier,
+        "neural network": MLPClassifier
     }
 
 }
