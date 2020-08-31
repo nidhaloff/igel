@@ -2,7 +2,7 @@
 igel
 ====
 
-.. image:: assets/profile.png
+.. image:: assets/cover.png
     :width: 100%
     :scale: 50%
     :align: center
