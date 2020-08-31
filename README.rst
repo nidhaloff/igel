@@ -37,8 +37,8 @@ igel
         :alt: PyPI - Status
         :target: https://pypi.python.org/pypi/igel
 
-
-
+|
+|
 
 A machine learning tool that allows to train/fit, test and use models **without writing code**
 
