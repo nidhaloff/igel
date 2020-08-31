@@ -18,7 +18,17 @@ igel
         :target: https://igel.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
 
+.. image:: https://img.shields.io/pypi/wheel/igel
+        :alt: PyPI - Wheel
 
+.. image:: https://img.shields.io/pypi/status/igel
+        :alt: PyPI - Status
+
+.. image:: https://pepy.tech/badge/igel
+    :target: https://pepy.tech/project/igel
+
+.. image:: https://pepy.tech/badge/igel/month
+    :target: https://pepy.tech/project/igel/month
 
 
 A machine learning tool that allows to train/fit, test and use models without writing code
@@ -30,7 +40,21 @@ A machine learning tool that allows to train/fit, test and use models without wr
 
 .. note::
 
-    The project is still under heavy development. Feel free to open an issue if you encountered any
+    The project is still under heavy development. Feel free to open an issue if you encountered any.
+    I appreciate any feedback in order to improve the package ;)
+
+Motivation & Goal
+------------------
+
+The goal of the project is to provide machine learning for everyone, both technical or non technical
+users.
+
+I needed a tool sometimes, which I can use to fast create a machine learning prototype. Whether to build
+some proof of concept or create a fast draft model to prove a point. I find myself often stuck at writing
+boilerplate code and/or thinking too much of how to start this.
+
+Therefore, I decided to create **igel**. Hopefully, it will make it easier for technical and non technical
+users to build machine learning models.
 
 Intro
 --------
@@ -60,10 +84,14 @@ Quick Start
 
         # model definition
         model:
+            # in the type field, you can write the type of problem you want to solve. Whether regression or classification
+            # Then, provide the algorithm you want to use on the data. Here I'm using the random forest algorithm
             type: regression
             algorithm: random forest
 
         # target you want to predict
+        # Here, as an example, I'm using a dataset, where I want to predict the GPA values.
+        # Depending on your data, you need to provide the target(s) you want to predict here
         target:
             - GPA
 
@@ -91,6 +119,7 @@ TODO
 -----
 - add option as arguments to the models
 - add multiple file support
+- provide an api to evaluate models
 
 Contributors
 ------------
