@@ -28,10 +28,8 @@ igel
 .. image:: https://readthedocs.org/projects/igel/badge/?version=latest
         :target: https://igel.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
-
 .. image:: https://img.shields.io/pypi/wheel/igel
         :alt: PyPI - Wheel
-
 .. image:: https://img.shields.io/pypi/status/igel
         :alt: PyPI - Status
 
