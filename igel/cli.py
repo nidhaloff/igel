@@ -18,7 +18,7 @@ class CLI(object):
         self.parser = argparse.ArgumentParser(
             description='igel cli runner',
             usage='''igel <command> [<args>]
-                    Available sub-commands:
+                    Available sub-commands at the moment are:
                        fit                 fits a model
                        predict             Predicts using a pre-fitted model
 ''')
