@@ -25,7 +25,7 @@ igel
     :target: https://pepy.tech/project/igel/month
 
 
-A machine learning tool that allows to train/fit, test and use models without writing code
+A machine learning tool that allows to train/fit, test and use models **without writing code**
 
 
 * Free software: MIT license
@@ -40,7 +40,7 @@ A machine learning tool that allows to train/fit, test and use models without wr
 Motivation & Goal
 ------------------
 
-The goal of the project is to provide machine learning for everyone, both technical or non technical
+The goal of the project is to provide machine learning for **everyone**, both technical and non technical
 users.
 
 I needed a tool sometimes, which I can use to fast create a machine learning prototype. Whether to build
