@@ -8,6 +8,9 @@ igel
     :align: center
     :alt: igel-icon
 
+|
+
+
 .. image:: https://img.shields.io/pypi/v/igel.svg
         :target: https://pypi.python.org/pypi/igel
 .. image:: https://img.shields.io/travis/nidhaloff/igel.svg
@@ -23,6 +26,7 @@ igel
     :target: https://pepy.tech/project/igel
 .. image:: https://pepy.tech/badge/igel/month
     :target: https://pepy.tech/project/igel/month
+
 
 
 A machine learning tool that allows to train/fit, test and use models **without writing code**
