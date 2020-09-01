@@ -115,6 +115,16 @@ predict is GPA (since I'm using this simple `dataset <https://www.kaggle.com/lud
 
     $ igel fit --data_path 'path_to_your_csv_dataset.csv' --yaml_file 'path_to_your_yaml_file.yaml'
 
+    # or shorter
+    $ igel fit -dp 'path_to_your_csv_dataset.csv' -yml 'path_to_your_yaml_file.yaml'
+
+
+you can run this command to get instruction on how to use the model:
+
+.. code-block:: console
+
+    $ igel -h
+
 
 That's it. Your "trained" model can be now found in the model_results folder
 (automatically created for you in your current working directory).
