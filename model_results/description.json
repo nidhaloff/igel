@@ -1,0 +1,9 @@
+{
+    "model": "DecisionTreeRegressor",
+    "data_path": "/home/nidhal/my_projects/igel/examples/data/example.csv",
+    "results_path": "/home/nidhal/my_projects/igel/model_results",
+    "model_path": "/home/nidhal/my_projects/igel/model_results",
+    "target": [
+        "GPA"
+    ]
+}

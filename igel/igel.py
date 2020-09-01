@@ -27,7 +27,7 @@ class IgelModel(object):
     res_path = Path(os.getcwd()) / stats_dir
     save_to = 'model.sav'
 
-    def __init__(self, command, **dict_args):
+    def __init__(self, command: str, **dict_args):
         logger.info(f"dict args: { dict_args}")
         logger.info(f"Command: { command}")
         if command not in self.commands:
@@ -49,12 +49,12 @@ class IgelModel(object):
                 dic = json.load(f)
                 self.target = dic.get("target")
 
-    def _create_model(self, model_type, model_algorithm):
+    def _create_model(self, model_type: str, model_algorithm: str):
         assert model_type in self.model_types, "model type is not supported"
         algorithms = models_dict.get(model_type)
         return algorithms.get(model_algorithm)
 
-    def _save_model(self, model, save_to):
+    def _save_model(self, model, save_to: str):
         cwd = Path(os.getcwd())
         self.res_path = cwd / self.stats_dir
         try:
