@@ -2,6 +2,10 @@
 History
 =======
 
+0.0.6 (2020-09-01)
+------------------
+* Added validation on arguments and provided an example
+
 0.0.5 (2020-08-31)
 ------------------
 * Added logging and changed file keyword to yaml_file
