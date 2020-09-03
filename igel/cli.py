@@ -98,6 +98,9 @@ class CLI(object):
     def predict(self):
         IgelModel(self.cmd.command, **self.dict_args).predict()
 
+    def evaluate(self):
+        IgelModel(self.cmd.command, **self.dict_args).evaluate()
+
 
 def main():
     CLI()

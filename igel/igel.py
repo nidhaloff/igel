@@ -5,7 +5,8 @@ import pickle
 import os
 from pathlib import Path
 from igel.utils import read_yaml, extract_params, _reshape
-from igel.data import models_dict
+from igel.data import evaluate_model
+from igel.data import models_dict, metrics_dict
 import json
 import warnings
 import logging
@@ -27,27 +28,28 @@ class IgelModel(object):
     res_path = Path(os.getcwd()) / stats_dir
     save_to = 'model.sav'
 
-    def __init__(self, command: str, **dict_args):
-        logger.info(f"dict args: { dict_args}")
+    def __init__(self, command: str, **cli_args):
+        logger.info(f"CLI args: { cli_args}")
         logger.info(f"Command: { command}")
         if command not in self.commands:
             raise Exception(f"Please choose an existing command -> {self.commands}")
 
         self.command = command
-        self.data_path = dict_args.get('data_path')
+        self.data_path = cli_args.get('data_path')
 
         if self.command == "fit":
-            self.model_definition_file = dict_args.get('yaml_path')
-            self.model_config = read_yaml(self.model_definition_file)
-            logger.info(f"model configuration: {self.model_config}")
+            self.model_definition_file = cli_args.get('yaml_path')
+            self.yaml_config = read_yaml(self.model_definition_file)
+            logger.info(f"model configuration: {self.yaml_config}")
 
-            self.model_type, self.target, self.algorithm = extract_params(self.model_config)
+            self.model_type, self.target, self.algorithm = extract_params(self.yaml_config)
 
         else:
-            self.model_path = dict_args.get('model_path')
+            self.model_path = cli_args.get('model_path')
             with open(self.res_path / 'description.json', 'r') as f:
                 dic = json.load(f)
                 self.target = dic.get("target")
+                self.model_type = dic.get("type")
 
     def _create_model(self, model_type: str, model_algorithm: str):
         assert model_type in self.model_types, "model type is not supported"
@@ -87,6 +89,12 @@ class IgelModel(object):
             logger.error(f"File not found in {self.res_path / self.save_to}")
 
     def _prepare_fit_data(self):
+        return self._process_data()
+
+    def _prepare_val_data(self):
+        return self._process_data()
+
+    def _process_data(self):
         assert isinstance(self.target, list), "provide target(s) as a list in the yaml file"
         assert len(self.target) > 0, "please provide at least a target to predict"
         try:
@@ -126,6 +134,7 @@ class IgelModel(object):
 
         fit_description = {
             "model": self.model.__class__.__name__,
+            "type": self.model_type,
             "data_path": self.data_path,
             "results_path": str(self.res_path),
             "model_path": str(self.res_path),
@@ -139,6 +148,23 @@ class IgelModel(object):
                 json.dump(fit_description, f, ensure_ascii=False, indent=4)
         except Exception as e:
             logger.exception(f"Error while storing the fit description file: {e}")
+
+    def evaluate(self):
+        try:
+            model = self._load_model(f=self.model_path)
+            x_val, y_true = self._prepare_val_data()
+            y_pred = model.predict(x_val)
+            eval_results = evaluate_model(model_type=self.model_type,
+                                          y_pred=y_pred,
+                                          y_true=y_true)
+
+            eval_file = self.res_path / "evaluation.json"
+            logger.info(f"saving fit description to {eval_file}")
+            with open(eval_file, 'w', encoding='utf-8') as f:
+                json.dump(eval_results, f, ensure_ascii=False, indent=4)
+
+        except Exception as e:
+            logger.exception(f"error occured during evaluation: {e}")
 
     def predict(self):
         try:
