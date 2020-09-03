@@ -106,7 +106,7 @@ class IgelModel(object):
         except Exception as e:
             logger.exception(f"error occured while preparing the data: {e.args}")
 
-    def _prepare_val_data(self):
+    def _prepare_predict_data(self):
         try:
             x_val = pd.read_csv(self.data_path)
             logger.info(f"shape of the prediction data: {x_val.shape}")
@@ -143,7 +143,7 @@ class IgelModel(object):
     def predict(self):
         try:
             model = self._load_model(f=self.model_path)
-            x_val = self._prepare_val_data()
+            x_val = self._prepare_predict_data()
             y_pred = model.predict(x_val)
             y_pred = _reshape(y_pred)
             logger.info(f"predictions array type: {type(y_pred)}")
