@@ -17,6 +17,9 @@ logger = logging.getLogger(__name__)
 
 
 class IgelModel(object):
+    """
+    IgelModel is the base model to use the fit, evaluate and predict functions of the sklearn library
+    """
     commands = ('fit', 'evaluate', 'predict')
     model_types = ('regression', 'classification')
     command = None
@@ -32,7 +35,7 @@ class IgelModel(object):
         logger.info(f"CLI args: { cli_args}")
         logger.info(f"Command: { command}")
         if command not in self.commands:
-            raise Exception(f"Please choose an existing command -> {self.commands}")
+            logger.exception(f"Please choose an existing command -> {self.commands}")
 
         self.command = command
         self.data_path = cli_args.get('data_path')
@@ -52,11 +55,27 @@ class IgelModel(object):
                 self.model_type = dic.get("type")
 
     def _create_model(self, model_type: str, model_algorithm: str):
+        """
+        fetch a model depending on the provided type and algorithm by the user and return it
+        @param model_type: type of the model -> whether regression or classification
+        @param model_algorithm: specific algorithm to use
+        @return: class of the chosen model
+        """
         assert model_type in self.model_types, "model type is not supported"
-        algorithms = models_dict.get(model_type)
-        return algorithms.get(model_algorithm)
+        algorithms = models_dict.get(model_type)  # extract all algorithms as a dictionary
+        model = algorithms.get(model_algorithm)  # extract model class depending on the algorithm
+        if not model:
+            raise Exception("Model not found in the algorithms list")
+        else:
+            return model
 
     def _save_model(self, model, save_to: str):
+        """
+        save the model to a binary file
+        @param model: model to save
+        @param save_to: path where to save the model
+        @return: bool
+        """
         cwd = Path(os.getcwd())
         self.res_path = cwd / self.stats_dir
         try:
@@ -67,18 +86,22 @@ class IgelModel(object):
                 logger.warning(f"data in the {self.stats_dir} folder will be overridden")
 
         except OSError:
-            logger.warning("Creation of the directory %s failed" % self.stats_dir)
+            logger.exception("Creation of the directory %s failed" % self.stats_dir)
         else:
             logger.info("Successfully created the directory %s " % self.stats_dir)
             pickle.dump(model, open(self.res_path / save_to, 'wb'))
             return True
 
-    def _load_model(self, f=None):
+    def _load_model(self, f: str =''):
+        """
+        load a saved model from file
+        @param f: path to model
+        @return: loaded model
+        """
         try:
             if not f:
                 path = self.res_path / self.save_to
                 logger.info(f"result path: {self.res_path} | saved to: {self.save_to}")
-                # exit()
                 logger.info(f"loading model form {path} ")
                 model = pickle.load(open(path, 'rb'))
             else:
@@ -95,6 +118,10 @@ class IgelModel(object):
         return self._process_data()
 
     def _process_data(self):
+        """
+        read and return data as x and y
+        @return: list of separate x and y
+        """
         assert isinstance(self.target, list), "provide target(s) as a list in the yaml file"
         assert len(self.target) > 0, "please provide at least a target to predict"
         try:
@@ -115,6 +142,10 @@ class IgelModel(object):
             logger.exception(f"error occured while preparing the data: {e.args}")
 
     def _prepare_predict_data(self):
+        """
+        read and return x_pred
+        @return: x_pred
+        """
         try:
             x_val = pd.read_csv(self.data_path)
             logger.info(f"shape of the prediction data: {x_val.shape}")
@@ -123,6 +154,10 @@ class IgelModel(object):
             logger.exception(f"exception while preparing prediction data: {e}")
 
     def fit(self):
+        """
+        fit a machine learning model and save it to a file along with a description.json file
+        @return: None
+        """
         model_class = self._create_model(self.model_type, self.algorithm)
         self.model = model_class()
         logger.info(f"executing a {self.model.__class__.__name__} algorithm ..")
@@ -150,6 +185,10 @@ class IgelModel(object):
             logger.exception(f"Error while storing the fit description file: {e}")
 
     def evaluate(self):
+        """
+        evaluate a pre-fitted model and save results to a evaluation.json
+        @return: None
+        """
         try:
             model = self._load_model(f=self.model_path)
             x_val, y_true = self._prepare_val_data()
@@ -167,6 +206,10 @@ class IgelModel(object):
             logger.exception(f"error occured during evaluation: {e}")
 
     def predict(self):
+        """
+        use a pre-fitted model to make predictions and save them as csv
+        @return: None
+        """
         try:
             model = self._load_model(f=self.model_path)
             x_val = self._prepare_predict_data()

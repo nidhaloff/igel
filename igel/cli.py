@@ -21,12 +21,13 @@ class CLI(object):
 
     def __init__(self):
         self.parser = argparse.ArgumentParser(
-            description='igel cli runner',
+            description='Igel CLI Runner',
             usage='''
 
                     igel <command> [<args>]
                     - Available sub-commands at the moment are:
                        fit                 fits a model
+                       evaluate            evaluate the performance of a pre-fitted model
                        predict             Predicts using a pre-fitted model
 
                     - Available arguments:
@@ -74,7 +75,6 @@ class CLI(object):
 
         dict_args = {self.args[i].replace('-', ''): self.args[i + 1] for i in range(0, len(self.args) - 1, 2)}
         dict_args = self.validate_args(dict_args)
-        print("arguments: ", dict_args)
         return dict_args
 
     def parse_command(self):
