@@ -1,8 +1,9 @@
+
 # model definition
 model:
-    type: regression
-    algorithm: decision tree
+    type: classification
+    algorithm: random forest
 
 # target you want to predict
 target:
-    - GPA
+    - quality

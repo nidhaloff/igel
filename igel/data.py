@@ -16,6 +16,8 @@ from sklearn.metrics import (mean_squared_error,
                              r2_score,
                              precision_score,
                              recall_score)
+from sklearn.utils.multiclass import type_of_target
+
 
 models_dict = {
     "regression": {
@@ -49,13 +51,22 @@ metrics_dict = {
 }
 
 
-def evaluate_model(model_type, y_pred, y_true):
+def evaluate_model(model_type, y_pred, y_true, **kwargs):
     if model_type not in metrics_dict.keys():
         raise Exception("model type needs to be regression or classification")
     metrics = metrics_dict.get(model_type, None)
     eval_res = {}
+    print(f"shape of y_pred: {y_pred.shape} | shape of y_true: {y_pred.shape}")
     if metrics:
         for metric in metrics:
-            eval_res[metric.__name__] = metric(y_pred=y_pred, y_true=y_true)
+            print(f"Calculating {metric.__name__} .....")
+
+            # if type_of_target(y_true) == 'multiclass' and metric.__name__ in ('precision_score',
+            #                                                                   'recall_score',
+            #                                                                   'f1_score'):
+            #
+            #     eval_res[metric.__name__] = metric(y_pred=y_pred, y_true=y_true, average='micro')
+            # else:
+            eval_res[metric.__name__] = metric(y_pred=y_pred, y_true=y_true, **kwargs)
 
     return eval_res

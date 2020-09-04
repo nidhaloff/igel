@@ -92,7 +92,7 @@ class IgelModel(object):
             pickle.dump(model, open(self.res_path / save_to, 'wb'))
             return True
 
-    def _load_model(self, f: str =''):
+    def _load_model(self, f: str):
         """
         load a saved model from file
         @param f: path to model
@@ -153,7 +153,7 @@ class IgelModel(object):
         except Exception as e:
             logger.exception(f"exception while preparing prediction data: {e}")
 
-    def fit(self):
+    def fit(self, *args, **kwargs):
         """
         fit a machine learning model and save it to a file along with a description.json file
         @return: None
@@ -184,7 +184,7 @@ class IgelModel(object):
         except Exception as e:
             logger.exception(f"Error while storing the fit description file: {e}")
 
-    def evaluate(self):
+    def evaluate(self, *args, **kwargs):
         """
         evaluate a pre-fitted model and save results to a evaluation.json
         @return: None
@@ -195,7 +195,8 @@ class IgelModel(object):
             y_pred = model.predict(x_val)
             eval_results = evaluate_model(model_type=self.model_type,
                                           y_pred=y_pred,
-                                          y_true=y_true)
+                                          y_true=y_true,
+                                          **kwargs)
 
             eval_file = self.res_path / "evaluation.json"
             logger.info(f"saving fit description to {eval_file}")
@@ -205,7 +206,7 @@ class IgelModel(object):
         except Exception as e:
             logger.exception(f"error occured during evaluation: {e}")
 
-    def predict(self):
+    def predict(self, *args, **kwargs):
         """
         use a pre-fitted model to make predictions and save them as csv
         @return: None
