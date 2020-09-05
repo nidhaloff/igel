@@ -106,7 +106,7 @@ Quick Start
 
 In the example above, I'm using random forest to classify whether someone have
 diabetes or not depending on some features in the dataset
-I used this ` indian-diabetes dataset <https://www.kaggle.com/uciml/pima-indians-diabetes-database>`_ )
+I used this `indian-diabetes dataset <https://www.kaggle.com/uciml/pima-indians-diabetes-database>`_ )
 
 `
 - Run this command in Terminal, where you provide the **path to your dataset** and the **path to the yaml file**
@@ -146,4 +146,4 @@ Contributions
 --------------
 
 Contributions are always welcome.
-Make sure you read ` the guidelines <https://igel.readthedocs.io/en/latest/contributing.html>`_ ) first
+Make sure you read `the guidelines <https://igel.readthedocs.io/en/latest/contributing.html>`_ ) first
