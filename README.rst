@@ -46,12 +46,6 @@ A machine learning tool that allows to train/fit, test and use models **without 
 * Free software: MIT license
 * Documentation: https://igel.readthedocs.io.
 
-
-.. note::
-
-    The project is still under heavy development. Feel free to open an issue if you encountered any.
-    I appreciate any feedback in order to improve the package ;)
-
 Motivation & Goal
 ------------------
 
