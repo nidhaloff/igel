@@ -12,7 +12,7 @@ predictions_file = 'predictions.csv'
 configs = {
     "stats_dir": stats_dir,
     "model_file": model_file,
-    "res_path": res_path,
+    "results_path": res_path,
     "default_model_path": res_path / model_file,
     "description_file": res_path / description_file,
     "evaluation_file": res_path / evaluation_file,

@@ -21,7 +21,7 @@ from sklearn.utils.multiclass import type_of_target
 
 models_dict = {
     "regression": {
-        "linear": LinearRegression,
+        "linear regression": LinearRegression,
         "decision tree": DecisionTreeRegressor,
         "random forest": RandomForestRegressor,
         "extra trees": ExtraTreesRegressor,
@@ -30,7 +30,7 @@ models_dict = {
         "neural network": MLPRegressor
     },
     "classification": {
-        "logistic": LogisticRegression,
+        "logistic regression": LogisticRegression,
         "decision tree": DecisionTreeClassifier,
         "random forest": RandomForestClassifier,
         "extra trees": ExtraTreesClassifier,

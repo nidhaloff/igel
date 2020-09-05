@@ -95,19 +95,19 @@ Quick Start
         model:
             # in the type field, you can write the type of problem you want to solve. Whether regression or classification
             # Then, provide the algorithm you want to use on the data. Here I'm using the random forest algorithm
-            type: regression
+            type: classification
             algorithm: random forest
 
         # target you want to predict
-        # Here, as an example, I'm using a dataset, where I want to predict the GPA values.
+        # Here, as an example, I'm using the famous indians-diabetes dataset, where I want to predict whether someone have diabetes or not.
         # Depending on your data, you need to provide the target(s) you want to predict here
         target:
-            - GPA
+            - sick
 
-In the example above, we declare that we have a regression
-problem and we want to use the random forest model
-to solve it. Furthermore, the target we want to
-predict is GPA (since I'm using this simple `dataset <https://www.kaggle.com/luddarell/101-simple-linear-regressioncsv>`_ )
+In the example above, I'm using random forest to classify whether someone have
+diabetes or not depending on some features in the dataset
+I used this ` indian-diabetes dataset <https://www.kaggle.com/uciml/pima-indians-diabetes-database>`_ )
+
 `
 - Run this command in Terminal, where you provide the **path to your dataset** and the **path to the yaml file**
 
@@ -123,6 +123,8 @@ you can run this command to get instruction on how to use the model:
 
 .. code-block:: console
 
+    $ igel --help
+    or
     $ igel -h
 
 
@@ -140,8 +142,8 @@ TODO
 - add multiple file support
 - provide an api to evaluate models
 
-Contributors
-------------
+Contributions
+--------------
 
-None yet. Why not be the first?
-Contributions are always welcome. Please check the contribution guidelines first.
+Contributions are always welcome.
+Make sure you read ` the guidelines <https://igel.readthedocs.io/en/latest/contributing.html>`_ ) first

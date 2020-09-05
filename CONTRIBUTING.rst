@@ -15,7 +15,7 @@ Types of Contributions
 Report Bugs
 ~~~~~~~~~~~
 
-Report bugs at https://github.com/nidhaloff/igel/issues.
+Report bugs at  https://github.com/nidhaloff/igel/issues.
 
 If you are reporting a bug, please include:
 
