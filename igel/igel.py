@@ -34,6 +34,7 @@ class IgelModel(object):
     prediction_file = configs.get('prediction_file')            # path to the predictions.csv
     default_dataset_props = configs.get('dataset_props')        # dataset props that can be changed from the yaml file
     default_model_props = configs.get('models_props')           # model props that can be changed from the yaml file
+    models_dict = models_dict
     model = None
 
     def __init__(self, command: str, **cli_args):

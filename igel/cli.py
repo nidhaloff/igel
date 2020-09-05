@@ -26,6 +26,7 @@ class CLI(object):
 
                     igel <command> [<args>]
                     - Available sub-commands at the moment are:
+                       algorithms          get a list of all supported algorithms by igel
                        fit                 fits a model
                        evaluate            evaluate the performance of a pre-fitted model
                        predict             Predicts using a pre-fitted model
@@ -100,6 +101,21 @@ class CLI(object):
 
     def evaluate(self):
         IgelModel(self.cmd.command, **self.dict_args).evaluate()
+
+    def algorithms(self):
+        print(f"\n\n"
+              f"{'*'*60}  Supported machine learning algorithms  {'*'*60} \n\n"
+              f"1 - Regression algorithms: \n"
+              f"{'-'*50} \n"
+              f"{list(IgelModel.models_dict.get('regression').keys())} \n\n"
+              f"{'='*120} \n"
+              f"2 - Classification algorithms: \n"
+              f"{'-'*50} \n"
+              f"{list(IgelModel.models_dict.get('classification').keys())} \n"
+              f" \n")
+
+    def help(self):
+        self.parser.print_help()
 
 
 def main():
