@@ -116,6 +116,7 @@ I used this `indian-diabetes dataset <https://www.kaggle.com/uciml/pima-indians-
     $ igel fit --data_path 'path_to_your_csv_dataset.csv' --yaml_file 'path_to_your_yaml_file.yaml'
 
     # or shorter
+
     $ igel fit -dp 'path_to_your_csv_dataset.csv' -yml 'path_to_your_yaml_file.yaml'
 
 
@@ -124,7 +125,9 @@ you can run this command to get instruction on how to use the model:
 .. code-block:: console
 
     $ igel --help
-    or
+
+    # or just
+
     $ igel -h
 
 
@@ -146,4 +149,4 @@ Contributions
 --------------
 
 Contributions are always welcome.
-Make sure you read `the guidelines <https://igel.readthedocs.io/en/latest/contributing.html>`_ ) first
+Make sure you read `the guidelines <https://igel.readthedocs.io/en/latest/contributing.html>`_ first
