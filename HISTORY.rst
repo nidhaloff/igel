@@ -2,6 +2,10 @@
 History
 =======
 
+0.0.1 (2020-09-05)
+------------------
+* stable release with an end to end pipeline
+
 0.0.6 (2020-09-01)
 ------------------
 * Added validation on arguments and provided an example

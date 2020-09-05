@@ -20,8 +20,6 @@ requirements = [
 setup_requirements = ['pytest-runner',]
 test_requirements = ['pytest>=3']
 
-print("requirements: ", requirements)
-
 setup(
     author=__author__,
     author_email=__email__,
