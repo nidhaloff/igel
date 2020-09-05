@@ -6,4 +6,4 @@ model:
 
 # target you want to predict
 target:
-    - quality
+    - sick
