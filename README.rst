@@ -135,9 +135,58 @@ That's it. Your "trained" model can be now found in the model_results folder
 (automatically created for you in your current working directory).
 Furthermore, a description can be found in the description.json file inside the model_results folder.
 
+E2E Example
+-----------
+
+A complete end to end solution is provided in this section to prove the capabilities of **igel**.
+As explained previously, you need to create a yaml configuration file. Here is an end to end example for
+predicting whether someone have diabetes or not using the **decision tree** algorithm. The dataset can be found in the examples folder.
+
+-  **Fit/Train a model**:
+
+.. code-block:: yaml
+
+        model:
+            type: classification
+            algorithm: decision tree
+
+        target:
+            - sick
+
+.. code-block:: console
+
+    $ igel fit -dp path_to_the_dataset -yml path_to_the_yaml_file
+
+That's it, igel will now fit the model for you and save it in a model_results folder in your current directory.
+
+
+- **Evaluate the model**:
+
+Evaluate the pre-fitted model. Igel will load the pre-fitted model from the model_results directory and evaluate it for you.
+You just need to run the evaluate command and provide the path to your evaluation data.
+
+.. code-block:: console
+
+    $ igel evaluate -dp path_to_the_evaluation_dataset
+
+That's it! Igel will evaluate the model and store statistics/results in an **evaluation.json** file inside the model_results folder
+
+- **Predict**:
+
+Use the pre-fitted model to predict on new data. This is done automatically by igel, you just need to provide the
+path to your data that you want to use prediction on.
+
+.. code-block:: console
+
+    $ igel predict -dp path_to_the_new_dataset
+
+That's it! Igel will use the pre-fitted model to make predictions and save it in a **predictions.csv** file inside the model_results folder
+
+
 Examples
 ----------
-Check the examples folder, where you can use the csv data to run a simple example from terminal
+
+Check the examples folder, where you will find the indian-diabetes data and a yaml file example
 
 TODO
 -----
