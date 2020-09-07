@@ -19,7 +19,14 @@ configs = {
     "prediction_file": res_path / predictions_file,
 
     "dataset_props": {
-        "csv_separator": ",",
+        "split": {
+            "test_size": 0,
+            "shuffle": False
+        },
+        "preprocess": {
+            "missing_values": "mean"
+        },
+
         "normalize": False
     },
     "model_props": {

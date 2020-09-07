@@ -17,7 +17,9 @@ from sklearn.metrics import (mean_squared_error,
                              precision_score,
                              recall_score)
 from sklearn.utils.multiclass import type_of_target
-
+import logging
+logging.basicConfig(format='%(levelname)s - %(message)s', level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 models_dict = {
     "regression": {
@@ -56,10 +58,10 @@ def evaluate_model(model_type, y_pred, y_true, **kwargs):
         raise Exception("model type needs to be regression or classification")
     metrics = metrics_dict.get(model_type, None)
     eval_res = {}
-    print(f"shape of y_pred: {y_pred.shape} | shape of y_true: {y_pred.shape}")
+    logger.info(f"shape of y_pred: {y_pred.shape} | shape of y_true: {y_pred.shape}")
     if metrics:
         for metric in metrics:
-            print(f"Calculating {metric.__name__} .....")
+            logger.info(f"Calculating {metric.__name__} .....")
 
             # if type_of_target(y_true) == 'multiclass' and metric.__name__ in ('precision_score',
             #                                                                   'recall_score',
@@ -70,3 +72,8 @@ def evaluate_model(model_type, y_pred, y_true, **kwargs):
             eval_res[metric.__name__] = metric(y_pred=y_pred, y_true=y_true, **kwargs)
 
     return eval_res
+
+
+if __name__ == '__main__':
+
+    print(LinearRegression().fit.__code__.co_varnames)

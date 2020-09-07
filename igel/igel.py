@@ -17,6 +17,8 @@ except ImportError:
     from configs import configs
     from data import models_dict, metrics_dict
 
+from sklearn.model_selection import train_test_split
+
 warnings.filterwarnings("ignore")
 logging.basicConfig(format='%(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -53,6 +55,11 @@ class IgelModel(object):
             # list of target(s) to predict
             self.target: list = self.yaml_configs.get('target')
 
+            self.model_type = self.model_props.get('type')
+            logger.info(f"dataset_props: {self.dataset_props} \n"
+                        f"model_props: {self.model_props} \n "
+                        f"target: {self.target} \n")
+
         else:
             self.model_path = cli_args.get('model_path', self.default_model_path)
             logger.info(f"path of the pre-fitted model => {self.model_path}")
@@ -61,16 +68,18 @@ class IgelModel(object):
                 self.target: list = dic.get("target")  # target to predict as a list
                 self.model_type: str = dic.get("type")  # type of the model -> regression or classification
 
-    def _create_model(self, model_type: str, model_algorithm: str):
+    def _create_model(self):
         """
         fetch a model depending on the provided type and algorithm by the user and return it
-        @param model_type: type of the model -> whether regression or classification
-        @param model_algorithm: specific algorithm to use
         @return: class of the chosen model
         """
-        assert model_type in self.supported_types, "model type is not supported"
+        model_type = self.model_props.get('type')
+        model_algorithm = self.model_props.get('algorithm')
+        if not model_type or not model_algorithm:
+            raise Exception(f"model_type and algorithm cannot be None")
         algorithms = models_dict.get(model_type)  # extract all algorithms as a dictionary
         model = algorithms.get(model_algorithm)  # extract model class depending on the algorithm
+        logger.info(f"Solving a {model_type} problem using ===> {model_algorithm}")
         if not model:
             raise Exception("Model not found in the algorithms list")
         else:
@@ -116,12 +125,12 @@ class IgelModel(object):
             logger.error(f"File not found in {self.default_model_path} ")
 
     def _prepare_fit_data(self):
-        return self._process_data()
+        return self._process_data(fit=True)
 
     def _prepare_val_data(self):
-        return self._process_data()
+        return self._process_data(fit=False)
 
-    def _process_data(self):
+    def _process_data(self, fit=True):
         """
         read and return data as x and y
         @return: list of separate x and y
@@ -141,7 +150,19 @@ class IgelModel(object):
             x = _reshape(dataset.to_numpy())
             y = _reshape(y.to_numpy())
             logger.info(f"y shape: {y.shape} and x shape: {x.shape}")
-            return x, y
+            if not fit:
+                return x, y
+
+            split_options = self.dataset_props.get('split')
+            test_size = split_options.get('test_size')
+            shuffle = split_options.get('shuffle')
+            stratify = split_options.get('stratify')
+            x_train, x_test, y_train, y_test = train_test_split(x,
+                                                                y,
+                                                                test_size=test_size,
+                                                                shuffle=shuffle,
+                                                                stratify=stratify)
+            return x_train, y_train, x_test, y_test
 
         except Exception as e:
             logger.exception(f"error occured while preparing the data: {e.args}")
@@ -154,6 +175,7 @@ class IgelModel(object):
         try:
             x_val = pd.read_csv(self.data_path)
             logger.info(f"shape of the prediction data: {x_val.shape}")
+
             return _reshape(x_val)
         except Exception as e:
             logger.exception(f"exception while preparing prediction data: {e}")
@@ -163,32 +185,34 @@ class IgelModel(object):
         fit a machine learning model and save it to a file along with a description.json file
         @return: None
         """
-        model_type = self.model_props.get('type')
-        algorithm = self.model_props.get('algorithm')
-        if not model_type or not algorithm:
-            raise Exception(f"model_type and algorithm cannot be None")
-
-        logger.info(f"Solving a {model_type} problem using ===> {algorithm}")
-        model_class = self._create_model(model_type, algorithm)
+        x_train, y_train, x_test, y_test = self._prepare_fit_data()
+        model_class = self._create_model()
         self.model = model_class(**kwargs)
         logger.info(f"executing a {self.model.__class__.__name__} algorithm ..")
-        x, y = self._prepare_fit_data()
-        self.model.fit(x, y)
+
+        self.model.fit(x_train, y_train)
+
         saved = self._save_model(self.model)
         if saved:
             logger.info(f"model saved successfully and can be found in the {self.results_path} folder")
-
+        test_predictions = self.model.predict(x_test)
+        eval_results = evaluate_model(model_type=self.model_type,
+                                      y_pred=test_predictions,
+                                      y_true=y_test,
+                                      **kwargs)
         fit_description = {
             "model": self.model.__class__.__name__,
             "type": self.model_props['type'],
             "algorithm": self.model_props['algorithm'],
             "data path": self.data_path,
-            "data shape": x.shape,
-            "data size": x.shape[0],
-
+            "train data shape": x_train.shape,
+            "test data shape": x_test.shape,
+            "train data size": x_train.shape[0],
+            "test data size": x_test.shape[0],
             "results path": str(self.results_path),
             "model path": str(self.default_model_path),
-            "target": self.target
+            "target": self.target,
+            "results on test data": eval_results
         }
 
         try:
@@ -242,9 +266,9 @@ class IgelModel(object):
 
 
 if __name__ == '__main__':
-    mock_params = {'data_path': '/home/nidhal/my_projects/igel/examples/data/example.csv',
-                   'yml_path': '/home/nidhal/my_projects/igel/examples/model.yaml'}
+    mock_params = {'data_path': '/home/nidhal/my_projects/igel/examples/data/indians-diabetes.csv',
+                   'yaml_path': '/home/nidhal/my_projects/igel/examples/model.yaml'}
 
-    reg = IgelModel('predict', **mock_params)
-    # reg.fit()
-    reg.predict()
+    reg = IgelModel('fit', **mock_params)
+    reg.fit()
+    # reg.predict()
