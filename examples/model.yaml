@@ -1,4 +1,10 @@
-
+# dataset operations
+dataset:
+    split:
+        test_size: 0.2
+        shuffle: True
+    preprocess:
+        missing_values: mean
 # model definition
 model:
     type: classification
