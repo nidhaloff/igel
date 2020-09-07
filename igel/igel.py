@@ -6,6 +6,7 @@ import os
 import json
 import warnings
 import logging
+
 try:
     from igel.utils import read_yaml, extract_params, _reshape
     from igel.data import evaluate_model
@@ -28,19 +29,19 @@ class IgelModel(object):
     """
     IgelModel is the base model to use the fit, evaluate and predict functions of the sklearn library
     """
-    supported_types = ('regression', 'classification')          # supported types that can be selected in the yaml file
-    results_path = configs.get('results_path')                  # path to the results folder
-    default_model_path = configs.get('default_model_path')      # path to the pre-fitted model
-    description_file = configs.get('description_file')          # path to the description.json file
-    evaluation_file = configs.get('evaluation_file')            # path to the evaluation.json file
-    prediction_file = configs.get('prediction_file')            # path to the predictions.csv
-    default_dataset_props = configs.get('dataset_props')        # dataset props that can be changed from the yaml file
-    default_model_props = configs.get('models_props')           # model props that can be changed from the yaml file
+    supported_types = ('regression', 'classification')  # supported types that can be selected in the yaml file
+    results_path = configs.get('results_path')  # path to the results folder
+    default_model_path = configs.get('default_model_path')  # path to the pre-fitted model
+    description_file = configs.get('description_file')  # path to the description.json file
+    evaluation_file = configs.get('evaluation_file')  # path to the evaluation.json file
+    prediction_file = configs.get('prediction_file')  # path to the predictions.csv
+    default_dataset_props = configs.get('dataset_props')  # dataset props that can be changed from the yaml file
+    default_model_props = configs.get('models_props')  # model props that can be changed from the yaml file
     model = None
 
-    def __init__(self, command, **cli_args):
-        logger.info(f"Entered CLI args: {cli_args}")
-        logger.info(f"Chosen command: {command}")
+    def __init__(self, command: str, **cli_args):
+        logger.info(f"Entered CLI args:         {cli_args}")
+        logger.info(f"Chosen command:           {command}")
         self.data_path: str = cli_args.get('data_path')  # path to the dataset
 
         if command == "fit":
@@ -256,7 +257,8 @@ class IgelModel(object):
             logger.info(f"predictions array type: {type(y_pred)}")
             logger.info(f"predictions shape: {y_pred.shape} | shape len: {len(y_pred.shape)}")
             logger.info(f"predict on targets: {self.target}")
-            df_pred = pd.DataFrame.from_dict({self.target[i]: y_pred[:, i] if len(y_pred.shape) > 1 else y_pred for i in range(len(self.target))})
+            df_pred = pd.DataFrame.from_dict(
+                {self.target[i]: y_pred[:, i] if len(y_pred.shape) > 1 else y_pred for i in range(len(self.target))})
 
             logger.info(f"saving the predictions to {self.prediction_file}")
             df_pred.to_csv(self.prediction_file)
