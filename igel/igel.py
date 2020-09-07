@@ -39,8 +39,8 @@ class IgelModel(object):
     model = None
 
     def __init__(self, command, **cli_args):
-        logger.info(f"Entered CLI args:         { cli_args}")
-        logger.info(f"Chosen command:           { command}")
+        logger.info(f"Entered CLI args: {cli_args}")
+        logger.info(f"Chosen command: {command}")
         self.data_path: str = cli_args.get('data_path')  # path to the dataset
 
         if command == "fit":
