@@ -38,7 +38,7 @@ class IgelModel(object):
     default_model_props = configs.get('models_props')           # model props that can be changed from the yaml file
     model = None
 
-    def __init__(self, command: str, **cli_args):
+    def __init__(self, command, **cli_args):
         logger.info(f"Entered CLI args:         { cli_args}")
         logger.info(f"Chosen command:           { command}")
         self.data_path: str = cli_args.get('data_path')  # path to the dataset
