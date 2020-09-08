@@ -227,13 +227,8 @@ For production
 Examples
 ----------
 
-Check the examples folder, where you will find the indian-diabetes data and a yaml file example
-
-TODO
------
-- add option as arguments to the models
-- add multiple file support
-- provide an api to evaluate models
+Check the examples folder, where you will find the indian-diabetes data and a yaml file example.
+You can clone the repo or just download the dataset then try running the example afterwards.
 
 Contributions
 --------------

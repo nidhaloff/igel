@@ -99,3 +99,51 @@ path to your data that you want to use prediction on.
 
 That's it! Igel will use the pre-fitted model to make predictions and save it in a **predictions.csv** file inside the model_results folder
 
+
+Advanced Usage
+---------------
+
+You can also carry out some preprocessing methods or other operations by providing the it in the yaml file.
+Here is an example, where the data is split to 80% for training and 20% for validation/testing.
+Also, the data are shuffled while splitting.
+
+Furthermore, the data are preprocessed by replacing missing values with the mean ( you can also use median, mode etc..).
+check `this link <https://www.kaggle.com/uciml/pima-indians-diabetes-database>`_ for more information
+
+
+.. code-block:: yaml
+
+        # dataset operations
+        dataset:
+            split:
+                test_size: 0.2
+                shuffle: True
+                stratify: None
+            preprocess:
+                missing_values: mean
+        # model definition
+        model:
+            type: classification
+            algorithm: random forest
+
+        # target you want to predict
+        target:
+            - sick
+
+Then, you can fit the model by running the igel command as shown in the other examples
+
+.. code-block:: console
+
+    $ igel fit -dp path_to_the_dataset -yml path_to_the_yaml_file
+
+For evaluation
+
+.. code-block:: console
+
+    $ igel evaluate -dp path_to_the_evaluation_dataset
+
+For production
+
+.. code-block:: console
+
+    $ igel predict -dp path_to_the_new_dataset
