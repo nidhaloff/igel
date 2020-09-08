@@ -20,6 +20,7 @@ except ImportError:
     from data import models_dict, metrics_dict
     from preprocessing import update_dataset_props
 
+from preprocessing import handle_missing_values
 from sklearn.model_selection import train_test_split
 
 warnings.filterwarnings("ignore")
@@ -146,6 +147,15 @@ class IgelModel(object):
             attributes = list(dataset.columns)
             logger.info(f"dataset attributes: {attributes}")
 
+            # handle missing values in the dataset
+            preprocess_props = self.dataset_props.get('preprocess', None)
+            if preprocess_props:
+                # preprocessing strategy: mean, median, mode etc..
+                strategy = preprocess_props.get('missing_values')
+                if strategy:
+                    dataset = handle_missing_values(dataset,
+                                                    strategy=strategy)
+
             if any(col not in attributes for col in self.target):
                 raise Exception("chosen target(s) to predict must exist in the dataset")
 
@@ -164,7 +174,7 @@ class IgelModel(object):
                                                                 y,
                                                                 test_size=test_size,
                                                                 shuffle=shuffle,
-                                                                stratify=stratify)
+                                                                stratify=None if not stratify or stratify.lower() == "none" else stratify)
             return x_train, y_train, x_test, y_test
 
         except Exception as e:

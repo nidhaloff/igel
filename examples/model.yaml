@@ -3,7 +3,7 @@ dataset:
     split:
         test_size: 0.2
         shuffle: True
-        stratify: False
+        stratify: None
     preprocess:
         missing_values: mean
 # model definition

@@ -19,9 +19,9 @@
         "sick"
     ],
     "results on test data": {
-        "accuracy_score": 0.7467532467532467,
-        "f1_score": 0.5806451612903226,
-        "precision_score": 0.627906976744186,
-        "recall_score": 0.54
+        "accuracy_score": 0.7662337662337663,
+        "f1_score": 0.6326530612244897,
+        "precision_score": 0.6595744680851063,
+        "recall_score": 0.6078431372549019
     }
 }
