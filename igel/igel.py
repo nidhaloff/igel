@@ -12,11 +12,13 @@ try:
     from igel.data import evaluate_model
     from igel.configs import configs
     from igel.data import models_dict, metrics_dict
+    from igel.preprocessing import update_dataset_props
 except ImportError:
     from utils import read_yaml, extract_params, _reshape
     from data import evaluate_model
     from configs import configs
     from data import models_dict, metrics_dict
+    from preprocessing import update_dataset_props
 
 from sklearn.model_selection import train_test_split
 

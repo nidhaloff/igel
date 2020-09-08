@@ -101,6 +101,21 @@ class CLI(object):
     def evaluate(self):
         IgelModel(self.cmd.command, **self.dict_args).evaluate()
 
+    def algorithms(self):
+        print(f"\n\n"
+              f"{'*'*60}  Supported machine learning algorithms  {'*'*60} \n\n"
+              f"1 - Regression algorithms: \n"
+              f"{'-'*50} \n"
+              f"{list(IgelModel.models_dict.get('regression').keys())} \n\n"
+              f"{'='*120} \n"
+              f"2 - Classification algorithms: \n"
+              f"{'-'*50} \n"
+              f"{list(IgelModel.models_dict.get('classification').keys())} \n"
+              f" \n")
+
+    def help(self):
+        self.parser.print_help()
+
 
 def main():
     CLI()
