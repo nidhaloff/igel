@@ -13,14 +13,15 @@ try:
     from igel.configs import configs
     from igel.data import models_dict, metrics_dict
     from igel.preprocessing import update_dataset_props
+    from igel.preprocessing import handle_missing_values
 except ImportError:
     from utils import read_yaml, extract_params, _reshape
     from data import evaluate_model
     from configs import configs
     from data import models_dict, metrics_dict
     from preprocessing import update_dataset_props
+    from preprocessing import handle_missing_values
 
-from preprocessing import handle_missing_values
 from sklearn.model_selection import train_test_split
 
 warnings.filterwarnings("ignore")
