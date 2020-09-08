@@ -4,7 +4,7 @@ igel
 
 .. image:: assets/logo1.png
     :width: 100%
-    :scale: 50%
+    :scale: 100%
     :align: center
     :alt: igel-icon
 
