@@ -151,13 +151,6 @@ class IgelModel(object):
             # handle missing values in the dataset
             preprocess_props = self.dataset_props.get('preprocess', None)
             if preprocess_props:
-                # preprocessing strategy: mean, median, mode etc..
-                strategy = preprocess_props.get('missing_values')
-                if strategy:
-                    dataset = handle_missing_values(dataset,
-                                                    strategy=strategy)
-                    logger.info(f"shape of the dataset after handling missing values => {dataset.shape}")
-
                 # handle encoding
                 encoding = preprocess_props.get('encoding')
                 if encoding:
@@ -167,6 +160,14 @@ class IgelModel(object):
                                      encoding_type=encoding_type.lower(),
                                      column=column)
                     logger.info(f"shape of the dataset after encoding => {dataset.shape}")
+
+                # preprocessing strategy: mean, median, mode etc..
+                strategy = preprocess_props.get('missing_values')
+                if strategy:
+                    dataset = handle_missing_values(dataset,
+                                                    strategy=strategy)
+                    logger.info(f"shape of the dataset after handling missing values => {dataset.shape}")
+
 
             if any(col not in attributes for col in self.target):
                 raise Exception("chosen target(s) to predict must exist in the dataset")
@@ -307,9 +308,8 @@ class IgelModel(object):
 
 
 if __name__ == '__main__':
-    mock_params = {'data_path': '/home/nidhal/my_projects/igel/examples/data/indians-diabetes.csv',
-                   'yaml_path': '/home/nidhal/my_projects/igel/examples/model.yaml'}
-
+    mock_params = {'data_path': '/home/nidhal/my_projects/igel/examples/data/Iris.csv',  # '/home/nidhal/my_projects/igel/examples/data/indians-diabetes.csv',
+                   'yaml_path': '/home/nidhal/my_projects/igel/examples/iris_example.yaml'}
     reg = IgelModel('fit', **mock_params)
     reg.fit()
     # reg.predict()
