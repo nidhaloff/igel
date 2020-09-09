@@ -20,7 +20,7 @@ except ImportError:
     from configs import configs
     from data import models_dict, metrics_dict
     from preprocessing import update_dataset_props
-    from preprocessing import handle_missing_values, encode
+    from preprocessing import handle_missing_values, encode, normalize
 
 from sklearn.model_selection import train_test_split
 
@@ -175,6 +175,21 @@ class IgelModel(object):
             x = _reshape(dataset.to_numpy())
             y = _reshape(y.to_numpy())
             logger.info(f"y shape: {y.shape} and x shape: {x.shape}")
+
+            # handle data scaling
+            if preprocess_props:
+                scaling_props = preprocess_props.get('scale', None)
+                if scaling_props:
+                    scaling_method = scaling_props.get('method', None)
+                    scaling_target = scaling_props.get('target', None)
+                    if scaling_target == 'all':
+                        x = normalize(x, method=scaling_method)
+                        y = normalize(y, method=scaling_method)
+                    elif scaling_target == 'inputs':
+                        x = normalize(x, method=scaling_method)
+                    elif scaling_target == 'outputs':
+                        y = normalize(y, method=scaling_method)
+
             if not fit:
                 return x, y
 

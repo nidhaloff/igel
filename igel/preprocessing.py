@@ -1,5 +1,6 @@
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
 import numpy as np
 import pandas as pd
 import logging
@@ -37,9 +38,11 @@ def encode(df, encoding_type="onehotencoding", column=None):
         raise Exception(f"encoding type should be -> oneHotEncoding or labelEncoding")
 
     if encoding_type == "onehotencoding":
+        logger.info(f"performing a one hot encoding ...")
         return pd.get_dummies(df)
 
     elif encoding_type == "labelencoding":
+        logger.info(f"performing a label encoding ...")
         encoder = LabelEncoder()
         encoder.fit(df[column])
         df[column] = encoder.transform(df[column])
@@ -47,3 +50,16 @@ def encode(df, encoding_type="onehotencoding", column=None):
 
     else:
         raise Exception(f"encoding type should be -> oneHotEncoding or labelEncoding")
+
+
+def normalize(x, y=None, method='standard'):
+    methods = ('minmax', 'standard')
+
+    if method not in methods:
+        raise Exception(f"Please choose one of the available scaling methods => {methods}")
+    logger.info(f"performing a {method} scaling ...")
+    scaler = MinMaxScaler() if method == 'minmax' else StandardScaler()
+    if not y:
+        return scaler.fit_transform(X=x)
+    else:
+        return scaler.fit_transform(X=x, y=y)
