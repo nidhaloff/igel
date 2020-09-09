@@ -78,6 +78,45 @@ Installation
 
 - Check the docs for other ways to install igel from source
 
+Overview
+----------
+The main goal of igel is to provide you with a way to train/fit, evaluate and use models without writing code.
+Instead, all you need is to provide/describe what you want to do in a simple yaml file.
+
+Basically, you provide description or rather configurations in the yaml file as key value pairs.
+Here is an overview of all supported configurations (for now):
+
+.. code-block:: yaml
+
+    # dataset operations
+    dataset:
+
+        split:  # split options
+            test_size: 0.2  # 0.2 means 20% for the test data, so 80% are automatically for training
+            shuffle: True   # whether to shuffle the data before/while splitting
+            stratify: None  # If not None, data is split in a stratified fashion, using this as the class labels.
+
+        preprocess: # preprocessing options
+            missing_values: mean    # other possible values: [drop, median, most_frequent, constant] check the docs for more
+            encoding:
+                type: oneHotEncoding  # other possible values: [labelEncoding]
+            scale:  # scaling options
+                method: standard    # standardization will scale values to have a 0 mean and 1 standard deviation  | you can also try minmax
+                target: inputs  # scale inputs. | other possible values: [outputs, all] # if you choose all then all values in the dataset will be scaled
+
+
+    # model definition
+    model:
+        type: classification
+        algorithm: random forest
+
+
+    # target you want to predict
+    target:
+        - sick
+
+
+
 Quick Start
 ------------
 
