@@ -107,13 +107,13 @@ Here is an overview of all supported configurations (for now):
 
     # model definition
     model:
-        type: classification
-        algorithm: random forest
+        type: classification    # type of the problem you want to solve. | possible values: [regression, classification]
+        algorithm: random forest    # which algorithm you want to use. | type igel algorithms in the Terminal to know more
 
 
     # target you want to predict
     target:
-        - sick
+        - put the target you want to predict here
 
 
 
