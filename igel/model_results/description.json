@@ -1,0 +1,27 @@
+{
+    "model": "RandomForestClassifier",
+    "type": "classification",
+    "algorithm": "random forest",
+    "data path": "/home/nidhal/my_projects/igel/examples/data/indians-diabetes.csv",
+    "train data shape": [
+        614,
+        8
+    ],
+    "test data shape": [
+        154,
+        8
+    ],
+    "train data size": 614,
+    "test data size": 154,
+    "results path": "/home/nidhal/my_projects/igel/igel/model_results",
+    "model path": "/home/nidhal/my_projects/igel/igel/model_results/model.sav",
+    "target": [
+        "sick"
+    ],
+    "results on test data": {
+        "accuracy_score": 0.7727272727272727,
+        "f1_score": 0.6534653465346534,
+        "precision_score": 0.717391304347826,
+        "recall_score": 0.6
+    }
+}

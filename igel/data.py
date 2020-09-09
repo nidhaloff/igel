@@ -58,18 +58,26 @@ def evaluate_model(model_type, y_pred, y_true, **kwargs):
         raise Exception("model type needs to be regression or classification")
     metrics = metrics_dict.get(model_type, None)
     eval_res = {}
-    logger.info(f"shape of y_pred: {y_pred.shape} | shape of y_true: {y_pred.shape}")
     if metrics:
         for metric in metrics:
             logger.info(f"Calculating {metric.__name__} .....")
+            logger.info(f"type of target: {type_of_target(y_true)}")
+            if type_of_target(y_true) in ('multiclass-multioutput',
+                                          'multilabel-indicator',
+                                          'multiclass') and metric.__name__ in ('precision_score',
+                                                                                'accuracy_score',
+                                                                                'recall_score',
+                                                                                'f1_score'):
+                if metric.__name__ == 'accuracy_score':
+                    eval_res[metric.__name__] = metric(y_pred=y_pred,
+                                                       y_true=y_true)
+                else:
+                    eval_res[metric.__name__] = metric(y_pred=y_pred,
+                                                       y_true=y_true,
+                                                       average='micro')
 
-            # if type_of_target(y_true) == 'multiclass' and metric.__name__ in ('precision_score',
-            #                                                                   'recall_score',
-            #                                                                   'f1_score'):
-            #
-            #     eval_res[metric.__name__] = metric(y_pred=y_pred, y_true=y_true, average='micro')
-            # else:
-            eval_res[metric.__name__] = metric(y_pred=y_pred, y_true=y_true, **kwargs)
+            else:
+                eval_res[metric.__name__] = metric(y_pred=y_pred, y_true=y_true, **kwargs)
 
     return eval_res
 

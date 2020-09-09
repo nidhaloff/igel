@@ -5,7 +5,10 @@ dataset:
         shuffle: True
         stratify: None
     preprocess:
-        missing_values: mean
+        missing_values: mean    # other possible values: [drop, median, most_frequent, constant] check the docs for more
+        encoding:
+            type: oneHotEncoding  # other possible values: [labelEncoding]
+
 # model definition
 model:
     type: classification

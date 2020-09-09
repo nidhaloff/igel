@@ -1,4 +1,5 @@
 from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 import numpy as np
 import pandas as pd
 import logging
@@ -25,7 +26,24 @@ def handle_missing_values(df, fill_value=np.nan, strategy="mean"):
     if strategy.lower() == "drop":
         return df.dropna()
 
-    imputer = SimpleImputer(fill_value=fill_value, strategy=strategy)
-    cleaned = imputer.fit_transform(df)
+    cleaner = SimpleImputer(fill_value=fill_value, strategy=strategy)
+    cleaned = cleaner.fit_transform(df)
 
     return pd.DataFrame(cleaned, columns=df.columns)
+
+
+def encode(df, encoding_type="onehotencoding", column=None):
+    if not encoding_type:
+        raise Exception(f"encoding type should be -> oneHotEncoding or labelEncoding")
+
+    if encoding_type == "onehotencoding":
+        return pd.get_dummies(df)
+
+    elif encoding_type == "labelencoding":
+        encoder = LabelEncoder()
+        encoder.fit(df[column])
+        df[column] = encoder.transform(df[column])
+        return df
+
+    else:
+        raise Exception(f"encoding type should be -> oneHotEncoding or labelEncoding")

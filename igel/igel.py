@@ -20,7 +20,7 @@ except ImportError:
     from configs import configs
     from data import models_dict, metrics_dict
     from preprocessing import update_dataset_props
-    from preprocessing import handle_missing_values
+    from preprocessing import handle_missing_values, encode
 
 from sklearn.model_selection import train_test_split
 
@@ -156,6 +156,17 @@ class IgelModel(object):
                 if strategy:
                     dataset = handle_missing_values(dataset,
                                                     strategy=strategy)
+                    logger.info(f"shape of the dataset after handling missing values => {dataset.shape}")
+
+                # handle encoding
+                encoding = preprocess_props.get('encoding')
+                if encoding:
+                    encoding_type = encoding.get('type', None)
+                    column = encoding.get('column', None)
+                    dataset = encode(df=dataset,
+                                     encoding_type=encoding_type.lower(),
+                                     column=column)
+                    logger.info(f"shape of the dataset after encoding => {dataset.shape}")
 
             if any(col not in attributes for col in self.target):
                 raise Exception("chosen target(s) to predict must exist in the dataset")
