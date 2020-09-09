@@ -2,6 +2,19 @@
 History
 =======
 
+
+0.1.5 (2020-09-10)
+------------------
+* implemented encoding and scaling methods
+
+0.1.4 (2020-09-08)
+------------------
+* support for all sklearn models
+
+0.1.3 (2020-09-07)
+------------------
+* implemented basic dataset operations
+
 0.0.1 (2020-09-05)
 ------------------
 * stable release with an end to end pipeline
