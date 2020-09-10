@@ -10,7 +10,7 @@ igel
     :width: 100%
     :scale: 100%
     :align: center
-    :alt: igel-icon
+    :alt: igel-icon-here
 
 |
 
