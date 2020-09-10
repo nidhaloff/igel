@@ -26,7 +26,7 @@ import igel
 # -- General configuration ---------------------------------------------
 
 
-html_logo = 'https://github.com/nidhaloff/igel/blob/master/assets/logo.jpg'
+html_logo = '../assets/logo.jpg'
 
 # If your documentation needs a minimal Sphinx version, state it here.
 #
