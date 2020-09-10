@@ -6,7 +6,7 @@
 igel
 ====
 
-.. image:: ../assets/logo.jpg
+.. image:: ./logo.jpg
     :width: 100%
     :scale: 100%
     :align: center
