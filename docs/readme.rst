@@ -6,6 +6,15 @@
 igel
 ====
 
+.. image:: ../assets/logo.jpg
+    :width: 100%
+    :scale: 100%
+    :align: center
+    :alt: igel-icon
+
+|
+
+|
 
 .. image:: https://img.shields.io/pypi/v/igel.svg
         :target: https://pypi.python.org/pypi/igel
