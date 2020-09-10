@@ -25,6 +25,9 @@ import igel
 
 # -- General configuration ---------------------------------------------
 
+
+html_logo = 'https://github.com/nidhaloff/igel/blob/master/assets/logo.jpg'
+
 # If your documentation needs a minimal Sphinx version, state it here.
 #
 # needs_sphinx = '1.0'
@@ -90,7 +93,6 @@ html_theme = 'classic'
 # documentation.
 #
 html_theme_options = {
-    'html_logo': 'https://github.com/nidhaloff/igel/blob/master/assets/logo.jpg',
     'canonical_url': '',
     'analytics_id': 'UA-XXXXXXX-1',  #  Provided by Google in your dashboard
     'logo_only': False,
