@@ -25,8 +25,8 @@ setup(
     author_email="nidhalbacc@gmail.com",
     python_requires='>=3.6',
     classifiers=[
-        # 'Development Status :: 2 - Pre-Alpha',
-        'Development Status :: 5 - Production/Stable',
+        'Development Status :: 4 - Beta',
+        # 'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
@@ -34,7 +34,7 @@ setup(
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
     ],
-    description="a machine learning tool that allows to train, test and use models without writing code",
+    description="a machine learning tool that allows you to train, test and use models without writing code",
     entry_points={
         'console_scripts': [
             'igel=igel.cli:main',

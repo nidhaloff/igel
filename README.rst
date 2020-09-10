@@ -40,7 +40,7 @@ igel
 |
 |
 
-A machine learning tool that allows to train/fit, test and use models **without writing code**
+A machine learning tool that allows you to train/fit, test and use models **without writing code**
 
 
 * Free software: MIT license
