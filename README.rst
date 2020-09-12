@@ -12,7 +12,7 @@ igel
 
 |
 
-.. image:: https://img.shields.io/pypi/v/igel?color=green&style=plastic
+.. image:: https://img.shields.io/pypi/v/igel?color=green
         :alt: PyPI
         :target: https://pypi.python.org/pypi/igel
 
