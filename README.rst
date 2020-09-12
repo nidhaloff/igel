@@ -78,6 +78,80 @@ Installation
 
 - Check the docs for other ways to install igel from source
 
+
+Quick Start
+------------
+
+you can run this command to get instruction on how to use the model:
+
+.. code-block:: console
+
+    $ igel --help
+
+    # or just
+
+    $ igel -h
+
+First step is to provide a yaml file:
+
+.. code-block:: yaml
+
+        # model definition
+        model:
+            # in the type field, you can write the type of problem you want to solve. Whether regression or classification
+            # Then, provide the algorithm you want to use on the data. Here I'm using the random forest algorithm
+            type: classification
+            algorithm: random forest
+            arguments:
+                n_estimators: 100   # here, I set the number of estimators (or trees) to 100
+                max_depth: 30       # set the max_depth of the tree
+
+        # target you want to predict
+        # Here, as an example, I'm using the famous indians-diabetes dataset, where I want to predict whether someone have diabetes or not.
+        # Depending on your data, you need to provide the target(s) you want to predict here
+        target:
+            - sick
+
+In the example above, I'm using random forest to classify whether someone have
+diabetes or not depending on some features in the dataset
+I used this `indian-diabetes dataset <https://www.kaggle.com/uciml/pima-indians-diabetes-database>`_)
+
+
+- The expected way is to use igel from terminal:
+
+Run this command in terminal to fit/train a model, where you provide the **path to your dataset** and the **path to the yaml file**
+
+.. code-block:: console
+
+    $ igel fit --data_path 'path_to_your_csv_dataset.csv' --yaml_file 'path_to_your_yaml_file.yaml'
+
+    # or shorter
+
+    $ igel fit -dp 'path_to_your_csv_dataset.csv' -yml 'path_to_your_yaml_file.yaml'
+
+    """
+    That's it. Your "trained" model can be now found in the model_results folder
+    (automatically created for you in your current working directory).
+    Furthermore, a description can be found in the description.json file inside the model_results folder.
+    """
+
+You can then evaluate the trained/pre-fitted model:
+
+.. code-block:: console
+
+    $ igel evaluate -dp 'path_to_your_evaluation_dataset.csv'
+    """
+    This will automatically generate an evaluation.json file in the current directory, where all evaluation results are stored
+    """
+Finally, you can use the trained/pre-fitted model to make predictions if you are happy with the evaluation results:
+
+.. code-block:: console
+
+    $ igel predict -dp 'path_to_your_test_dataset.csv'
+    """
+    This will generate a predictions.csv file in your current directory, where all predictions are stored in a csv file
+    """
+
 Overview
 ----------
 The main goal of igel is to provide you with a way to train/fit, evaluate and use models without writing code.
@@ -116,61 +190,6 @@ Here is an overview of all supported configurations (for now):
     target:
         - put the target you want to predict here
 
-
-
-Quick Start
-------------
-
-- First step is to provide a yaml file:
-
-.. code-block:: yaml
-
-        # model definition
-        model:
-            # in the type field, you can write the type of problem you want to solve. Whether regression or classification
-            # Then, provide the algorithm you want to use on the data. Here I'm using the random forest algorithm
-            type: classification
-            algorithm: random forest
-            arguments:
-                n_estimators: 100   # here, I set the number of estimators (or trees) to 100
-                max_depth: 30       # set the max_depth of the tree
-
-        # target you want to predict
-        # Here, as an example, I'm using the famous indians-diabetes dataset, where I want to predict whether someone have diabetes or not.
-        # Depending on your data, you need to provide the target(s) you want to predict here
-        target:
-            - sick
-
-In the example above, I'm using random forest to classify whether someone have
-diabetes or not depending on some features in the dataset
-I used this `indian-diabetes dataset <https://www.kaggle.com/uciml/pima-indians-diabetes-database>`_ )
-
-`
-- Run this command in Terminal, where you provide the **path to your dataset** and the **path to the yaml file**
-
-.. code-block:: console
-
-    $ igel fit --data_path 'path_to_your_csv_dataset.csv' --yaml_file 'path_to_your_yaml_file.yaml'
-
-    # or shorter
-
-    $ igel fit -dp 'path_to_your_csv_dataset.csv' -yml 'path_to_your_yaml_file.yaml'
-
-
-you can run this command to get instruction on how to use the model:
-
-.. code-block:: console
-
-    $ igel --help
-
-    # or just
-
-    $ igel -h
-
-
-That's it. Your "trained" model can be now found in the model_results folder
-(automatically created for you in your current working directory).
-Furthermore, a description can be found in the description.json file inside the model_results folder.
 
 E2E Example
 -----------
@@ -282,7 +301,8 @@ Examples
 ----------
 
 Check the examples folder, where you will find the indian-diabetes data and a yaml file example.
-You can clone the repo or just download the dataset then try running the example afterwards.
+You can download the yaml file example from the examples folder and try running
+the fit, evaluate or predict scripts.
 
 Contributions
 --------------
