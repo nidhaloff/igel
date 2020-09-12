@@ -12,8 +12,8 @@ igel
 
 |
 
-
-.. image:: https://img.shields.io/pypi/v/igel.svg
+.. image:: https://img.shields.io/pypi/v/igel?color=green&style=plastic
+        :alt: PyPI
         :target: https://pypi.python.org/pypi/igel
 
 .. image:: https://img.shields.io/travis/nidhaloff/igel.svg
