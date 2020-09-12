@@ -74,7 +74,7 @@ Installation
 
 .. code-block:: console
 
-    $ pip install igel
+    $ pip install -U igel
 
 - Check the docs for other ways to install igel from source
 
@@ -90,7 +90,8 @@ Here is an overview of all supported configurations (for now):
 
     # dataset operations
     dataset:
-
+        type: csv
+        read_data_options: default
         split:  # split options
             test_size: 0.2  # 0.2 means 20% for the test data, so 80% are automatically for training
             shuffle: True   # whether to shuffle the data before/while splitting
@@ -109,7 +110,7 @@ Here is an overview of all supported configurations (for now):
     model:
         type: classification    # type of the problem you want to solve. | possible values: [regression, classification]
         algorithm: random forest    # which algorithm you want to use. | type igel algorithms in the Terminal to know more
-
+        arguments: default          # model arguments: you can check the available arguments for each model by running igel help in your terminal
 
     # target you want to predict
     target:
@@ -130,6 +131,9 @@ Quick Start
             # Then, provide the algorithm you want to use on the data. Here I'm using the random forest algorithm
             type: classification
             algorithm: random forest
+            arguments:
+                n_estimators: 100   # here, I set the number of estimators (or trees) to 100
+                max_depth: 30       # set the max_depth of the tree
 
         # target you want to predict
         # Here, as an example, I'm using the famous indians-diabetes dataset, where I want to predict whether someone have diabetes or not.
@@ -233,13 +237,24 @@ check `this link <https://www.kaggle.com/uciml/pima-indians-diabetes-database>`_
             split:
                 test_size: 0.2
                 shuffle: True
-                stratify: None
-            preprocess:
-                missing_values: mean
+                stratify: default
+
+            preprocess: # preprocessing options
+                missing_values: mean    # other possible values: [drop, median, most_frequent, constant] check the docs for more
+                encoding:
+                    type: oneHotEncoding  # other possible values: [labelEncoding]
+                scale:  # scaling options
+                    method: standard    # standardization will scale values to have a 0 mean and 1 standard deviation  | you can also try minmax
+                    target: inputs  # scale inputs. | other possible values: [outputs, all] # if you choose all then all values in the dataset will be scaled
+
         # model definition
         model:
             type: classification
             algorithm: random forest
+            arguments:
+                # notice that this is the available args for the random forest model. check different available args for all supported models by running igel help
+                n_estimators: 100
+                max_depth: 20
 
         # target you want to predict
         target:
@@ -274,3 +289,8 @@ Contributions
 
 Contributions are always welcome.
 Make sure you read `the guidelines <https://igel.readthedocs.io/en/latest/contributing.html>`_ first
+
+License
+--------
+
+MIT license
