@@ -1,22 +1,24 @@
 """Console script for igel."""
 import sys
 import argparse
-from igel import IgelModel
+from igel import IgelModel, models_dict, metrics_dict
+import inspect
 
 
 class CLI(object):
     """CLI describes a command line interface for interacting with igel, there
-    are several different functions that can be performed. These functions are:
-
-    - fit - fits a model on the input file specified to it
-    - predict - Given a list of $hat{y}$ values, compute $d(\\hat{y}, y) under a
-      specified metric
+    are several different functions that can be performed.
 
     """
 
     available_args = {
+        # fit, evaluate and predict args:
         "dp": "data_path",
         "yml": "yaml_path",
+
+        # models arguments
+        "name": "model_name",
+        "type": "model_type"
     }
 
     def __init__(self):
@@ -29,6 +31,8 @@ class CLI(object):
                        fit                 fits a model
                        evaluate            evaluate the performance of a pre-fitted model
                        predict             Predicts using a pre-fitted model
+                       help                get help about how to use igel
+                       algorithms          get a list of supported machine learning algorithms
 
                     - Available arguments:
                         --data_path         Path to your dataset
@@ -92,29 +96,63 @@ class CLI(object):
         # use dispatch pattern to invoke method with same name
         return cmd
 
-    def fit(self):
+    def help(self, *args, **kwargs):
+        self.parser.print_help()
+
+    def fit(self, *args, **kwargs):
         IgelModel(self.cmd.command, **self.dict_args).fit()
 
-    def predict(self):
+    def predict(self, *args, **kwargs):
         IgelModel(self.cmd.command, **self.dict_args).predict()
 
-    def evaluate(self):
+    def evaluate(self, *args, **kwargs):
         IgelModel(self.cmd.command, **self.dict_args).evaluate()
 
-    def algorithms(self):
+    def print_models_overview(self):
         print(f"\n\n"
-              f"{'*'*60}  Supported machine learning algorithms  {'*'*60} \n\n"
+              f"{'*' * 60}  Supported machine learning algorithms  {'*' * 60} \n\n"
               f"1 - Regression algorithms: \n"
-              f"{'-'*50} \n"
-              f"{list(IgelModel.models_dict.get('regression').keys())} \n\n"
-              f"{'='*120} \n"
+              f"{'-' * 50} \n"
+              f"{list(models_dict.get('regression').keys())} \n\n"
+              f"{'=' * 120} \n"
               f"2 - Classification algorithms: \n"
-              f"{'-'*50} \n"
-              f"{list(IgelModel.models_dict.get('classification').keys())} \n"
+              f"{'-' * 50} \n"
+              f"{list(models_dict.get('classification').keys())} \n"
               f" \n")
 
-    def help(self):
-        self.parser.print_help()
+    def models(self):
+        if not self.dict_args:
+            self.print_models_overview()
+        else:
+            print("models args: ", self.dict_args)
+            model_name = self.dict_args.get('model_name', None)
+            model_type = self.dict_args.get('model_type', None)
+
+            if not model_name or not model_type:
+                print(f"Please enter a supported model")
+                self.print_models_overview()
+            else:
+                if model_type not in ('regression', 'classification'):
+                    raise Exception(f"{model_type} is not supported! \n"
+                                    f"model_type need to be regression or classification")
+
+                models: dict = models_dict.get(model_type)
+                model = models.get(model_name.replace('_', ' '))
+                print(f"model type: {model_type} | model_name: {model_name} | sklearn class: {model.__name__} \n"
+                      f"inspect: {inspect.getfullargspec(model.__init__)} \n"
+                      f"model: {model.__init__.__code__.co_varnames}")
+
+    def metrics(self):
+        print(f"\n\n"
+              f"{'*' * 60}  Supported metrics  {'*' * 60} \n\n"
+              f"1 - Regression metrics: \n"
+              f"{'-' * 50} \n"
+              f"{[ func.__name__ for func in metrics_dict.get('regression')]} \n\n"
+              f"{'=' * 120} \n"
+              f"2 - Classification metrics: \n"
+              f"{'-' * 50} \n"
+              f"{[ func.__name__ for func in metrics_dict.get('classification')]} \n"
+              f" \n")
 
 
 def main():

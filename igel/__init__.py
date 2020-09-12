@@ -1,5 +1,5 @@
 """Top-level package for igel."""
-from .igel import IgelModel
+from .igel import IgelModel, models_dict, metrics_dict
 
 
 __author__ = "Nidhal Baccouri"

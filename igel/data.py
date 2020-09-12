@@ -18,37 +18,56 @@ from sklearn.metrics import (mean_squared_error,
                              recall_score)
 from sklearn.utils.multiclass import type_of_target
 import logging
+
 logging.basicConfig(format='%(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 models_dict = {
     "regression": {
-        "linear regression": LinearRegression,
-        "decision tree": DecisionTreeRegressor,
-        "random forest": RandomForestRegressor,
-        "extra trees": ExtraTreesRegressor,
-        "svm": SVR,
-        "nearest neighbor": KNeighborsRegressor,
-        "neural network": MLPRegressor
+        "linear regression": {"class": LinearRegression,
+                              "link": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html"
+                              },
+
+        "decision tree": {"class": DecisionTreeRegressor,
+                          "link": "https://scikit-learn.org/stable/modules/generatedsklearn.tree.DecisionTreeRegressor.html?highlight=decision%20tree%20regressor#sklearn.tree.DecisionTreeRegressor"
+                          },
+        "random forest": {"class": RandomForestRegressor,
+                          "link": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html?highlight=random%20forest#sklearn.ensemble.RandomForestRegressor"},
+
+        "extra trees": {"class": ExtraTreesRegressor,
+                        "link": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.ExtraTreesRegressor.html?highlight=extra%20trees#sklearn.ensemble.ExtraTreesRegressor"},
+        "svm": {"class": SVR,
+                "link": "https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVR.html?highlight=svr#sklearn.svm.SVR"},
+        "nearest neighbor": {"class": KNeighborsRegressor,
+                             "link": "https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsRegressor.html?highlight=neighbor#sklearn.neighbors.KNeighborsRegressor"},
+        "neural network": {"class": MLPRegressor,
+                           "link": "https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPRegressor.html?highlight=mlp#sklearn.neural_network.MLPRegressor"}
     },
     "classification": {
-        "logistic regression": LogisticRegression,
-        "decision tree": DecisionTreeClassifier,
-        "random forest": RandomForestClassifier,
-        "extra trees": ExtraTreesClassifier,
-        "svm": SVC,
-        "nearest neighbor": KNeighborsClassifier,
-        "neural network": MLPClassifier
+        "logistic regression": {"class": LogisticRegression,
+                                "link": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html?highlight=regression#sklearn.linear_model.LogisticRegression"},
+        "decision tree": {"class": DecisionTreeClassifier,
+                          "link": "https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeClassifier.html?highlight=decision%20tree#sklearn.tree.DecisionTreeClassifier"},
+        "random forest": {"class": RandomForestClassifier,
+                          "link": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html?highlight=random%20forest#sklearn.ensemble.RandomForestClassifier"},
+        "extra trees": {"class": ExtraTreesClassifier,
+                        "link": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.ExtraTreesClassifier.html?highlight=extra%20trees#sklearn.ensemble.ExtraTreesClassifier"},
+        "svm": {"class": SVC,
+                "link": "https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html?highlight=svc#sklearn.svm.SVC"},
+        "nearest neighbor": {"class": KNeighborsClassifier,
+                             "link": "https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html?highlight=neighbor#sklearn.neighbors.KNeighborsClassifier"},
+        "neural network": {"class": MLPClassifier,
+                           "link": "https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPClassifier.html?highlight=mlp#sklearn.neural_network.MLPClassifier"}
     }
 
 }
 
 metrics_dict = {
     "regression": (
-                    mean_squared_error, mean_absolute_error, mean_squared_log_error, median_absolute_error, r2_score
-     ),
+        mean_squared_error, mean_absolute_error, mean_squared_log_error, median_absolute_error, r2_score
+    ),
     "classification": (
-                    accuracy_score, f1_score, precision_score, recall_score
+        accuracy_score, f1_score, precision_score, recall_score
     )
 }
 
@@ -83,5 +102,4 @@ def evaluate_model(model_type, y_pred, y_true, **kwargs):
 
 
 if __name__ == '__main__':
-
     print(LinearRegression().fit.__code__.co_varnames)
