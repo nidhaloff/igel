@@ -1,6 +1,7 @@
 # dataset operations
 dataset:
-
+    type: csv
+    separator: ,
     split:  # split options
         test_size: 0.2  # 0.2 means 20% for the test data, so 80% are automatically for training
         shuffle: True   # whether to shuffle the data before/while splitting
@@ -19,6 +20,9 @@ dataset:
 model:
     type: classification
     algorithm: random forest
+    arguments:
+        n_estimators: 100
+        max_depth: 30
 
 
 # target you want to predict

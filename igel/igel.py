@@ -73,13 +73,14 @@ class IgelModel(object):
                 self.target: list = dic.get("target")  # target to predict as a list
                 self.model_type: str = dic.get("type")  # type of the model -> regression or classification
 
-    def _create_model(self):
+    def _create_model(self, *args, **kwargs):
         """
         fetch a model depending on the provided type and algorithm by the user and return it
         @return: class of the chosen model
         """
         model_type = self.model_props.get('type')
         model_algorithm = self.model_props.get('algorithm')
+        model_args = None
         if not model_type or not model_algorithm:
             raise Exception(f"model_type and algorithm cannot be None")
         algorithms = models_dict.get(model_type)  # extract all algorithms as a dictionary
@@ -88,7 +89,16 @@ class IgelModel(object):
         if not model:
             raise Exception("Model not found in the algorithms list")
         else:
-            return model
+            model_props_args = self.model_props.get('arguments', None)
+            if model_props_args and type(model_props_args) == dict:
+                model_args = model_props_args
+            elif not model_props_args or model_props_args.lower() == "none":
+                model_args = None
+
+            model_class = model.get('class')
+            logger.info(f"model arguments: {self.model_props.get('arguments')}")
+            model = model_class(**kwargs) if not model_args else model_class(**model_args)
+            return model, model_args
 
     def _save_model(self, model):
         """
@@ -101,7 +111,7 @@ class IgelModel(object):
                 os.mkdir(self.results_path)
             else:
                 logger.info(f"Folder {self.results_path} already exists")
-                logger.warning(f"data in the {self.results_path} folder will be overridden. If you don't"
+                logger.warning(f"data in the {self.results_path} folder will be overridden. If you don't "
                                f"want this, then move the current {self.results_path} to another path")
 
         except OSError:
@@ -168,7 +178,6 @@ class IgelModel(object):
                                                     strategy=strategy)
                     logger.info(f"shape of the dataset after handling missing values => {dataset.shape}")
 
-
             if any(col not in attributes for col in self.target):
                 raise Exception("chosen target(s) to predict must exist in the dataset")
 
@@ -227,12 +236,10 @@ class IgelModel(object):
         @return: None
         """
         x_train, y_train, x_test, y_test = self._prepare_fit_data()
-        model_class = self._create_model()
-        self.model = model_class(**kwargs)
+        self.model, model_args = self._create_model(**kwargs)
         logger.info(f"executing a {self.model.__class__.__name__} algorithm ..")
 
         self.model.fit(x_train, y_train)
-
         saved = self._save_model(self.model)
         if saved:
             logger.info(f"model saved successfully and can be found in the {self.results_path} folder")
@@ -243,8 +250,10 @@ class IgelModel(object):
                                       **kwargs)
         fit_description = {
             "model": self.model.__class__.__name__,
+            "arguments": model_args if model_args else "default",
             "type": self.model_props['type'],
             "algorithm": self.model_props['algorithm'],
+
             "data path": self.data_path,
             "train data shape": x_train.shape,
             "test data shape": x_test.shape,
@@ -308,8 +317,8 @@ class IgelModel(object):
 
 
 if __name__ == '__main__':
-    mock_params = {'data_path': '/home/nidhal/my_projects/igel/examples/data/Iris.csv',  # '/home/nidhal/my_projects/igel/examples/data/indians-diabetes.csv',
-                   'yaml_path': '/home/nidhal/my_projects/igel/examples/iris_example.yaml'}
+    mock_params = {'data_path': '/home/nidhal/my_projects/igel/examples/data/indians-diabetes.csv',
+                   'yaml_path': '/home/nidhal/my_projects/igel/examples/model.yaml'}
     reg = IgelModel('fit', **mock_params)
     reg.fit()
     # reg.predict()

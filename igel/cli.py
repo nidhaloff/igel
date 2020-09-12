@@ -3,6 +3,7 @@ import sys
 import argparse
 from igel import IgelModel, models_dict, metrics_dict
 import inspect
+import pdb
 
 
 class CLI(object):
@@ -32,15 +33,40 @@ class CLI(object):
                        evaluate            evaluate the performance of a pre-fitted model
                        predict             Predicts using a pre-fitted model
                        help                get help about how to use igel
-                       algorithms          get a list of supported machine learning algorithms
+                       models              get a list of supported machine learning algorithms/models
+                       metrics             get a list of all supported metrics
 
                     - Available arguments:
+
+                        # for usage with the fit/train, evaluate or predict command:
                         --data_path         Path to your dataset
                         --yaml_file         Path to your yaml file
+
+                        # for getting help with the models command:
+                        --model_type        type of the model you want to get help on -> whether regression or classification
+                        --model_name        name of the model you want to get help on
                         ------------------------------------------
-                        or for a short version
-                        -dp                 Path to your dataset
-                        -yml                Path to your yaml file
+
+                        or for the short version
+                        # for usage with the fit/train, evaluate or predict command:
+                        -dp         Path to your dataset
+                        -yml        Path to your yaml file
+
+                        # for getting help with the models command:
+                        -type        type of the model you want to get help on -> whether regression or classification
+                        -name        name of the model you want to get help on
+                        ------------------------------------------
+
+                    - Quick Start:
+                    igel models                                                # type this to get a list of supported models
+                    igel models -type regression -name random_forest           # this will give you a help on how to use the RandomForestRegressor and will provide
+                                                                                 you a link to get more help in the sklearn website
+                    igel metrics                                               # get a list of all supported metrics
+                    igel -h                                                    # print this help guide
+                    igel fit -dp "path_to_data" -yml "path_to_yaml_file"       # fit a model
+                    igel evaluate -dp "path_to_data"                            # evaluate the trained/pre-fitted model
+                    igel predict -dp "path_to_data"                            # make predictions using the trained/pre-fitted model
+
 ''')
 
         self.parser.add_argument('command', help='Subcommand to run')
@@ -109,7 +135,7 @@ class CLI(object):
         IgelModel(self.cmd.command, **self.dict_args).evaluate()
 
     def print_models_overview(self):
-        print(f"\n\n"
+        print(f"\n"
               f"{'*' * 60}  Supported machine learning algorithms  {'*' * 60} \n\n"
               f"1 - Regression algorithms: \n"
               f"{'-' * 50} \n"
@@ -121,28 +147,45 @@ class CLI(object):
               f" \n")
 
     def models(self):
+        """
+        show an overview of all models supported by igel
+        """
         if not self.dict_args:
             self.print_models_overview()
         else:
-            print("models args: ", self.dict_args)
             model_name = self.dict_args.get('model_name', None)
             model_type = self.dict_args.get('model_type', None)
 
-            if not model_name or not model_type:
+            if not model_name:
                 print(f"Please enter a supported model")
                 self.print_models_overview()
             else:
+                if not model_type:
+                    print(f"Please enter a type argument to get help on the chosen model\n"
+                          f"type can be whether regression or classification \n")
+                    self.print_models_overview()
+                    return
                 if model_type not in ('regression', 'classification'):
                     raise Exception(f"{model_type} is not supported! \n"
                                     f"model_type need to be regression or classification")
 
-                models: dict = models_dict.get(model_type)
-                model = models.get(model_name.replace('_', ' '))
-                print(f"model type: {model_type} | model_name: {model_name} | sklearn class: {model.__name__} \n"
-                      f"inspect: {inspect.getfullargspec(model.__init__)} \n"
-                      f"model: {model.__init__.__code__.co_varnames}")
+                models = models_dict.get(model_type)
+                model_data = models.get(model_name.replace('_', ' '))
+                model, link = model_data.values()
+                print(f"model type: {model_type} \n"
+                      f"model name: {model_name} \n"
+                      f"sklearn model class: {model.__name__} \n"
+
+                      f"{'-'*60}\n"
+                      f"You can click the link below to know more about the optional arguments "
+                      f"that you can use with your chosen model ({model_name}).\n"
+                      f"You can provide these optional arguments in the yaml file if you want to use them\n"
+                      f"link: {link} \n")
 
     def metrics(self):
+        """
+        show an overview of all metrics supported by igel
+        """
         print(f"\n\n"
               f"{'*' * 60}  Supported metrics  {'*' * 60} \n\n"
               f"1 - Regression metrics: \n"

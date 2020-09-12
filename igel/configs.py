@@ -19,18 +19,23 @@ configs = {
     "prediction_file": res_path / predictions_file,
 
     "dataset_props": {
+        "type": "csv",
+        "separator": ",",
         "split": {
             "test_size": 0,
-            "shuffle": False
+            "shuffle": False,
+            "stratify": None
         },
         "preprocess": {
-            "missing_values": "mean"
-        },
+            "missing_values": "mean",
+            "encoding": None,
+            "scale": None,
+        }
 
-        "normalize": False
     },
     "model_props": {
         "type": "regression",
-        "algorithm": "linear regression"
+        "algorithm": "linear regression",
+        "arguments": None
     }
 }
