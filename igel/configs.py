@@ -36,6 +36,6 @@ configs = {
     "model_props": {
         "type": "regression",
         "algorithm": "linear regression",
-        "arguments": None
+        "arguments": "default"
     }
 }

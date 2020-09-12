@@ -105,6 +105,7 @@ class CLI(object):
 
         dict_args = {self.args[i].replace('-', ''): self.args[i + 1] for i in range(0, len(self.args) - 1, 2)}
         dict_args = self.validate_args(dict_args)
+        dict_args['cmd'] = self.cmd.command
         return dict_args
 
     def parse_command(self):
@@ -126,13 +127,13 @@ class CLI(object):
         self.parser.print_help()
 
     def fit(self, *args, **kwargs):
-        IgelModel(self.cmd.command, **self.dict_args).fit()
+        IgelModel(**self.dict_args).fit()
 
     def predict(self, *args, **kwargs):
-        IgelModel(self.cmd.command, **self.dict_args).predict()
+        IgelModel(**self.dict_args).predict()
 
     def evaluate(self, *args, **kwargs):
-        IgelModel(self.cmd.command, **self.dict_args).evaluate()
+        IgelModel(**self.dict_args).evaluate()
 
     def print_models_overview(self):
         print(f"\n"

@@ -43,12 +43,16 @@ class IgelModel(object):
     default_model_props = configs.get('models_props')  # model props that can be changed from the yaml file
     model = None
 
-    def __init__(self, command: str, **cli_args):
+    def __init__(self, **cli_args):
         logger.info(f"Entered CLI args:         {cli_args}")
-        logger.info(f"Chosen command:           {command}")
+        logger.info(f"Chosen command:           {cli_args.get('cmd')}")
         self.data_path: str = cli_args.get('data_path')  # path to the dataset
+        self.command = cli_args.get('cmd', None)
 
-        if command == "fit":
+        if not self.command:
+            raise Exception(f"You must enter a valid command")
+
+        if self.command == "fit":
             self.yml_path = cli_args.get('yaml_path')
             self.yaml_configs = read_yaml(self.yml_path)
             logger.info(f"your chosen configuration: {self.yaml_configs}")
@@ -72,6 +76,7 @@ class IgelModel(object):
                 dic = json.load(f)
                 self.target: list = dic.get("target")  # target to predict as a list
                 self.model_type: str = dic.get("type")  # type of the model -> regression or classification
+                self.dataset_props = dic.get('dataset_props')
 
     def _create_model(self, *args, **kwargs):
         """
@@ -92,7 +97,7 @@ class IgelModel(object):
             model_props_args = self.model_props.get('arguments', None)
             if model_props_args and type(model_props_args) == dict:
                 model_args = model_props_args
-            elif not model_props_args or model_props_args.lower() == "none":
+            elif not model_props_args or model_props_args.lower() == "default":
                 model_args = None
 
             model_class = model.get('class')
@@ -211,7 +216,7 @@ class IgelModel(object):
                                                                 y,
                                                                 test_size=test_size,
                                                                 shuffle=shuffle,
-                                                                stratify=None if not stratify or stratify.lower() == "none" else stratify)
+                                                                stratify=None if not stratify or stratify.lower() == "default" else stratify)
             return x_train, y_train, x_test, y_test
 
         except Exception as e:
@@ -253,16 +258,17 @@ class IgelModel(object):
             "arguments": model_args if model_args else "default",
             "type": self.model_props['type'],
             "algorithm": self.model_props['algorithm'],
-
-            "data path": self.data_path,
-            "train data shape": x_train.shape,
-            "test data shape": x_test.shape,
-            "train data size": x_train.shape[0],
-            "test data size": x_test.shape[0],
-            "results path": str(self.results_path),
-            "model path": str(self.default_model_path),
+            "dataset_props": self.dataset_props,
+            "model_props": self.model_props,
+            "data_path": self.data_path,
+            "train_data_shape": x_train.shape,
+            "test_data_shape": x_test.shape,
+            "train_data_size": x_train.shape[0],
+            "test_data_size": x_test.shape[0],
+            "results_path": str(self.results_path),
+            "model_path": str(self.default_model_path),
             "target": self.target,
-            "results on test data": eval_results
+            "results_on_test_data": eval_results
         }
 
         try:
@@ -317,8 +323,14 @@ class IgelModel(object):
 
 
 if __name__ == '__main__':
-    mock_params = {'data_path': '/home/nidhal/my_projects/igel/examples/data/indians-diabetes.csv',
-                   'yaml_path': '/home/nidhal/my_projects/igel/examples/model.yaml'}
-    reg = IgelModel('fit', **mock_params)
-    reg.fit()
-    # reg.predict()
+    mock_fit_params = {'data_path': '/home/nidhal/my_projects/igel/examples/data/indians-diabetes.csv',
+                       'yaml_path': '/home/nidhal/my_projects/igel/examples/model.yaml',
+                       'cmd': 'fit'}
+    mock_eval_params = {'data_path': '/home/nidhal/my_projects/igel/examples/data/indians-diabetes.csv',
+                        'cmd': 'evaluate'}
+    mock_pred_params = {'data_path': '/home/nidhal/my_projects/igel/examples/data/test-indians-diabetes.csv',
+                        'cmd': 'predict'}
+
+    IgelModel(**mock_fit_params).fit()
+    # IgelModel(**mock_eval_params).evaluate()
+    # IgelModel(**mock_pred_params).predict()
