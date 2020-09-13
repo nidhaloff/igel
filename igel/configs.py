@@ -19,10 +19,19 @@ configs = {
     "prediction_file": res_path / predictions_file,
 
     "dataset_props": {
+        "type": "csv"
+    },
+    "model_props": {
+        "type": "regression",
+        "algorithm": "linear regression",
+        "arguments": "default"
+    },
+
+    "available_dataset_props": {
         "type": "csv",
         "separator": ",",
         "split": {
-            "test_size": 0,
+            "test_size": None,
             "shuffle": False,
             "stratify": None
         },
@@ -33,7 +42,7 @@ configs = {
         }
 
     },
-    "model_props": {
+    "available_model_props": {
         "type": "regression",
         "algorithm": "linear regression",
         "arguments": "default"

@@ -20,7 +20,9 @@ dataset:
 model:
     type: classification
     algorithm: random forest
-    arguments: default
+    arguments:
+        n_estimators: 100
+        max_depth: 30
 
 
 # target you want to predict

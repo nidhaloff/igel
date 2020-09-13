@@ -39,14 +39,20 @@ def encode(df, encoding_type="onehotencoding", column=None):
 
     if encoding_type == "onehotencoding":
         logger.info(f"performing a one hot encoding ...")
-        return pd.get_dummies(df)
+        return pd.get_dummies(df), None
 
     elif encoding_type == "labelencoding":
+        if not column:
+            raise Exception("if you choose to label encode your data, "
+                            "then you need to provide the column you want to encode from your dataset")
         logger.info(f"performing a label encoding ...")
         encoder = LabelEncoder()
         encoder.fit(df[column])
+        classes_map = {cls: int(lbl) for (cls, lbl) in zip(encoder.classes_, encoder.transform(encoder.classes_))}
+        logger.info(f"label encoding classes => {encoder.classes_}")
+        logger.info(f"classes map => {classes_map}")
         df[column] = encoder.transform(df[column])
-        return df
+        return df, classes_map
 
     else:
         raise Exception(f"encoding type should be -> oneHotEncoding or labelEncoding")

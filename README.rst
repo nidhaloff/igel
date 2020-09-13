@@ -305,9 +305,18 @@ For production
 Examples
 ----------
 
-Check the examples folder, where you will find the indian-diabetes data and a yaml file example.
-You can download the yaml file example from the examples folder and try running
-the fit, evaluate or predict scripts.
+In the examples folder in the repository, you will find a data folder,where the famous indian-diabetes and iris dataset
+are stored. Furthermore, there are end to end examples inside each folder, where there are scripts and yaml files that
+will help you get started.
+
+The iris-example folder contains a straightforward logistic regression example to help you get started.
+
+The indian-diabetes-example folder contains two examples:
+- The first example is using a neural network, where the configurations are stored in the neural-network.yaml file
+- The second example is using a random forest, where the configurations are stored in the random-forest.yaml file
+
+You can try executing the fit.py, evaluate.py and predict.py scripts using the neural-network.yaml or random-forest.yaml
+and check the performance or play with the yaml files and see what happens.
 
 Contributions
 --------------

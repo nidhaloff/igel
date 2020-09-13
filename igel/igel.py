@@ -6,6 +6,7 @@ import os
 import json
 import warnings
 import logging
+import numpy as np
 
 try:
     from igel.utils import read_yaml, extract_params, _reshape
@@ -13,7 +14,7 @@ try:
     from igel.configs import configs
     from igel.data import models_dict, metrics_dict
     from igel.preprocessing import update_dataset_props
-    from igel.preprocessing import handle_missing_values
+    from igel.preprocessing import handle_missing_values, encode, normalize
 except ImportError:
     from utils import read_yaml, extract_params, _reshape
     from data import evaluate_model
@@ -145,12 +146,12 @@ class IgelModel(object):
             logger.error(f"File not found in {self.default_model_path} ")
 
     def _prepare_fit_data(self):
-        return self._process_data(fit=True)
+        return self._process_data(target='fit')
 
-    def _prepare_val_data(self):
-        return self._process_data(fit=False)
+    def _prepare_eval_data(self):
+        return self._process_data(target='evaluate')
 
-    def _process_data(self, fit=True):
+    def _process_data(self, target='fit'):
         """
         read and return data as x and y
         @return: list of separate x and y
@@ -171,10 +172,14 @@ class IgelModel(object):
                 if encoding:
                     encoding_type = encoding.get('type', None)
                     column = encoding.get('column', None)
-                    dataset = encode(df=dataset,
-                                     encoding_type=encoding_type.lower(),
-                                     column=column)
-                    logger.info(f"shape of the dataset after encoding => {dataset.shape}")
+                    if column in attributes:
+                        dataset, classes_map = encode(df=dataset,
+                                                      encoding_type=encoding_type.lower(),
+                                                      column=column)
+                        if classes_map:
+                            self.dataset_props['label_encoding_classes'] = classes_map
+                            logger.info(f"adding classes_map to dataset props: \n{classes_map}")
+                        logger.info(f"shape of the dataset after encoding => {dataset.shape}")
 
                 # preprocessing strategy: mean, median, mode etc..
                 strategy = preprocess_props.get('missing_values')
@@ -182,6 +187,15 @@ class IgelModel(object):
                     dataset = handle_missing_values(dataset,
                                                     strategy=strategy)
                     logger.info(f"shape of the dataset after handling missing values => {dataset.shape}")
+
+            if target == 'predict':
+                x = _reshape(dataset.to_numpy())
+                scaling_props = preprocess_props.get('scale', None)
+                if not scaling_props:
+                    return x
+                else:
+                    scaling_method = scaling_props.get('method', None)
+                    return normalize(x, method=scaling_method)
 
             if any(col not in attributes for col in self.target):
                 raise Exception("chosen target(s) to predict must exist in the dataset")
@@ -205,10 +219,12 @@ class IgelModel(object):
                     elif scaling_target == 'outputs':
                         y = normalize(y, method=scaling_method)
 
-            if not fit:
+            if target == 'evaluate':
                 return x, y
 
-            split_options = self.dataset_props.get('split')
+            split_options = self.dataset_props.get('split', None)
+            if not split_options:
+                return x, y, None, None
             test_size = split_options.get('test_size')
             shuffle = split_options.get('shuffle')
             stratify = split_options.get('stratify')
@@ -227,13 +243,14 @@ class IgelModel(object):
         read and return x_pred
         @return: x_pred
         """
-        try:
-            x_val = pd.read_csv(self.data_path)
-            logger.info(f"shape of the prediction data: {x_val.shape}")
-
-            return _reshape(x_val)
-        except Exception as e:
-            logger.exception(f"exception while preparing prediction data: {e}")
+        return self._process_data(target='predict')
+        # try:
+        #     x_val = pd.read_csv(self.data_path)
+        #     logger.info(f"shape of the prediction data: {x_val.shape}")
+        #
+        #     return _reshape(x_val)
+        # except Exception as e:
+        #     logger.exception(f"exception while preparing prediction data: {e}")
 
     def fit(self, **kwargs):
         """
@@ -248,11 +265,17 @@ class IgelModel(object):
         saved = self._save_model(self.model)
         if saved:
             logger.info(f"model saved successfully and can be found in the {self.results_path} folder")
-        test_predictions = self.model.predict(x_test)
-        eval_results = evaluate_model(model_type=self.model_type,
-                                      y_pred=test_predictions,
-                                      y_true=y_test,
-                                      **kwargs)
+
+        eval_results = None
+        logger.info(f"type of x_test : {type(x_test)}")
+        if x_test is None:
+            logger.info(f"no split options was provided.")
+        else:
+            test_predictions = self.model.predict(x_test)
+            eval_results = evaluate_model(model_type=self.model_type,
+                                          y_pred=test_predictions,
+                                          y_true=y_test,
+                                          **kwargs)
         fit_description = {
             "model": self.model.__class__.__name__,
             "arguments": model_args if model_args else "default",
@@ -262,9 +285,9 @@ class IgelModel(object):
             "model_props": self.model_props,
             "data_path": self.data_path,
             "train_data_shape": x_train.shape,
-            "test_data_shape": x_test.shape,
+            "test_data_shape": None if x_test is None else x_test.shape,
             "train_data_size": x_train.shape[0],
-            "test_data_size": x_test.shape[0],
+            "test_data_size": None if x_test is None else x_test.shape[0],
             "results_path": str(self.results_path),
             "model_path": str(self.default_model_path),
             "target": self.target,
@@ -285,7 +308,7 @@ class IgelModel(object):
         """
         try:
             model = self._load_model()
-            x_val, y_true = self._prepare_val_data()
+            x_val, y_true = self._prepare_eval_data()
             y_pred = model.predict(x_val)
             eval_results = evaluate_model(model_type=self.model_type,
                                           y_pred=y_pred,
@@ -324,7 +347,7 @@ class IgelModel(object):
 
 if __name__ == '__main__':
     mock_fit_params = {'data_path': '/home/nidhal/my_projects/igel/examples/data/indians-diabetes.csv',
-                       'yaml_path': '/home/nidhal/my_projects/igel/examples/model.yaml',
+                       'yaml_path': '/home/nidhal/my_projects/igel/examples/random-forest.yaml',
                        'cmd': 'fit'}
     mock_eval_params = {'data_path': '/home/nidhal/my_projects/igel/examples/data/indians-diabetes.csv',
                         'cmd': 'evaluate'}
