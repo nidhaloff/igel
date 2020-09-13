@@ -157,6 +157,24 @@ Finally, you can use the trained/pre-fitted model to make predictions if you are
     This will generate a predictions.csv file in your current directory, where all predictions are stored in a csv file
     """
 
+- Alternatively, you can also write code if you want to:
+
+..  code-block:: python
+
+    from igel import IgelModel
+
+    # provide the arguments in a dictionary
+    params = {
+            'cmd': 'fit',    # provide the command you want to use. whether fit, evaluate or predict
+            'data_path': 'path_to_your_dataset',
+            'yaml_path': 'path_to_your_yaml_file'
+    }
+
+    IgelModel(**params).fit()
+    """
+    check the examples folder for more
+    """
+
 Overview
 ----------
 The main goal of igel is to provide you with a way to train/fit, evaluate and use models without writing code.
@@ -317,6 +335,7 @@ The indian-diabetes-example folder contains two examples:
 
 You can try executing the fit.py, evaluate.py and predict.py scripts using the neural-network.yaml or random-forest.yaml
 and check the performance or play with the yaml files and see what happens.
+
 
 Contributions
 --------------
