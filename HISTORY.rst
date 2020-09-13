@@ -2,6 +2,10 @@
 History
 =======
 
+0.1.8 (2020-09-13)
+------------------
+* fixed predict function bugs and added examples
+
 0.1.7 (2020-09-12)
 ------------------
 * implemented optional arguments in sklearn models
