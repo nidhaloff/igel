@@ -90,11 +90,14 @@ you can run this command to get instruction on how to use the model:
 
 .. code-block:: console
 
-    $ igel --help
+    $ igel help
 
     # or just
 
     $ igel -h
+    """
+    Take some time and read the output of help command. You ll save time later if you understand how to use igel.
+    """
 
 First step is to provide a yaml file:
 
