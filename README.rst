@@ -147,6 +147,7 @@ You can then evaluate the trained/pre-fitted model:
     """
     This will automatically generate an evaluation.json file in the current directory, where all evaluation results are stored
     """
+
 Finally, you can use the trained/pre-fitted model to make predictions if you are happy with the evaluation results:
 
 .. code-block:: console
