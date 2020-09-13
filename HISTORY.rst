@@ -6,6 +6,7 @@ History
 ------------------
 * implemented optional arguments in sklearn models
 
+
 0.1.5 (2020-09-10)
 ------------------
 * implemented encoding and scaling methods

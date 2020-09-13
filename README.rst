@@ -33,10 +33,13 @@ igel
         :alt: PyPI - Wheel
         :target: https://pypi.python.org/pypi/igel
 
+.. image:: https://img.shields.io/pypi/status/igel
+        :alt: PyPI - Status
+        :target: https://pypi.python.org/pypi/igel
+
 .. image:: https://img.shields.io/twitter/url?url=https%3A%2F%2Ftwitter.com%2FNidhalBaccouri
         :alt: Twitter URL
         :target: https://twitter.com/NidhalBaccouri
-
 
 |
 |
