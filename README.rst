@@ -209,7 +209,7 @@ Here is an overview of all supported configurations (for now):
     # model definition
     model:
         type: classification    # type of the problem you want to solve. | possible values: [regression, classification]
-        algorithm: random forest    # which algorithm you want to use. | type igel algorithms in the Terminal to know more
+        algorithm: neural network    # which algorithm you want to use. | type igel algorithms in the Terminal to know more
         arguments: default          # model arguments: you can check the available arguments for each model by running igel help in your terminal
 
     # target you want to predict
@@ -326,18 +326,23 @@ For production
 Examples
 ----------
 
-In the examples folder in the repository, you will find a data folder,where the famous indian-diabetes and iris dataset
-are stored. Furthermore, there are end to end examples inside each folder, where there are scripts and yaml files that
+In the examples folder in the repository, you will find a data folder,where the famous indian-diabetes, iris dataset
+and the linnerud (from sklearn) datasets are stored.
+Furthermore, there are end to end examples inside each folder, where there are scripts and yaml files that
 will help you get started.
 
-The iris-example folder contains a straightforward logistic regression example to help you get started.
 
-The indian-diabetes-example folder contains two examples:
-- The first example is using a neural network, where the configurations are stored in the neural-network.yaml file
-- The second example is using a random forest, where the configurations are stored in the random-forest.yaml file
+The indian-diabetes-example folder contains two examples to help you get started:
+- The first example is using a **neural network**, where the configurations are stored in the neural-network.yaml file
+- The second example is using a **random forest**, where the configurations are stored in the random-forest.yaml file
 
-You can try executing the fit.py, evaluate.py and predict.py scripts using the neural-network.yaml or random-forest.yaml
-and check the performance or play with the yaml files and see what happens.
+The iris-example folder contains a **logistic regression** example, where some preprocessing (one hot encoding)
+is conducted on the target column to show you more the capabilities of igel.
+
+Finally, the multioutput-example contains a **multioutput regression** example.
+
+I suggest you play around with the examples and igel cli. However,
+you can also directly execute the fit.py, evaluate.py and predict.py if you want to.
 
 
 Contributions

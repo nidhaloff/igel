@@ -45,18 +45,18 @@ class IgelModel(object):
     model = None
 
     def __init__(self, **cli_args):
-        logger.info(f"Entered CLI args:         {cli_args}")
-        logger.info(f"Chosen command:           {cli_args.get('cmd')}")
+        logger.debug(f"Entered CLI args: {cli_args}")
+        logger.info(f"Executing command: {cli_args.get('cmd')} ...")
         self.data_path: str = cli_args.get('data_path')  # path to the dataset
+        logger.info(f"reading data from {self.data_path}")
         self.command = cli_args.get('cmd', None)
-
         if not self.command:
             raise Exception(f"You must enter a valid command")
 
         if self.command == "fit":
             self.yml_path = cli_args.get('yaml_path')
             self.yaml_configs = read_yaml(self.yml_path)
-            logger.info(f"your chosen configuration: {self.yaml_configs}")
+            logger.debug(f"your chosen configuration: {self.yaml_configs}")
 
             # dataset options given by the user
             self.dataset_props: dict = self.yaml_configs.get('dataset', self.default_dataset_props)
@@ -65,31 +65,33 @@ class IgelModel(object):
             # list of target(s) to predict
             self.target: list = self.yaml_configs.get('target')
 
-            self.model_type = self.model_props.get('type')
+            self.model_type: str = self.model_props.get('type')
             logger.info(f"dataset_props: {self.dataset_props} \n"
                         f"model_props: {self.model_props} \n "
                         f"target: {self.target} \n")
 
+        # if entered command is evaluate or predict, then the pre-fitted model needs to be loaded and used
         else:
             self.model_path = cli_args.get('model_path', self.default_model_path)
             logger.info(f"path of the pre-fitted model => {self.model_path}")
+            # load description file to read stored training parameters
             with open(self.description_file, 'r') as f:
                 dic = json.load(f)
                 self.target: list = dic.get("target")  # target to predict as a list
                 self.model_type: str = dic.get("type")  # type of the model -> regression or classification
-                self.dataset_props = dic.get('dataset_props')
+                self.dataset_props: dict = dic.get('dataset_props')  # dataset props entered while fitting
 
     def _create_model(self, **kwargs):
         """
         fetch a model depending on the provided type and algorithm by the user and return it
         @return: class of the chosen model
         """
-        model_type = self.model_props.get('type')
-        model_algorithm = self.model_props.get('algorithm')
+        model_type: str = self.model_props.get('type')
+        model_algorithm: str = self.model_props.get('algorithm')
         model_args = None
         if not model_type or not model_algorithm:
             raise Exception(f"model_type and algorithm cannot be None")
-        algorithms = models_dict.get(model_type)  # extract all algorithms as a dictionary
+        algorithms: dict = models_dict.get(model_type)  # extract all algorithms as a dictionary
         model = algorithms.get(model_algorithm)  # extract model class depending on the algorithm
         logger.info(f"Solving a {model_type} problem using ===> {model_algorithm}")
         if not model:
@@ -102,7 +104,8 @@ class IgelModel(object):
                 model_args = None
 
             model_class = model.get('class')
-            logger.info(f"model arguments: {self.model_props.get('arguments')}")
+            logger.info(f"model arguments: \n"
+                        f"{self.model_props.get('arguments')}")
             model = model_class(**kwargs) if not model_args else model_class(**model_args)
             return model, model_args
 
@@ -114,6 +117,8 @@ class IgelModel(object):
         """
         try:
             if not os.path.exists(self.results_path):
+                logger.info(f"creating model_results folder to save results...\n"
+                            f"path of the results folder: {self.results_path}")
                 os.mkdir(self.results_path)
             else:
                 logger.info(f"Folder {self.results_path} already exists")
@@ -230,11 +235,13 @@ class IgelModel(object):
             test_size = split_options.get('test_size')
             shuffle = split_options.get('shuffle')
             stratify = split_options.get('stratify')
-            x_train, x_test, y_train, y_test = train_test_split(x,
-                                                                y,
-                                                                test_size=test_size,
-                                                                shuffle=shuffle,
-                                                                stratify=None if not stratify or stratify.lower() == "default" else stratify)
+            x_train, x_test, y_train, y_test = train_test_split(
+                x,
+                y,
+                test_size=test_size,
+                shuffle=shuffle,
+                stratify=None if not stratify or stratify.lower() == "default" else stratify)
+
             return x_train, y_train, x_test, y_test
 
         except Exception as e:
@@ -242,17 +249,9 @@ class IgelModel(object):
 
     def _prepare_predict_data(self):
         """
-        read and return x_pred
-        @return: x_pred
+        preprocess predict data to get similar data to the one used when training the model
         """
         return self._process_data(target='predict')
-        # try:
-        #     x_val = pd.read_csv(self.data_path)
-        #     logger.info(f"shape of the prediction data: {x_val.shape}")
-        #
-        #     return _reshape(x_val)
-        # except Exception as e:
-        #     logger.exception(f"exception while preparing prediction data: {e}")
 
     def fit(self, **kwargs):
         """
@@ -261,9 +260,12 @@ class IgelModel(object):
         """
         x_train, y_train, x_test, y_test = self._prepare_fit_data()
         self.model, model_args = self._create_model(**kwargs)
-        logger.info(f"executing a {self.model.__class__.__name__} algorithm ..")
+        logger.info(f"executing a {self.model.__class__.__name__} algorithm...")
+
         # convert to multioutput if there is more than one target to predict:
         if len(self.target) > 1:
+            logger.info(f"predicting multiple targets detected. Hence, the model will be automatically "
+                        f"converted to a multioutput model")
             self.model = MultiOutputClassifier(self.model) \
                 if self.model_type == 'classification' else MultiOutputRegressor(self.model)
         self.model.fit(x_train, y_train)
@@ -272,10 +274,11 @@ class IgelModel(object):
             logger.info(f"model saved successfully and can be found in the {self.results_path} folder")
 
         eval_results = None
-        logger.info(f"type of x_test : {type(x_test)}")
         if x_test is None:
             logger.info(f"no split options was provided.")
         else:
+            logger.info(f"split option detected. The performance will be automatically evaluated "
+                        f"using the test data portion")
             test_predictions = self.model.predict(x_test)
             eval_results = evaluate_model(model_type=self.model_type,
                                           model=self.model,
@@ -341,7 +344,6 @@ class IgelModel(object):
             x_val = self._prepare_predict_data()
             y_pred = model.predict(x_val)
             y_pred = _reshape(y_pred)
-            logger.info(f"predictions array type: {type(y_pred)}")
             logger.info(f"predictions shape: {y_pred.shape} | shape len: {len(y_pred.shape)}")
             logger.info(f"predict on targets: {self.target}")
             df_pred = pd.DataFrame.from_dict(

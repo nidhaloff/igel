@@ -2,6 +2,13 @@
 History
 =======
 
+0.1.9 (2020-09-18)
+-------------------
+
+* added support for multioutput regression and classification
+* fixed bug in preparing predict data
+* provided a way to evaluate models
+
 0.1.8 (2020-09-13)
 ------------------
 * fixed predict function bugs and added examples
