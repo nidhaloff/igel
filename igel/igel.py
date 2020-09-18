@@ -34,6 +34,7 @@ class IgelModel(object):
     """
     IgelModel is the base model to use the fit, evaluate and predict functions of the sklearn library
     """
+    available_commands = ('fit', 'evaluate', 'predict')
     supported_types = ('regression', 'classification')  # supported types that can be selected in the yaml file
     results_path = configs.get('results_path')  # path to the results folder
     default_model_path = configs.get('default_model_path')  # path to the pre-fitted model
@@ -50,8 +51,9 @@ class IgelModel(object):
         self.data_path: str = cli_args.get('data_path')  # path to the dataset
         logger.info(f"reading data from {self.data_path}")
         self.command = cli_args.get('cmd', None)
-        if not self.command:
-            raise Exception(f"You must enter a valid command")
+        if not self.command or self.command not in self.available_commands:
+            raise Exception(f"You must enter a valid command.\n"
+                            f"available commands: {self.available_commands}")
 
         if self.command == "fit":
             self.yml_path = cli_args.get('yaml_path')
@@ -80,6 +82,7 @@ class IgelModel(object):
                 self.target: list = dic.get("target")  # target to predict as a list
                 self.model_type: str = dic.get("type")  # type of the model -> regression or classification
                 self.dataset_props: dict = dic.get('dataset_props')  # dataset props entered while fitting
+        getattr(self, self.command)()
 
     def _create_model(self, **kwargs):
         """

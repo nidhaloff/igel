@@ -16,5 +16,5 @@ mock_fit_params = {'data_path': '../data/indian-diabetes/train-indians-diabetes.
                    'yaml_path': './neural-network.yaml',
                    'cmd': 'fit'}
 
-IgelModel(**mock_fit_params).fit()
+IgelModel(**mock_fit_params)
 

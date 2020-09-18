@@ -1,0 +1,36 @@
+{
+    "model": "MLPClassifier",
+    "arguments": {
+        "max_iter": 500,
+        "alpha": 0.0001,
+        "activation": "logistic"
+    },
+    "type": "classification",
+    "algorithm": "neural network",
+    "dataset_props": {
+        "type": "csv"
+    },
+    "model_props": {
+        "type": "classification",
+        "algorithm": "neural network",
+        "arguments": {
+            "max_iter": 500,
+            "alpha": 0.0001,
+            "activation": "logistic"
+        }
+    },
+    "data_path": "../data/indian-diabetes/train-indians-diabetes.csv",
+    "train_data_shape": [
+        768,
+        8
+    ],
+    "test_data_shape": null,
+    "train_data_size": 768,
+    "test_data_size": null,
+    "results_path": "/home/nidhal/projects/igel/examples/indian-diabetes-example/model_results",
+    "model_path": "/home/nidhal/projects/igel/examples/indian-diabetes-example/model_results/model.sav",
+    "target": [
+        "sick"
+    ],
+    "results_on_test_data": null
+}
