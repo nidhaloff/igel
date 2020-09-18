@@ -30,7 +30,7 @@ History
 ------------------
 * implemented basic dataset operations
 
-0.0.1 (2020-09-05)
+0.1.0 (2020-09-05)
 ------------------
 * stable release with an end to end pipeline
 
