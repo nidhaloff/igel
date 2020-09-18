@@ -1,4 +1,4 @@
-from igel import IgelModel
+from igel import Igel
 
 
 """
@@ -12,4 +12,4 @@ Alternatively, you can write code if you want. This example below demonstrates h
 mock_eval_params = {'data_path': './linnerud.csv',
                     'cmd': 'evaluate'}
 
-IgelModel(**mock_eval_params).evaluate()
+Igel(**mock_eval_params)

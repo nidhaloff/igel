@@ -8,6 +8,8 @@ History
 * added support for multioutput regression and classification
 * fixed bug in preparing predict data
 * provided a way to evaluate models
+* changed class from IgelModel to Igel
+* updated igel cli
 
 0.1.8 (2020-09-13)
 ------------------

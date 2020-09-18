@@ -30,9 +30,9 @@ logging.basicConfig(format='%(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-class IgelModel(object):
+class Igel(object):
     """
-    IgelModel is the base model to use the fit, evaluate and predict functions of the sklearn library
+    Igel is the base model to use the fit, evaluate and predict functions of the sklearn library
     """
     available_commands = ('fit', 'evaluate', 'predict')
     supported_types = ('regression', 'classification')  # supported types that can be selected in the yaml file
@@ -369,6 +369,6 @@ if __name__ == '__main__':
     mock_pred_params = {'data_path': '/home/nidhal/projects/igel/examples/data/indian-diabetes/test-indians-diabetes.csv',
                         'cmd': 'predict'}
 
-    IgelModel(**mock_fit_params).fit()
-    # IgelModel(**mock_eval_params).evaluate()
-    # IgelModel(**mock_pred_params).predict()
+    Igel(**mock_fit_params)
+    # Igel(**mock_eval_params)
+    # Igel(**mock_pred_params)

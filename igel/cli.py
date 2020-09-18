@@ -1,7 +1,7 @@
 """Console script for igel."""
 import sys
 import argparse
-from igel import IgelModel, models_dict, metrics_dict
+from igel import Igel, models_dict, metrics_dict
 import inspect
 import pdb
 
@@ -26,6 +26,13 @@ class CLI(object):
         self.parser = argparse.ArgumentParser(
             description='Igel CLI Runner',
             usage='''
+                     ___           _
+                    |_ _|__ _  ___| |
+                     | |/ _` |/ _ \ |
+                     | | (_| |  __/ |
+                    |___\__, |\___|_|
+                        |___/
+
 
                     igel <command> [<args>]
                     - Available sub-commands at the moment are:
@@ -127,13 +134,13 @@ class CLI(object):
         self.parser.print_help()
 
     def fit(self, *args, **kwargs):
-        IgelModel(**self.dict_args).fit()
+        Igel(**self.dict_args)
 
     def predict(self, *args, **kwargs):
-        IgelModel(**self.dict_args).predict()
+        Igel(**self.dict_args)
 
     def evaluate(self, *args, **kwargs):
-        IgelModel(**self.dict_args).evaluate()
+        Igel(**self.dict_args)
 
     def print_models_overview(self):
         print(f"\n"

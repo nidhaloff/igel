@@ -164,7 +164,7 @@ Finally, you can use the trained/pre-fitted model to make predictions if you are
 
 ..  code-block:: python
 
-    from igel import IgelModel
+    from igel import Igel
 
     # provide the arguments in a dictionary
     params = {
@@ -173,7 +173,7 @@ Finally, you can use the trained/pre-fitted model to make predictions if you are
             'yaml_path': 'path_to_your_yaml_file'
     }
 
-    IgelModel(**params).fit()
+    Igel(**params).fit()
     """
     check the examples folder for more
     """

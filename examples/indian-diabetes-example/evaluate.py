@@ -1,4 +1,4 @@
-from igel import IgelModel
+from igel import Igel
 
 
 """
@@ -17,4 +17,4 @@ This example uses the pre-fitted machine learning model to evaluate its performa
 mock_eval_params = {'data_path': '../data/indian-diabetes/eval-indians-diabetes.csv',
                     'cmd': 'evaluate'}
 
-IgelModel(**mock_eval_params).evaluate()
+Igel(**mock_eval_params)

@@ -1,4 +1,4 @@
-from igel import IgelModel
+from igel import Igel
 
 
 """
@@ -17,4 +17,4 @@ This example uses the pre-fitted machine learning model to generate predictions
 mock_pred_params = {'data_path': '../data/indian-diabetes/test-indians-diabetes.csv',
                     'cmd': 'predict'}
 
-IgelModel(**mock_pred_params).predict()
+Igel(**mock_pred_params)

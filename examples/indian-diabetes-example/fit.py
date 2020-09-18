@@ -1,4 +1,4 @@
-from igel import IgelModel
+from igel import Igel
 
 """
 The goal of igel is to use ML without writing code. Therefore, the right and simplest way to use igel is from terminal.
@@ -16,5 +16,5 @@ mock_fit_params = {'data_path': '../data/indian-diabetes/train-indians-diabetes.
                    'yaml_path': './neural-network.yaml',
                    'cmd': 'fit'}
 
-IgelModel(**mock_fit_params)
+Igel(**mock_fit_params)
 
