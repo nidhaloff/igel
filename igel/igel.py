@@ -46,7 +46,7 @@ class Igel(object):
     model = None
 
     def __init__(self, **cli_args):
-        logger.debug(f"Entered CLI args: {cli_args}")
+        logger.info(f"Entered CLI args: {cli_args}")
         logger.info(f"Executing command: {cli_args.get('cmd')} ...")
         self.data_path: str = cli_args.get('data_path')  # path to the dataset
         logger.info(f"reading data from {self.data_path}")
