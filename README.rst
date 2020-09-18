@@ -173,7 +173,7 @@ Finally, you can use the trained/pre-fitted model to make predictions if you are
             'yaml_path': 'path_to_your_yaml_file'
     }
 
-    Igel(**params).fit()
+    Igel(**params)
     """
     check the examples folder for more
     """
@@ -215,6 +215,7 @@ Here is an overview of all supported configurations (for now):
     # target you want to predict
     target:
         - put the target you want to predict here
+        - you can assign many target if you are making a multioutput prediction
 
 
 E2E Example
