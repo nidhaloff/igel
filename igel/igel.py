@@ -6,7 +6,6 @@ import os
 import json
 import warnings
 import logging
-import numpy as np
 
 try:
     from igel.utils import read_yaml, extract_params, _reshape
@@ -24,6 +23,7 @@ except ImportError:
     from preprocessing import handle_missing_values, encode, normalize
 
 from sklearn.model_selection import train_test_split
+from sklearn.multioutput import MultiOutputClassifier, MultiOutputRegressor
 
 warnings.filterwarnings("ignore")
 logging.basicConfig(format='%(levelname)s - %(message)s', level=logging.INFO)
@@ -79,7 +79,7 @@ class IgelModel(object):
                 self.model_type: str = dic.get("type")  # type of the model -> regression or classification
                 self.dataset_props = dic.get('dataset_props')
 
-    def _create_model(self, *args, **kwargs):
+    def _create_model(self, **kwargs):
         """
         fetch a model depending on the provided type and algorithm by the user and return it
         @return: class of the chosen model
@@ -190,6 +190,8 @@ class IgelModel(object):
 
             if target == 'predict':
                 x = _reshape(dataset.to_numpy())
+                if not preprocess_props:
+                    return x
                 scaling_props = preprocess_props.get('scale', None)
                 if not scaling_props:
                     return x
@@ -260,7 +262,10 @@ class IgelModel(object):
         x_train, y_train, x_test, y_test = self._prepare_fit_data()
         self.model, model_args = self._create_model(**kwargs)
         logger.info(f"executing a {self.model.__class__.__name__} algorithm ..")
-
+        # convert to multioutput if there is more than one target to predict:
+        if len(self.target) > 1:
+            self.model = MultiOutputClassifier(self.model) \
+                if self.model_type == 'classification' else MultiOutputRegressor(self.model)
         self.model.fit(x_train, y_train)
         saved = self._save_model(self.model)
         if saved:
@@ -273,6 +278,8 @@ class IgelModel(object):
         else:
             test_predictions = self.model.predict(x_test)
             eval_results = evaluate_model(model_type=self.model_type,
+                                          model=self.model,
+                                          x_test=x_test,
                                           y_pred=test_predictions,
                                           y_true=y_test,
                                           **kwargs)
@@ -311,6 +318,8 @@ class IgelModel(object):
             x_val, y_true = self._prepare_eval_data()
             y_pred = model.predict(x_val)
             eval_results = evaluate_model(model_type=self.model_type,
+                                          model=model,
+                                          x_test=x_val,
                                           y_pred=y_pred,
                                           y_true=y_true,
                                           **kwargs)
@@ -346,12 +355,13 @@ class IgelModel(object):
 
 
 if __name__ == '__main__':
-    mock_fit_params = {'data_path': '/home/nidhal/my_projects/igel/examples/data/indians-diabetes.csv',
-                       'yaml_path': '/home/nidhal/my_projects/igel/examples/random-forest.yaml',
+    mock_fit_params = {'data_path': '/home/nidhal/projects/igel/examples/multioutput-example/linnerud.csv',
+                       'yaml_path': '/home/nidhal/projects/igel/examples/multioutput-example/multioutput.yaml',
+                       #/home/nidhal/projects/igel/examples/indian-diabetes-example/random-forest.yaml
                        'cmd': 'fit'}
-    mock_eval_params = {'data_path': '/home/nidhal/my_projects/igel/examples/data/indians-diabetes.csv',
+    mock_eval_params = {'data_path': '/home/nidhal/projects/igel/examples/data/indian-diabetes/eval-indians-diabetes.csv',
                         'cmd': 'evaluate'}
-    mock_pred_params = {'data_path': '/home/nidhal/my_projects/igel/examples/data/test-indians-diabetes.csv',
+    mock_pred_params = {'data_path': '/home/nidhal/projects/igel/examples/data/indian-diabetes/test-indians-diabetes.csv',
                         'cmd': 'predict'}
 
     IgelModel(**mock_fit_params).fit()

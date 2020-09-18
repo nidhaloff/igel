@@ -72,7 +72,12 @@ metrics_dict = {
 }
 
 
-def evaluate_model(model_type, y_pred, y_true, **kwargs):
+def evaluate_model(model, model_type, x_test, y_pred, y_true, **kwargs):
+
+    if y_true.shape[1] > 1 or y_pred.shape[1] > 1:
+        logger.info(f"Multitarget {model_type} Evaluation: calculating {model_type} score")
+        return model.score(x_test, y_true)
+
     if model_type not in metrics_dict.keys():
         raise Exception("model type needs to be regression or classification")
     metrics = metrics_dict.get(model_type, None)
