@@ -333,6 +333,7 @@ will help you get started.
 
 
 The indian-diabetes-example folder contains two examples to help you get started:
+
 - The first example is using a **neural network**, where the configurations are stored in the neural-network.yaml file
 - The second example is using a **random forest**, where the configurations are stored in the random-forest.yaml file
 
