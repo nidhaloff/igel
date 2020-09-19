@@ -90,7 +90,7 @@ you can run this command to get instruction on how to use the model:
 
 .. code-block:: console
 
-    $ igel help
+    $ igel --help
 
     # or just
 
@@ -124,7 +124,7 @@ diabetes or not depending on some features in the dataset
 I used this `indian-diabetes dataset <https://www.kaggle.com/uciml/pima-indians-diabetes-database>`_)
 
 
-- The expected way is to use igel from terminal:
+- The expected way to use igel is from terminal (igel CLI):
 
 Run this command in terminal to fit/train a model, where you provide the **path to your dataset** and the **path to the yaml file**
 
@@ -158,6 +158,16 @@ Finally, you can use the trained/pre-fitted model to make predictions if you are
     $ igel predict -dp 'path_to_your_test_dataset.csv'
     """
     This will generate a predictions.csv file in your current directory, where all predictions are stored in a csv file
+    """
+
+You can combine the train, evaluate and predict phases using one single command called experiment:
+
+.. code-block:: console
+
+    $ igel experiment -DP "path_to_train_data path_to_eval_data path_to_test_data" -yml "path_to_yaml_file"
+
+    """
+    This will run fit using train_data, evaluate using eval_data and further generate predictions using the test_data
     """
 
 - Alternatively, you can also write code if you want to:
