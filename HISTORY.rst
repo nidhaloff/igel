@@ -2,6 +2,13 @@
 History
 =======
 
+0.2.0 (2020-09-19)
+-------------------
+
+* added the experiment command
+* fixed bugs in predict
+* fixed sphinx docs dependencies
+
 0.1.9 (2020-09-18)
 -------------------
 
