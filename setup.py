@@ -4,6 +4,7 @@
 
 from setuptools import setup, find_packages
 from igel import __version__, __email__, __author__
+import os
 
 with open('README.rst') as readme_file:
     readme = readme_file.read()
@@ -19,6 +20,10 @@ requirements = [
 
 setup_requirements = ['pytest-runner', 'sphinx-copybutton']
 test_requirements = ['pytest>=3']
+
+on_rtd = os.environ.get('READTHEDOCS') == 'True'
+if on_rtd:
+    requirements.append('sphinx-copybutton==0.3.0')
 
 setup(
     author=__author__,
