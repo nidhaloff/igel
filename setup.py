@@ -17,7 +17,7 @@ requirements = [
     'scikit-learn==0.23.2'
 ]
 
-setup_requirements = ['pytest-runner',]
+setup_requirements = ['pytest-runner', 'sphinx-copybutton']
 test_requirements = ['pytest>=3']
 
 setup(
