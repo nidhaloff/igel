@@ -18,12 +18,9 @@ requirements = [
     'scikit-learn==0.23.2'
 ]
 
-setup_requirements = ['pytest-runner', 'sphinx-copybutton']
+setup_requirements = ['pytest-runner']
 test_requirements = ['pytest>=3']
-
-on_rtd = os.environ.get('READTHEDOCS') == 'True'
-if on_rtd:
-    requirements.append('sphinx-copybutton==0.3.0')
+docs_require = ['sphinx-copybutton']
 
 setup(
     author=__author__,
@@ -49,10 +46,17 @@ setup(
     license="MIT license",
     long_description=readme + '\n\n' + history,
     include_package_data=True,
-    keywords='igel',
+    keywords=['igel',
+              'machine learning',
+              'ML',
+              'sklearn',
+              'scikit-learn',
+              'regression',
+              'classification'],
     name='igel',
     packages=find_packages(include=['igel', 'igel.*']),
     setup_requires=setup_requirements,
+    extras_require={'docs': docs_require},
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/nidhaloff/igel',
