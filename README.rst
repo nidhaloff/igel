@@ -360,6 +360,8 @@ you can also directly execute the fit.py, evaluate.py and predict.py if you want
 Contributions
 --------------
 
+You think this project is useful and you want to bring new ideas, new features, bug fixes, extend the docs?
+
 Contributions are always welcome.
 Make sure you read `the guidelines <https://igel.readthedocs.io/en/latest/contributing.html>`_ first
 
