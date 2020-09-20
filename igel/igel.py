@@ -256,6 +256,26 @@ class Igel(object):
         """
         return self._process_data(target='predict')
 
+    def get_evaluation(self, model, x_test, y_true, y_pred, **kwargs):
+        res = None
+        try:
+            res = evaluate_model(model_type=self.model_type,
+                                  model=model,
+                                  x_test=x_test,
+                                  y_pred=y_pred,
+                                  y_true=y_true,
+                                  get_score_only=False,
+                                  **kwargs)
+        except Exception as e:
+            res = evaluate_model(model_type=self.model_type,
+                                  model=model,
+                                  x_test=x_test,
+                                  y_pred=y_pred,
+                                  y_true=y_true,
+                                  get_score_only=True,
+                                  **kwargs)
+        return res
+
     def fit(self, **kwargs):
         """
         fit a machine learning model and save it to a file along with a description.json file
@@ -282,13 +302,13 @@ class Igel(object):
         else:
             logger.info(f"split option detected. The performance will be automatically evaluated "
                         f"using the test data portion")
-            test_predictions = self.model.predict(x_test)
-            eval_results = evaluate_model(model_type=self.model_type,
-                                          model=self.model,
-                                          x_test=x_test,
-                                          y_pred=test_predictions,
-                                          y_true=y_test,
-                                          **kwargs)
+            y_pred = self.model.predict(x_test)
+            eval_results = self.get_evaluation(model=self.model,
+                                               x_test=x_test,
+                                               y_true=y_test,
+                                               y_pred=y_pred,
+                                               **kwargs)
+
         fit_description = {
             "model": self.model.__class__.__name__,
             "arguments": model_args if model_args else "default",
@@ -323,12 +343,11 @@ class Igel(object):
             model = self._load_model()
             x_val, y_true = self._prepare_eval_data()
             y_pred = model.predict(x_val)
-            eval_results = evaluate_model(model_type=self.model_type,
-                                          model=model,
-                                          x_test=x_val,
-                                          y_pred=y_pred,
-                                          y_true=y_true,
-                                          **kwargs)
+            eval_results = self.get_evaluation(model=model,
+                                               x_test=x_val,
+                                               y_true=y_true,
+                                               y_pred=y_pred,
+                                               **kwargs)
 
             logger.info(f"saving fit description to {self.evaluation_file}")
             with open(self.evaluation_file, 'w', encoding='utf-8') as f:

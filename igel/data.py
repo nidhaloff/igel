@@ -388,7 +388,11 @@ metrics_dict = {
 }
 
 
-def evaluate_model(model, model_type, x_test, y_pred, y_true, **kwargs):
+def evaluate_model(model, model_type, x_test, y_pred, y_true, get_score_only, **kwargs):
+    if get_score_only:
+        logger.info(f"calculating {model_type} score...")
+        return {f"{model_type} score": model.score(x_test, y_true)}
+
     if y_pred.ndim > 1:
         if y_true.shape[1] > 1 or y_pred.shape[1] > 1:
             logger.info(f"Multitarget {model_type} Evaluation: calculating {model_type} score")

@@ -194,6 +194,7 @@ class CLI(object):
         Igel(**self.dict_args)
 
     def print_models_overview(self):
+        print(f"\nIgel's supported models overview: \n")
         reg_algs = list(models_dict.get('regression').keys())
         clf_algs = list(models_dict.get('classification').keys())
         df_algs = pd.DataFrame.from_dict({
@@ -244,16 +245,17 @@ class CLI(object):
         """
         show an overview of all metrics supported by igel
         """
-        print(f"\n\n"
-              f"{'*' * 60}  Supported metrics  {'*' * 60} \n\n"
-              f"1 - Regression metrics: \n"
-              f"{'-' * 50} \n"
-              f"{[func.__name__ for func in metrics_dict.get('regression')]} \n\n"
-              f"{'=' * 120} \n"
-              f"2 - Classification metrics: \n"
-              f"{'-' * 50} \n"
-              f"{[func.__name__ for func in metrics_dict.get('classification')]} \n"
-              f" \n")
+        print(f"\nIgel's supported metrics overview: \n")
+        reg_metrics = [func.__name__ for func in metrics_dict.get('regression')]
+        clf_metrics = [func.__name__ for func in metrics_dict.get('classification')]
+
+        df_metrics = pd.DataFrame.from_dict({
+            "regression": reg_metrics,
+            "classification": clf_metrics
+        }, orient="index").transpose().fillna('----')
+
+        df_metrics = self.tableize(df_metrics)
+        print(df_metrics)
 
     def experiment(self):
         print("""
