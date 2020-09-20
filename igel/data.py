@@ -77,65 +77,65 @@ models_dict = {
 
         "Lasso": {
             "class": Lasso,
-            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Lasso.html?\
-                    highlight=lasso#sklearn.linear_model.Lasso",
+            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Lasso.html?"
+                    "highlight=lasso#sklearn.linear_model.Lasso",
             "cv_class": LassoCV
         },
 
         "LassoLars": {
             "class": LassoLars,
-            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LassoLars.html?\
-                    highlight=lasso#sklearn.linear_model.LassoLars",
+            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LassoLars.html?"
+                    "highlight=lasso#sklearn.linear_model.LassoLars",
             "cv_class": LassoLarsCV
         },
 
         "BayesianRegression": {
             "class": BayesianRidge,
-            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.BayesianRidge.html?\
-                    highlight=ridge#sklearn.linear_model.BayesianRidge"
+            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.BayesianRidge.html?"
+                    "highlight=ridge#sklearn.linear_model.BayesianRidge"
         },
 
         "HuberRegression": {
             "class": HuberRegressor,
-            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.HuberRegressor.html?\
-                    highlight=huber#sklearn.linear_model.HuberRegressor"
+            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.HuberRegressor.html?"
+                    "highlight=huber#sklearn.linear_model.HuberRegressor"
         },
 
         "Ridge": {
             "class": Ridge,
-            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html\
-                    #sklearn.linear_model.Ridge",
+            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html"
+                    "#sklearn.linear_model.Ridge",
             "cv_class": RidgeCV
         },
 
         "PoissonRegression": {
             "class": PoissonRegressor,
-            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.PoissonRegressor.html?\
-                    highlight=poisson#sklearn.linear_model.PoissonRegressor"
+            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.PoissonRegressor.html?"
+                    "highlight=poisson#sklearn.linear_model.PoissonRegressor"
         },
 
         "ARDRegression": {
             "class": ARDRegression,
-            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.ARDRegression.html?\
-                    highlight=ard#sklearn.linear_model.ARDRegression"
+            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.ARDRegression.html?"
+                    "highlight=ard#sklearn.linear_model.ARDRegression"
         },
 
         "TweedieRegression": {
             "class": TweedieRegressor,
-            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.TweedieRegressor.html?\
-                    highlight=tweedie#sklearn.linear_model.TweedieRegressor"
+            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.TweedieRegressor.html?"
+                    "highlight=tweedie#sklearn.linear_model.TweedieRegressor"
         },
 
         "TheilSenRegression": {
             "class": TheilSenRegressor,
-            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.TheilSenRegressor.html?\
-                    highlight=theilsenregressor#sklearn.linear_model.TheilSenRegressor"
+            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.TheilSenRegressor.html?"
+                    "highlight=theilsenregressor#sklearn.linear_model.TheilSenRegressor"
         },
 
         "GammaRegression": {
             "class": GammaRegressor,
-            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.GammaRegressor.html?\
-                    highlight=gamma%20regressor#sklearn.linear_model.GammaRegressor"
+            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.GammaRegressor.html?"
+                    "highlight=gamma%20regressor#sklearn.linear_model.GammaRegressor"
         },
 
         "RANSACRegression": {
@@ -145,30 +145,30 @@ models_dict = {
 
         "DecisionTree": {
             "class": DecisionTreeRegressor,
-            "link": "https://scikit-learn.org/stable/modules/generatedsklearn.tree.DecisionTreeRegressor.html?\
-                    highlight=decision%20tree%20regressor#sklearn.tree.DecisionTreeRegressor"
+            "link": "https://scikit-learn.org/stable/modules/generatedsklearn.tree.DecisionTreeRegressor.html?"
+                    "highlight=decision%20tree%20regressor#sklearn.tree.DecisionTreeRegressor"
         },
 
         "ExtraTree": {
             "class": ExtraTreeRegressor,
-            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.tree.ExtraTreeRegressor.html\
-                    #sklearn.tree.ExtraTreeRegressor"
+            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.tree.ExtraTreeRegressor.html"
+                    "#sklearn.tree.ExtraTreeRegressor"
         },
 
         "RandomForest": {
             "class": RandomForestRegressor,
-            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html?\
-                    highlight=random%20forest#sklearn.ensemble.RandomForestRegressor"},
+            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html?"
+                    "highlight=random%20forest#sklearn.ensemble.RandomForestRegressor"},
 
         "ExtraTrees": {
             "class": ExtraTreesRegressor,
-            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.ExtraTreesRegressor.html?\
-                    highlight=extra%20trees#sklearn.ensemble.ExtraTreesRegressor"},
+            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.ExtraTreesRegressor.html?"
+                    "highlight=extra%20trees#sklearn.ensemble.ExtraTreesRegressor"},
 
         "SVM": {
             "class": SVR,
-            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVR.html?\
-                    highlight=svr#sklearn.svm.SVR"},
+            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVR.html?"
+                    "highlight=svr#sklearn.svm.SVR"},
 
         "LinearSVM": {
             "class": LinearSVR,
@@ -182,50 +182,50 @@ models_dict = {
 
         "NearestNeighbor": {
             "class": KNeighborsRegressor,
-            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsRegressor.html?\
-                    highlight=neighbor#sklearn.neighbors.KNeighborsRegressor"},
+            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsRegressor.html?"
+                    "highlight=neighbor#sklearn.neighbors.KNeighborsRegressor"},
 
         "NeuralNetwork": {
             "class": MLPRegressor,
-            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPRegressor.html?\
-                    highlight=mlp#sklearn.neural_network.MLPRegressor"
+            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPRegressor.html?"
+                    "highlight=mlp#sklearn.neural_network.MLPRegressor"
         },
 
         "ElasticNet": {
             "class": ElasticNet,
-            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.ElasticNet.html?\
-                    highlight=elasticnet#sklearn.linear_model.ElasticNet",
+            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.ElasticNet.html?"
+                    "highlight=elasticnet#sklearn.linear_model.ElasticNet",
             "cv_class": ElasticNetCV
         },
 
         "BernoulliRBM": {
             "class": BernoulliRBM,
-            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.BernoulliRBM.html#\
-                    sklearn.neural_network.BernoulliRBM"
+            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.BernoulliRBM.html#"
+                    "sklearn.neural_network.BernoulliRBM"
         },
 
         "BoltzmannMachine": {
             "class": BernoulliRBM,
-            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.BernoulliRBM.html#\
-            sklearn.neural_network.BernoulliRBM"
+            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.BernoulliRBM.html#"
+                    "sklearn.neural_network.BernoulliRBM"
         },
 
         "Adaboost": {
             "class": AdaBoostRegressor,
-            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.AdaBoostRegressor.html#\
-            sklearn.ensemble.AdaBoostRegressor"
+            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.AdaBoostRegressor.html#"
+                    "sklearn.ensemble.AdaBoostRegressor"
         },
 
         "Bagging": {
             "class": BaggingRegressor,
-            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.BaggingRegressor.html\
-            #sklearn.ensemble.BaggingRegressor"
+            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.BaggingRegressor.html"
+                    "#sklearn.ensemble.BaggingRegressor"
         },
 
         "GradientBoosting": {
             "class": GradientBoostingRegressor,
-            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.GradientBoostingRegressor.html\
-            #sklearn.ensemble.GradientBoostingRegressor"
+            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.GradientBoostingRegressor.html"
+                    "#sklearn.ensemble.GradientBoostingRegressor"
         }
     },
 
@@ -234,44 +234,44 @@ models_dict = {
         "LogisticRegression": {
 
             "class": LogisticRegression,
-            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html?\
-                    highlight=regression#sklearn.linear_model.LogisticRegression",
+            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html?"
+                    "highlight=regression#sklearn.linear_model.LogisticRegression",
             "cv_class": LogisticRegressionCV,
             "sgd_class": SGDClassifier
         },
 
         "Ridge": {
             "class": RidgeClassifier,
-            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.RidgeClassifier.html?\
-                    highlight=ridgeclassifier#sklearn.linear_model.RidgeClassifier",
+            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.RidgeClassifier.html?"
+                    "highlight=ridgeclassifier#sklearn.linear_model.RidgeClassifier",
             "cv_class": RidgeClassifierCV
         },
 
         "DecisionTree": {
             "class": DecisionTreeClassifier,
-            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeClassifier.html?\
-                    highlight=decision%20tree#sklearn.tree.DecisionTreeClassifier"},
+            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeClassifier.html?"
+                    "highlight=decision%20tree#sklearn.tree.DecisionTreeClassifier"},
 
         "ExtraTree": {
             "class": ExtraTreeClassifier,
-            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.tree.ExtraTreeClassifier.html\
-                    #sklearn.tree.ExtraTreeClassifier"
+            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.tree.ExtraTreeClassifier.html"
+                    "#sklearn.tree.ExtraTreeClassifier"
         },
 
         "RandomForest": {
             "class": RandomForestClassifier,
-            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html?\
-                    highlight=random%20forest#sklearn.ensemble.RandomForestClassifier"},
+            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html?"
+                    "highlight=random%20forest#sklearn.ensemble.RandomForestClassifier"},
 
         "ExtraTrees": {
             "class": ExtraTreesClassifier,
-            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.ExtraTreesClassifier.html?\
-                    highlight=extra%20trees#sklearn.ensemble.ExtraTreesClassifier"},
+            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.ExtraTreesClassifier.html?"
+                    "highlight=extra%20trees#sklearn.ensemble.ExtraTreesClassifier"},
 
         "SVM": {
             "class": SVC,
-            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html?\
-                    highlight=svc#sklearn.svm.SVC"},
+            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html?"
+                    "highlight=svc#sklearn.svm.SVC"},
 
         "LinearSVM": {
             "class": LinearSVC,
@@ -286,91 +286,91 @@ models_dict = {
 
         "NearestNeighbor": {
             "class": KNeighborsClassifier,
-            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html?\
-                    highlight=neighbor#sklearn.neighbors.KNeighborsClassifier"},
+            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html?"
+                    "highlight=neighbor#sklearn.neighbors.KNeighborsClassifier"},
 
         "NeuralNetwork": {
             "class": MLPClassifier,
-            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPClassifier.html?\
-                    highlight=mlp#sklearn.neural_network.MLPClassifier"
+            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPClassifier.html?"
+                    "highlight=mlp#sklearn.neural_network.MLPClassifier"
         },
 
         "PassiveAgressiveClassifier": {
             "class": PassiveAggressiveClassifier,
-            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.PassiveAggressiveClassifier.html?\
-                    highlight=passiveaggressiveclassifier#sklearn.linear_model.PassiveAggressiveClassifier"
+            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.PassiveAggressiveClassifier.html?"
+                    "highlight=passiveaggressiveclassifier#sklearn.linear_model.PassiveAggressiveClassifier"
         },
 
         "Perceptron": {
             "class": Perceptron,
-            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Perceptron.html#\
-                    sklearn.linear_model.Perceptron"
+            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Perceptron.html#"
+                    "sklearn.linear_model.Perceptron"
         },
 
         "BernoulliRBM": {
                     "class": BernoulliRBM,
-                    "link": "https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.BernoulliRBM.html#\
-                            sklearn.neural_network.BernoulliRBM"
+                    "link": "https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.BernoulliRBM.html#"
+                            "sklearn.neural_network.BernoulliRBM"
                 },
 
         "BoltzmannMachine": {
             "class": BernoulliRBM,
-            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.BernoulliRBM.html#\
-                    sklearn.neural_network.BernoulliRBM"
+            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.BernoulliRBM.html#"
+                    "sklearn.neural_network.BernoulliRBM"
         },
 
         "CalibratedClassifier": {
             "class": CalibratedClassifierCV,
-            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.calibration.CalibratedClassifierCV.html#\
-                    sklearn.calibration.CalibratedClassifierCV"
+            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.calibration.CalibratedClassifierCV.html#"
+                    "sklearn.calibration.CalibratedClassifierCV"
         },
 
         "Adaboost": {
             "class": AdaBoostClassifier,
-            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.AdaBoostClassifier.html#\
-                    sklearn.ensemble.AdaBoostClassifier"
+            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.AdaBoostClassifier.html#"
+                    "sklearn.ensemble.AdaBoostClassifier"
         },
 
         "Bagging": {
             "class": BaggingClassifier,
-            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.BaggingClassifier.html\
-                    #sklearn.ensemble.BaggingClassifier"
+            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.BaggingClassifier.html"
+                    "#sklearn.ensemble.BaggingClassifier"
         },
 
         "GradientBoosting": {
             "class": GradientBoostingClassifier,
-            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.GradientBoostingClassifier.html\
-                    #sklearn.ensemble.GradientBoostingClassifier"
+            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.GradientBoostingClassifier.html"
+                    "#sklearn.ensemble.GradientBoostingClassifier"
         },
 
         "BernoulliNaiveBayes": {
             "class": BernoulliNB,
-            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.BernoulliNB.html\
-                    #sklearn.naive_bayes.BernoulliNB"
+            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.BernoulliNB.html"
+                    "#sklearn.naive_bayes.BernoulliNB"
         },
 
         "CategoricalNaiveBayes": {
             "class": CategoricalNB,
-            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.CategoricalNB.html\
-                    #sklearn.naive_bayes.CategoricalNB"
+            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.CategoricalNB.html"
+                    "#sklearn.naive_bayes.CategoricalNB"
         },
 
         "ComplementNaiveBayes": {
             "class": ComplementNB,
-            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.ComplementNB.html\
-                    #sklearn.naive_bayes.ComplementNB"
+            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.ComplementNB.html"
+                    "#sklearn.naive_bayes.ComplementNB"
         },
 
         "GaussianNaiveBayes": {
             "class": GaussianNB,
-            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.GaussianNB.html\
-                    #sklearn.naive_bayes.GaussianNB"
+            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.GaussianNB.html"
+                    "#sklearn.naive_bayes.GaussianNB"
         },
 
         "MultinomialNaiveBayes": {
             "class": MultinomialNB,
-            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.MultinomialNB.html\
-                    #sklearn.naive_bayes.MultinomialNB"
+            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.MultinomialNB.html"
+                    "#sklearn.naive_bayes.MultinomialNB"
         }
 
 

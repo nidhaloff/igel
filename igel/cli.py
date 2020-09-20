@@ -4,6 +4,7 @@ import argparse
 from igel import Igel, models_dict, metrics_dict
 import inspect
 import pdb
+import pandas as pd
 
 
 class CLI(object):
@@ -80,7 +81,7 @@ class CLI(object):
 
                     igel models                                                         # type this to get a list of supported models
 
-                    igel models -type regression -name random_forest                    # this will give you a help on how to use the
+                    igel models -type regression -name RandomForest                     # this will give you a help on how to use the
                                                                                         # RandomForestRegressor and will provide
                                                                                         # you a link to get more help in the sklearn website
 
@@ -193,22 +194,21 @@ class CLI(object):
         Igel(**self.dict_args)
 
     def print_models_overview(self):
-        print(f"\n"
-              f"{'*' * 60}  Supported machine learning algorithms  {'*' * 60} \n\n"
-              f"1 - Regression algorithms: \n"
-              f"{'-' * 50} \n"
-              f"{list(models_dict.get('regression').keys())} \n\n"
-              f"{'=' * 120} \n"
-              f"2 - Classification algorithms: \n"
-              f"{'-' * 50} \n"
-              f"{list(models_dict.get('classification').keys())} \n"
-              f" \n")
+        reg_algs = list(models_dict.get('regression').keys())
+        clf_algs = list(models_dict.get('classification').keys())
+        df_algs = pd.DataFrame.from_dict({
+            "regression": reg_algs,
+            "classification": clf_algs
+        }, orient="index").transpose().fillna('----')
+
+        df = self.tableize(df_algs)
+        print(df)
 
     def models(self):
         """
         show an overview of all models supported by igel
         """
-        if not self.dict_args:
+        if not self.dict_args or len(self.dict_args.keys()) <= 1:
             self.print_models_overview()
         else:
             model_name = self.dict_args.get('model_name', None)
@@ -228,8 +228,8 @@ class CLI(object):
                                     f"model_type need to be regression or classification")
 
                 models = models_dict.get(model_type)
-                model_data = models.get(model_name.replace('_', ' '))
-                model, link = model_data.values()
+                model_data = models.get(model_name)
+                model, link, *cv_class = model_data.values()
                 print(f"model type: {model_type} \n"
                       f"model name: {model_name} \n"
                       f"sklearn model class: {model.__name__} \n"
@@ -280,6 +280,24 @@ class CLI(object):
         Igel(**eval_args)
         Igel(**pred_args)
 
+    def tableize(self, df):
+        if not isinstance(df, pd.DataFrame):
+            return
+        df_columns = df.columns.tolist()
+        max_len_in_lst = lambda lst: len(sorted(lst, reverse=True, key=len)[0])
+        align_center = lambda st, sz: "{0}{1}{0}".format(" "*(1+(sz-len(st))//2), st)[:sz] if len(st) < sz else st
+        align_right = lambda st, sz: "{0}{1} ".format(" "*(sz-len(st)-1), st) if len(st) < sz else st
+        max_col_len = max_len_in_lst(df_columns)
+        max_val_len_for_col = dict([(col, max_len_in_lst(df.iloc[:,idx].astype('str'))) for idx, col in enumerate(df_columns)])
+        col_sizes = dict([(col, 2 + max(max_val_len_for_col.get(col, 0), max_col_len)) for col in df_columns])
+        build_hline = lambda row: '+'.join(['-' * col_sizes[col] for col in row]).join(['+', '+'])
+        build_data = lambda row, align: "|".join([align(str(val), col_sizes[df_columns[idx]]) for idx, val in enumerate(row)]).join(['|', '|'])
+        hline = build_hline(df_columns)
+        out = [hline, build_data(df_columns, align_center), hline]
+        for _, row in df.iterrows():
+            out.append(build_data(row.tolist(), align_right))
+        out.append(hline)
+        return "\n".join(out)
 
 def main():
     CLI()
