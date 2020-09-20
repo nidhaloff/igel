@@ -87,4 +87,4 @@ install: clean ## install the package to the active Python's site-packages
 git:  ## add, commit and push in one command
 	git add .
 	git commit -m "$m"
-	git push origin master
+	git push origin -b "$b"
