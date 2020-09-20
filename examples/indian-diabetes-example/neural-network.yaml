@@ -2,7 +2,7 @@
 # model definition
 model:
     type: classification
-    algorithm: neural network
+    algorithm: NeuralNetwork
     arguments:
         max_iter: 500
         alpha: 0.0001

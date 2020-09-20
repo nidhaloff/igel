@@ -19,7 +19,7 @@ dataset:
 # model definition
 model:
     type: classification
-    algorithm: logistic regression
+    algorithm: LogisticRegression
 
 
 # target you want to predict

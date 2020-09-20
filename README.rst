@@ -108,7 +108,7 @@ First step is to provide a yaml file:
             # in the type field, you can write the type of problem you want to solve. Whether regression or classification
             # Then, provide the algorithm you want to use on the data. Here I'm using the random forest algorithm
             type: classification
-            algorithm: random forest
+            algorithm: RandomForest     # make sure you write the name of the algorithm in pascal case
             arguments:
                 n_estimators: 100   # here, I set the number of estimators (or trees) to 100
                 max_depth: 30       # set the max_depth of the tree
@@ -219,7 +219,7 @@ Here is an overview of all supported configurations (for now):
     # model definition
     model:
         type: classification    # type of the problem you want to solve. | possible values: [regression, classification]
-        algorithm: neural network    # which algorithm you want to use. | type igel algorithms in the Terminal to know more
+        algorithm: NeuralNetwork    # which algorithm you want to use. | type igel algorithms in the Terminal to know more
         arguments: default          # model arguments: you can check the available arguments for each model by running igel help in your terminal
 
     # target you want to predict
@@ -241,7 +241,7 @@ predicting whether someone have diabetes or not using the **decision tree** algo
 
         model:
             type: classification
-            algorithm: decision tree
+            algorithm: DecisionTree
 
         target:
             - sick
@@ -306,7 +306,7 @@ check `this link <https://www.kaggle.com/uciml/pima-indians-diabetes-database>`_
         # model definition
         model:
             type: classification
-            algorithm: random forest
+            algorithm: RandomForest
             arguments:
                 # notice that this is the available args for the random forest model. check different available args for all supported models by running igel help
                 n_estimators: 100

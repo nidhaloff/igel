@@ -10,7 +10,7 @@ dataset:
 
 model:
     type: regression
-    algorithm: random forest
+    algorithm: RandomForest
 
 target:
     - y1
