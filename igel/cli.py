@@ -21,7 +21,9 @@ class CLI(object):
 
         # models arguments
         "name": "model_name",
-        "type": "model_type"
+        "model": "model_name",
+        "type": "model_type",
+        "tg": "target"
     }
 
     def __init__(self):
@@ -158,6 +160,9 @@ class CLI(object):
 
     def help(self, *args, **kwargs):
         self.parser.print_help()
+
+    def init(self, *args, **kwargs):
+        Igel.create_init_mock_file(**self.dict_args)
 
     def fit(self, *args, **kwargs):
         print("""

@@ -2,6 +2,18 @@
 History
 =======
 
+0.2.2 (2020-09-23)
+-------------------
+
+* added init command
+* users can get started quickly by getting a default yaml file "on the fly"
+
+0.2.1 (2020-09-21)
+-------------------
+
+* added support for other ensemble models like adaboost, extra trees etc..
+
+
 0.2.0 (2020-09-19)
 -------------------
 

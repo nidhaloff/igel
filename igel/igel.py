@@ -8,7 +8,7 @@ import warnings
 import logging
 
 try:
-    from igel.utils import read_yaml, extract_params, _reshape
+    from igel.utils import read_yaml, create_yaml, extract_params, _reshape
     from igel.data import evaluate_model
     from igel.configs import configs
     from igel.data import models_dict, metrics_dict
@@ -42,7 +42,7 @@ class Igel(object):
     evaluation_file = configs.get('evaluation_file')  # path to the evaluation.json file
     prediction_file = configs.get('prediction_file')  # path to the predictions.csv
     default_dataset_props = configs.get('dataset_props')  # dataset props that can be changed from the yaml file
-    default_model_props = configs.get('models_props')  # model props that can be changed from the yaml file
+    default_model_props = configs.get('model_props')  # model props that can be changed from the yaml file
     model = None
 
     def __init__(self, **cli_args):
@@ -376,6 +376,34 @@ class Igel(object):
 
         except Exception as e:
             logger.exception(f"Error while preparing predictions: {e}")
+
+    @staticmethod
+    def create_init_mock_file(model_type=None, model_name=None, target=None, *args, **kwargs):
+        path = configs.get('init_file_path', None)
+        if not path:
+            raise Exception("You need to provide a path for the init file")
+
+        dataset_props = Igel.default_dataset_props
+        model_props = Igel.default_model_props
+        if model_type:
+            logger.info(f"user selected model type = {model_type}")
+            model_props['type'] = model_type
+        if model_name:
+            logger.info(f"user selected algorithm = {model_name}")
+            model_props['algorithm'] = model_name
+
+        logger.info(f"initalizing a default igel.yaml in {path}")
+        default_data = {
+            "dataset": dataset_props,
+            "model": model_props,
+            "target": ['provide your target(s) here'] if not target else [tg for tg in target.split()]
+        }
+        created = create_yaml(default_data, path)
+        if created:
+            logger.info(f"a default igel.yaml is created for you in {path}. "
+                        f"you just need to overwrite the values to meet your expectations")
+        else:
+            logger.warning(f"something went wrong while initializing a default file")
 
 
 if __name__ == '__main__':
