@@ -21,6 +21,7 @@ First step is to provide a yaml file. You can do this manually by creating a .ya
 However, if you are lazy (and you probably are, like me :D), you can use the igel init command to get started fast:
 
 .. code-block:: console
+
     """
     igel init <args>
     possible optional args are: (notice that these args are optional, so you can also just run igel init if you want)
