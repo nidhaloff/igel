@@ -34,7 +34,7 @@ class Igel(object):
     """
     Igel is the base model to use the fit, evaluate and predict functions of the sklearn library
     """
-    available_commands = ('fit', 'evaluate', 'predict')
+    available_commands = ('fit', 'evaluate', 'predict', 'experiment')
     supported_types = ('regression', 'classification')  # supported types that can be selected in the yaml file
     results_path = configs.get('results_path')  # path to the results folder
     default_model_path = configs.get('default_model_path')  # path to the pre-fitted model

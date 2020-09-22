@@ -301,6 +301,7 @@ class CLI(object):
         out.append(hline)
         return "\n".join(out)
 
+
 def main():
     CLI()
 
