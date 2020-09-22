@@ -71,6 +71,7 @@ a **single line of code**
 
 All you need is a yaml file, where you need to describe what you are trying to do. That's it!
 
+
 Installation
 -------------
 
@@ -99,7 +100,27 @@ you can run this command to get instruction on how to use the model:
     Take some time and read the output of help command. You ll save time later if you understand how to use igel.
     """
 
-First step is to provide a yaml file:
+First step is to provide a yaml file. You can do this manually by creating a .yaml file and editing it yourself.
+However, if you are lazy (and you probably are, like me :D), you can use the igel init command to get started fast:
+
+.. code-block:: console
+    """
+    igel init <args>
+    possible optional args are: (notice that these args are optional, so you can also just run igel init if you want)
+    -type: regression or classification
+    -model: model you want to use
+    -target: target you want to predict
+
+
+    Example:
+    If I want to use neural networks to classify whether someone is sick or not using the indian-diabetes dataset,
+    then I would use this command to initliaze a yaml file:
+    $ igel init -type "classification" -model "NeuralNetwork" -target "sick"
+    """
+    $ igel init
+
+After runnig the command, an igel.yaml file will be created for you in the current working directory. You can
+check it out and modify it if you want to, otherwise you can also create everything from scratch.
 
 .. code-block:: yaml
 

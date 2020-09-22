@@ -40,6 +40,7 @@ class CLI(object):
 
                     igel <command> [<args>]
                     - Available sub-commands at the moment are:
+                       init                initialize a yaml file with default parameters
                        fit                 fits a model
                        evaluate            evaluate the performance of a pre-fitted model
                        predict             Predicts using a pre-fitted model
@@ -80,6 +81,9 @@ class CLI(object):
                     - Quick Start:
 
                     igel -h                                                             # print this help guide
+
+                    igel init -type regression -model RandomForest                      # automatically create a yaml file in the working directory
+                                                                                        # with some default parameters to get you started fast
 
                     igel models                                                         # type this to get a list of supported models
 
