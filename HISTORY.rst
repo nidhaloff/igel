@@ -2,6 +2,12 @@
 History
 =======
 
+0.2.3 (2020-09-26)
+-------------------
+
+* added clustering support
+* all clustering classes of sklearn are now supported
+
 0.2.2 (2020-09-23)
 -------------------
 
