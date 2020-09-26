@@ -45,6 +45,19 @@ from sklearn.naive_bayes import (BernoulliNB,
                                  GaussianNB,
                                  MultinomialNB)
 
+from sklearn.cluster import (KMeans,
+                             AffinityPropagation,
+                             AgglomerativeClustering,
+                             Birch,
+                             DBSCAN,
+                             FeatureAgglomeration,
+                             MiniBatchKMeans,
+                             MeanShift,
+                             OPTICS,
+                             SpectralBiclustering,
+                             SpectralClustering,
+                             SpectralCoclustering)
+
 from sklearn.calibration import CalibratedClassifierCV
 from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor, ExtraTreeClassifier, ExtraTreeRegressor
 from sklearn.svm import SVC, SVR, LinearSVC, LinearSVR, NuSVC, NuSVR
@@ -373,6 +386,77 @@ models_dict = {
                     "#sklearn.naive_bayes.MultinomialNB"
         }
 
+
+    },
+
+    "clustering": {
+        "KMeans": {
+            "class": KMeans,
+            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html"
+                    "#sklearn.cluster.KMeans"
+        },
+
+        "AffinityPropagation": {
+            "class": AffinityPropagation,
+            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.cluster.AffinityPropagation.html"
+                    "#sklearn.cluster.AffinityPropagation"
+        },
+
+        "Birch": {
+            "class": Birch,
+            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.cluster.Birch.html#sklearn.cluster.Birch"
+        },
+
+        "AgglomerativeClustering": {
+            "class": AgglomerativeClustering,
+            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.cluster.AgglomerativeClustering.html#"
+                    "sklearn.cluster.AgglomerativeClustering"
+        },
+
+        "FeatureAgglomeration": {
+            "class": FeatureAgglomeration,
+            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.cluster.FeatureAgglomeration.html#"
+                    "sklearn.cluster.FeatureAgglomeration"
+        },
+        "DBSCAN": {
+            "class": DBSCAN,
+            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.cluster.DBSCAN.html"
+                    "#sklearn.cluster.DBSCAN"
+        },
+        "MiniBatchKMeans": {
+            "class": MiniBatchKMeans,
+            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.cluster.MiniBatchKMeans.html"
+                    "#sklearn.cluster.MiniBatchKMeans"
+        },
+
+        "SpectralBiclustering": {
+            "class": SpectralBiclustering,
+            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.cluster.SpectralBiclustering.html"
+                    "#sklearn.cluster.SpectralBiclustering"
+        },
+
+        "SpectralCoclustering": {
+            "class": SpectralCoclustering,
+            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.cluster.SpectralCoclustering.html"
+                    "#sklearn.cluster.SpectralCoclustering"
+        },
+
+        "SpectralClustering": {
+            "class": SpectralClustering,
+            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.cluster.SpectralClustering.html"
+                    "#sklearn.cluster.SpectralClustering"
+        },
+
+        "MeanShift": {
+            "class": MeanShift,
+            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.cluster.MeanShift.html#"
+                    "sklearn.cluster.MeanShift"
+        },
+        "OPTICS": {
+            "class": OPTICS,
+            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.cluster.OPTICS.html"
+                    "#sklearn.cluster.OPTICS"
+        },
 
     }
 

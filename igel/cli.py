@@ -2,8 +2,6 @@
 import sys
 import argparse
 from igel import Igel, models_dict, metrics_dict
-import inspect
-import pdb
 import pandas as pd
 
 
@@ -60,7 +58,7 @@ class CLI(object):
                         --yaml_file         Path to the yaml file that will be used when fitting the model
 
                         # for getting help with the models command:
-                        --model_type        type of the model you want to get help on -> whether regression or classification
+                        --model_type        type of the model you want to get help on -> whether regression, classification or clustering
                         --model_name        name of the model you want to get help on
                         ------------------------------------------
 
@@ -202,16 +200,18 @@ class CLI(object):
         """)
         Igel(**self.dict_args)
 
-    def print_models_overview(self):
+    def _print_models_overview(self):
         print(f"\nIgel's supported models overview: \n")
         reg_algs = list(models_dict.get('regression').keys())
         clf_algs = list(models_dict.get('classification').keys())
+        cluster_algs = list(models_dict.get('clustering').keys())
         df_algs = pd.DataFrame.from_dict({
             "regression": reg_algs,
-            "classification": clf_algs
+            "classification": clf_algs,
+            "clustering": cluster_algs
         }, orient="index").transpose().fillna('----')
 
-        df = self.tableize(df_algs)
+        df = self._tableize(df_algs)
         print(df)
 
     def models(self):
@@ -219,19 +219,19 @@ class CLI(object):
         show an overview of all models supported by igel
         """
         if not self.dict_args or len(self.dict_args.keys()) <= 1:
-            self.print_models_overview()
+            self._print_models_overview()
         else:
             model_name = self.dict_args.get('model_name', None)
             model_type = self.dict_args.get('model_type', None)
 
             if not model_name:
                 print(f"Please enter a supported model")
-                self.print_models_overview()
+                self._print_models_overview()
             else:
                 if not model_type:
                     print(f"Please enter a type argument to get help on the chosen model\n"
                           f"type can be whether regression or classification \n")
-                    self.print_models_overview()
+                    self._print_models_overview()
                     return
                 if model_type not in ('regression', 'classification'):
                     raise Exception(f"{model_type} is not supported! \n"
@@ -263,7 +263,7 @@ class CLI(object):
             "classification": clf_metrics
         }, orient="index").transpose().fillna('----')
 
-        df_metrics = self.tableize(df_metrics)
+        df_metrics = self._tableize(df_metrics)
         print(df_metrics)
 
     def experiment(self):
@@ -291,7 +291,7 @@ class CLI(object):
         Igel(**eval_args)
         Igel(**pred_args)
 
-    def tableize(self, df):
+    def _tableize(self, df):
         if not isinstance(df, pd.DataFrame):
             return
         df_columns = df.columns.tolist()
