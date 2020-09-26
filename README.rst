@@ -71,6 +71,7 @@ a **single line of code**
 
 All you need is a yaml file, where you need to describe what you are trying to do. That's it!
 
+Igel supports all sklearn's machine learning functionality, whether regression, classification or clustering.
 
 Installation
 -------------
