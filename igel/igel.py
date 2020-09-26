@@ -35,7 +35,7 @@ class Igel(object):
     Igel is the base model to use the fit, evaluate and predict functions of the sklearn library
     """
     available_commands = ('fit', 'evaluate', 'predict', 'experiment')
-    supported_types = ('regression', 'classification')  # supported types that can be selected in the yaml file
+    supported_types = ('regression', 'classification', 'clustering')
     results_path = configs.get('results_path')  # path to the results folder
     default_model_path = configs.get('default_model_path')  # path to the pre-fitted model
     description_file = configs.get('description_file')  # path to the description.json file
@@ -165,7 +165,9 @@ class Igel(object):
         @return: list of separate x and y
         """
         assert isinstance(self.target, list), "provide target(s) as a list in the yaml file"
-        assert len(self.target) > 0, "please provide at least a target to predict"
+        if self.model_type != "clustering":
+            assert len(self.target) > 0, "please provide at least a target to predict"
+
         try:
             dataset = pd.read_csv(self.data_path)
             logger.info(f"dataset shape: {dataset.shape}")
@@ -196,7 +198,7 @@ class Igel(object):
                                                     strategy=strategy)
                     logger.info(f"shape of the dataset after handling missing values => {dataset.shape}")
 
-            if target == 'predict':
+            if target == 'predict' or target == 'fit_cluster':
                 x = _reshape(dataset.to_numpy())
                 if not preprocess_props:
                     return x
@@ -250,6 +252,12 @@ class Igel(object):
         except Exception as e:
             logger.exception(f"error occured while preparing the data: {e.args}")
 
+    def _prepare_clustering_data(self):
+        """
+        preprocess data for the clustering algorithm
+        """
+        return self._process_data(target='fit_cluster')
+
     def _prepare_predict_data(self):
         """
         preprocess predict data to get similar data to the one used when training the model
@@ -281,33 +289,50 @@ class Igel(object):
         fit a machine learning model and save it to a file along with a description.json file
         @return: None
         """
-        x_train, y_train, x_test, y_test = self._prepare_fit_data()
+        x_train = None
+        x_test = None
+        y_train = None
+        y_test = None
+        if self.model_type == 'clustering':
+            x_train = self._prepare_clustering_data()
+        else:
+            x_train, y_train, x_test, y_test = self._prepare_fit_data()
         self.model, model_args = self._create_model(**kwargs)
         logger.info(f"executing a {self.model.__class__.__name__} algorithm...")
 
         # convert to multioutput if there is more than one target to predict:
-        if len(self.target) > 1:
+        if self.model_type != 'clustering' and len(self.target) > 1:
             logger.info(f"predicting multiple targets detected. Hence, the model will be automatically "
                         f"converted to a multioutput model")
             self.model = MultiOutputClassifier(self.model) \
                 if self.model_type == 'classification' else MultiOutputRegressor(self.model)
-        self.model.fit(x_train, y_train)
+
+        if self.model_type != 'clustering':
+            self.model.fit(x_train, y_train)
+        else:
+            self.model.fit(x_train)
+
         saved = self._save_model(self.model)
         if saved:
             logger.info(f"model saved successfully and can be found in the {self.results_path} folder")
 
         eval_results = None
-        if x_test is None:
-            logger.info(f"no split options was provided.")
+        if self.model_type == 'clustering':
+            eval_results = self.model.score(x_train)
         else:
-            logger.info(f"split option detected. The performance will be automatically evaluated "
-                        f"using the test data portion")
-            y_pred = self.model.predict(x_test)
-            eval_results = self.get_evaluation(model=self.model,
-                                               x_test=x_test,
-                                               y_true=y_test,
-                                               y_pred=y_pred,
-                                               **kwargs)
+            if x_test is None:
+                logger.info(f"no split options was provided. training score will be calculated")
+                eval_results = self.model.score(x_train, y_train)
+
+            else:
+                logger.info(f"split option detected. The performance will be automatically evaluated "
+                            f"using the test data portion")
+                y_pred = self.model.predict(x_test)
+                eval_results = self.get_evaluation(model=self.model,
+                                                   x_test=x_test,
+                                                   y_true=y_test,
+                                                   y_pred=y_pred,
+                                                   **kwargs)
 
         fit_description = {
             "model": self.model.__class__.__name__,
@@ -323,8 +348,10 @@ class Igel(object):
             "test_data_size": None if x_test is None else x_test.shape[0],
             "results_path": str(self.results_path),
             "model_path": str(self.default_model_path),
-            "target": self.target,
-            "results_on_test_data": eval_results
+            "target": None if self.model_type == 'clustering' else self.target,
+            "results_on_test_data": eval_results,
+            "cluster_centers": None if self.model_type != 'clustering' else self.model.cluster_centers_,
+            "cluster_labels": None if self.model_type != 'clustering' else self.model.labels_,
         }
 
         try:
@@ -339,15 +366,23 @@ class Igel(object):
         evaluate a pre-fitted model and save results to a evaluation.json
         @return: None
         """
+        x_val = None
+        y_true = None
+        eval_results = None
         try:
             model = self._load_model()
-            x_val, y_true = self._prepare_eval_data()
-            y_pred = model.predict(x_val)
-            eval_results = self.get_evaluation(model=model,
-                                               x_test=x_val,
-                                               y_true=y_true,
-                                               y_pred=y_pred,
-                                               **kwargs)
+            if self.model_type != 'clustering':
+                x_val, y_true = self._prepare_eval_data()
+                y_pred = model.predict(x_val)
+                eval_results = self.get_evaluation(model=model,
+                                                   x_test=x_val,
+                                                   y_true=y_true,
+                                                   y_pred=y_pred,
+                                                   **kwargs)
+            else:
+                x_val = self._prepare_clustering_data()
+                y_pred = model.predict(x_val)
+                eval_results = model.score(x_val, y_pred)
 
             logger.info(f"saving fit description to {self.evaluation_file}")
             with open(self.evaluation_file, 'w', encoding='utf-8') as f:
@@ -363,7 +398,7 @@ class Igel(object):
         """
         try:
             model = self._load_model(f=self.model_path)
-            x_val = self._prepare_predict_data()
+            x_val = self._prepare_predict_data()  # the same is used for clustering
             y_pred = model.predict(x_val)
             y_pred = _reshape(y_pred)
             logger.info(f"predictions shape: {y_pred.shape} | shape len: {len(y_pred.shape)}")

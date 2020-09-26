@@ -83,6 +83,44 @@ Installation
 
 - Check the docs for other ways to install igel from source
 
+Models
+-------
+
+Igel's supported models:
+
+.. code-block:: console
+
+        +--------------------+----------------------------+-------------------------+
+        |      regression    |        classification      |        clustering       |
+        +--------------------+----------------------------+-------------------------+
+        |   LinearRegression |         LogisticRegression |                  KMeans |
+        |              Lasso |                      Ridge |     AffinityPropagation |
+        |          LassoLars |               DecisionTree |                   Birch |
+        | BayesianRegression |                  ExtraTree | AgglomerativeClustering |
+        |    HuberRegression |               RandomForest |    FeatureAgglomeration |
+        |              Ridge |                 ExtraTrees |                  DBSCAN |
+        |  PoissonRegression |                        SVM |         MiniBatchKMeans |
+        |      ARDRegression |                  LinearSVM |    SpectralBiclustering |
+        |  TweedieRegression |                      NuSVM |    SpectralCoclustering |
+        | TheilSenRegression |            NearestNeighbor |      SpectralClustering |
+        |    GammaRegression |              NeuralNetwork |               MeanShift |
+        |   RANSACRegression | PassiveAgressiveClassifier |                  OPTICS |
+        |       DecisionTree |                 Perceptron |                    ---- |
+        |          ExtraTree |               BernoulliRBM |                    ---- |
+        |       RandomForest |           BoltzmannMachine |                    ---- |
+        |         ExtraTrees |       CalibratedClassifier |                    ---- |
+        |                SVM |                   Adaboost |                    ---- |
+        |          LinearSVM |                    Bagging |                    ---- |
+        |              NuSVM |           GradientBoosting |                    ---- |
+        |    NearestNeighbor |        BernoulliNaiveBayes |                    ---- |
+        |      NeuralNetwork |      CategoricalNaiveBayes |                    ---- |
+        |         ElasticNet |       ComplementNaiveBayes |                    ---- |
+        |       BernoulliRBM |         GaussianNaiveBayes |                    ---- |
+        |   BoltzmannMachine |      MultinomialNaiveBayes |                    ---- |
+        |           Adaboost |                       ---- |                    ---- |
+        |            Bagging |                       ---- |                    ---- |
+        |   GradientBoosting |                       ---- |                    ---- |
+        +--------------------+----------------------------+-------------------------+
 
 Quick Start
 ------------
