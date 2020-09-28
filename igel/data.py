@@ -85,7 +85,14 @@ models_dict = {
         "LinearRegression": {
             "class": LinearRegression,
             "link": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html",
-            "sgd_class": SGDRegressor
+
+        },
+
+        "SGDRegressor": {
+            "class": SGDRegressor,
+            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.SGDRegressor.html?"
+                    "highlight=sgd#sklearn.linear_model.SGDRegressor",
+
         },
 
         "Lasso": {
@@ -249,8 +256,14 @@ models_dict = {
             "class": LogisticRegression,
             "link": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html?"
                     "highlight=regression#sklearn.linear_model.LogisticRegression",
-            "cv_class": LogisticRegressionCV,
-            "sgd_class": SGDClassifier
+            "cv_class": LogisticRegressionCV
+        },
+
+        "SGDClassifier": {
+
+            "class": SGDClassifier,
+            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.SGDClassifier.html?"
+                    "highlight=sgd#sklearn.linear_model.SGDClassifier",
         },
 
         "Ridge": {

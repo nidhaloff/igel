@@ -8,21 +8,21 @@ import warnings
 import logging
 
 try:
-    from igel.utils import read_yaml, create_yaml, extract_params, _reshape
+    from igel.utils import read_yaml, create_yaml, extract_params, _reshape, read_json
     from igel.data import evaluate_model
     from igel.configs import configs
     from igel.data import models_dict, metrics_dict
     from igel.preprocessing import update_dataset_props
     from igel.preprocessing import handle_missing_values, encode, normalize
 except ImportError:
-    from utils import read_yaml, extract_params, _reshape
+    from utils import read_yaml, create_yaml, extract_params, _reshape, read_json
     from data import evaluate_model
     from configs import configs
     from data import models_dict, metrics_dict
     from preprocessing import update_dataset_props
     from preprocessing import handle_missing_values, encode, normalize
 
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, cross_validate
 from sklearn.multioutput import MultiOutputClassifier, MultiOutputRegressor
 
 warnings.filterwarnings("ignore")
@@ -57,8 +57,11 @@ class Igel(object):
 
         if self.command == "fit":
             self.yml_path = cli_args.get('yaml_path')
-            self.yaml_configs = read_yaml(self.yml_path)
-            logger.debug(f"your chosen configuration: {self.yaml_configs}")
+            file_ext = self.yml_path.split('.')[-1]
+            logger.info(f"You passed the configurations as a {file_ext} file.")
+
+            self.yaml_configs = read_yaml(self.yml_path) if file_ext == 'yaml' else read_json(self.yml_path)
+            logger.info(f"your chosen configuration: {self.yaml_configs}")
 
             # dataset options given by the user
             self.dataset_props: dict = self.yaml_configs.get('dataset', self.default_dataset_props)
@@ -91,6 +94,8 @@ class Igel(object):
         """
         model_type: str = self.model_props.get('type')
         model_algorithm: str = self.model_props.get('algorithm')
+        use_cv = self.model_props.get('use_cv_estimator', None)
+
         model_args = None
         if not model_type or not model_algorithm:
             raise Exception(f"model_type and algorithm cannot be None")
@@ -106,7 +111,18 @@ class Igel(object):
             elif not model_props_args or model_props_args.lower() == "default":
                 model_args = None
 
-            model_class = model.get('class')
+            if use_cv:
+                model_class = model.get('cv_class', None)
+                if model_class:
+                    logger.info(
+                    f"cross validation estimator detected. "
+                    f"Switch to the CV version of the {model_algorithm} algorithm")
+                else:
+                    logger.info(
+                        f"No CV class found for the {model_algorithm} algorithm"
+                    )
+            else:
+                model_class = model.get('class')
             logger.info(f"model arguments: \n"
                         f"{self.model_props.get('arguments')}")
             model = model_class(**kwargs) if not model_args else model_class(**model_args)
@@ -169,7 +185,9 @@ class Igel(object):
             assert len(self.target) > 0, "please provide at least a target to predict"
 
         try:
-            dataset = pd.read_csv(self.data_path)
+            read_data_options = self.dataset_props.get('read_data_options', None)
+            dataset = pd.read_csv(self.data_path) if not read_data_options else pd.read_csv(self.data_path,
+                                                                                            **read_data_options)
             logger.info(f"dataset shape: {dataset.shape}")
             attributes = list(dataset.columns)
             logger.info(f"dataset attributes: {attributes}")
@@ -293,6 +311,9 @@ class Igel(object):
         x_test = None
         y_train = None
         y_test = None
+        cv_results = None
+        eval_results = None
+        cv_params = None
         if self.model_type == 'clustering':
             x_train = self._prepare_clustering_data()
         else:
@@ -308,6 +329,13 @@ class Igel(object):
                 if self.model_type == 'classification' else MultiOutputRegressor(self.model)
 
         if self.model_type != 'clustering':
+            cv_params = self.model_props.get('cross_validate', None)
+            if not cv_params:
+                logger.info(f"cross validation is not provided")
+            else:
+                cv_results = cross_validate(estimator=self.model,
+                                            X=x_train,
+                                            y=y_train, **cv_params)
             self.model.fit(x_train, y_train)
         else:
             self.model.fit(x_train)
@@ -316,7 +344,6 @@ class Igel(object):
         if saved:
             logger.info(f"model saved successfully and can be found in the {self.results_path} folder")
 
-        eval_results = None
         if self.model_type == 'clustering':
             eval_results = self.model.score(x_train)
         else:
@@ -349,10 +376,24 @@ class Igel(object):
             "results_path": str(self.results_path),
             "model_path": str(self.default_model_path),
             "target": None if self.model_type == 'clustering' else self.target,
-            "results_on_test_data": eval_results,
-            "cluster_centers": None if self.model_type != 'clustering' else self.model.cluster_centers_,
-            "cluster_labels": None if self.model_type != 'clustering' else self.model.labels_,
+            "results_on_test_data": eval_results
+
         }
+        if self.model_type == 'clustering':
+            clustering_res = {
+                "cluster_centers": self.model.cluster_centers_,
+                "cluster_labels": self.model.labels_
+            }
+            fit_description['clustering_results'] = clustering_res
+
+        if cv_params:
+            cv_res = {
+                "fit_time": cv_results['fit_time'].tolist(),
+                "score_time": cv_results['score_time'].tolist(),
+                "test_score": cv_results['test_score'].tolist()
+            }
+            fit_description['cross_validation_params'] = cv_params
+            fit_description['cross_validation_results'] = cv_res
 
         try:
             logger.info(f"saving fit description to {self.description_file}")

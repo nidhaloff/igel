@@ -1,5 +1,5 @@
 import yaml
-
+import json
 
 def create_yaml(data, f):
     try:
@@ -20,6 +20,16 @@ def read_yaml(f):
             print(exc)
         else:
             return res
+
+
+def read_json(f):
+    try:
+        with open(f, 'r') as file:
+            data = json.load(file)
+    except Exception as e:
+        print("error while reading the json file: ", e.args)
+    else:
+        return data
 
 
 def extract_params(config):
