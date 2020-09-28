@@ -69,7 +69,7 @@ Intro
 igel is built on top of scikit-learn. It provides a simple way to use machine learning without writing
 a **single line of code**
 
-All you need is a yaml file, where you need to describe what you are trying to do. That's it!
+All you need is a **yaml** (or **json**) file, where you need to describe what you are trying to do. That's it!
 
 Igel supports all sklearn's machine learning functionality, whether regression, classification or clustering.
 
@@ -139,7 +139,7 @@ you can run this command to get instruction on how to use the model:
     Take some time and read the output of help command. You ll save time later if you understand how to use igel.
     """
 
-First step is to provide a yaml file. You can do this manually by creating a .yaml file and editing it yourself.
+First step is to provide a yaml file (you can also use json if you want). You can do this manually by creating a .yaml file and editing it yourself.
 However, if you are lazy (and you probably are, like me :D), you can use the igel init command to get started fast:
 
 .. code-block:: console
@@ -262,7 +262,47 @@ Here is an overview of all supported configurations (for now):
     # dataset operations
     dataset:
         type: csv
-        read_data_options: default
+        read_data_options: # options you want to supply for reading your data
+            sep:  # Delimiter to use.
+            delimiter:  # Alias for sep.
+            header:     # Row number(s) to use as the column names, and the start of the data.
+            names:  # List of column names to use
+            index_col: # Column(s) to use as the row labels of the DataFrame,
+            usecols:    # Return a subset of the columns
+            squeeze:    # If the parsed data only contains one column then return a Series.
+            prefix:     # Prefix to add to column numbers when no header, e.g. ‘X’ for X0, X1, …
+            mangle_dupe_cols:   # Duplicate columns will be specified as ‘X’, ‘X.1’, …’X.N’, rather than ‘X’…’X’. Passing in False will cause data to be overwritten if there are duplicate names in the columns.
+            dtype:  # Data type for data or columns
+            engine:     # Parser engine to use. The C engine is faster while the python engine is currently more feature-complete.
+            converters: # Dict of functions for converting values in certain columns. Keys can either be integers or column labels.
+            true_values: # Values to consider as True.
+            false_values: # Values to consider as False.
+            skipinitialspace: # Skip spaces after delimiter.
+            skiprows: # Line numbers to skip (0-indexed) or number of lines to skip (int) at the start of the file.
+            skipfooter: # Number of lines at bottom of file to skip
+            nrows: # Number of rows of file to read. Useful for reading pieces of large files.
+            na_values: # Additional strings to recognize as NA/NaN.
+            keep_default_na: # Whether or not to include the default NaN values when parsing the data.
+            na_filter: # Detect missing value markers (empty strings and the value of na_values). In data without any NAs, passing na_filter=False can improve the performance of reading a large file.
+            verbose: # Indicate number of NA values placed in non-numeric columns.
+            skip_blank_lines: # If True, skip over blank lines rather than interpreting as NaN values.
+            parse_dates: # try parsing the dates
+            infer_datetime_format: # If True and parse_dates is enabled, pandas will attempt to infer the format of the datetime strings in the columns, and if it can be inferred, switch to a faster method of parsing them.
+            keep_date_col: # If True and parse_dates specifies combining multiple columns then keep the original columns.
+            dayfirst: # DD/MM format dates, international and European format.
+            cache_dates: # If True, use a cache of unique, converted dates to apply the datetime conversion.
+            thousands: # the thousands operator
+            decimal: # Character to recognize as decimal point (e.g. use ‘,’ for European data).
+            lineterminator: # Character to break file into lines.
+            escapechar: # One-character string used to escape other characters.
+            comment: # Indicates remainder of line should not be parsed. If found at the beginning of a line, the line will be ignored altogether. This parameter must be a single character.
+            encoding: # Encoding to use for UTF when reading/writing (ex. ‘utf-8’).
+            dialect: # If provided, this parameter will override values (default or not) for the following parameters: delimiter, doublequote, escapechar, skipinitialspace, quotechar, and quoting
+            delim_whitespace: # Specifies whether or not whitespace (e.g. ' ' or '    ') will be used as the sep
+            low_memory: # Internally process the file in chunks, resulting in lower memory use while parsing, but possibly mixed type inference.
+            memory_map: # If a filepath is provided for filepath_or_buffer, map the file object directly onto memory and access the data directly from there. Using this option can improve performance because there is no longer any I/O overhead.
+
+
         split:  # split options
             test_size: 0.2  # 0.2 means 20% for the test data, so 80% are automatically for training
             shuffle: True   # whether to shuffle the data before/while splitting
