@@ -1,9 +1,0 @@
-
-# model definition
-model:
-    type: classification
-    algorithm: random forest
-
-# target you want to predict
-target:
-    - sick

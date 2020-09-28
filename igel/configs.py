@@ -4,7 +4,9 @@ import os
 
 stats_dir = 'model_results'
 model_file = 'model.sav'
+init_file = 'igel.yaml'
 res_path = Path(os.getcwd()) / stats_dir
+init_file_path = Path(os.getcwd()) / init_file
 description_file = 'description.json'
 evaluation_file = 'evaluation.json'
 predictions_file = 'predictions.csv'
@@ -17,13 +19,50 @@ configs = {
     "description_file": res_path / description_file,
     "evaluation_file": res_path / evaluation_file,
     "prediction_file": res_path / predictions_file,
+    "init_file_path": init_file_path,
 
     "dataset_props": {
-        "csv_separator": ",",
-        "normalize": False
+
+        "type": "csv",
+        "read_data_options": "default",
+        "split": {
+            "test_size": 0.2,
+            "shuffle": True,
+            "stratify": "default"
+        },
+        "preprocess": {
+            "missing_values": "mean",
+            "scale": {
+                "method": "standard",
+                "target": "inputs"
+            }
+        }
+
     },
     "model_props": {
+        "type": "classification",
+        "algorithm": "RandomForest",
+        "arguments": "default"
+    },
+
+    "available_dataset_props": {
+        "type": "csv",
+        "separator": ",",
+        "split": {
+            "test_size": None,
+            "shuffle": False,
+            "stratify": None
+        },
+        "preprocess": {
+            "missing_values": "mean",
+            "encoding": None,
+            "scale": None,
+        }
+
+    },
+    "available_model_props": {
         "type": "regression",
-        "algorithm": "linear regression"
+        "algorithm": "linear regression",
+        "arguments": "default"
     }
 }

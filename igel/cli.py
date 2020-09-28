@@ -1,43 +1,113 @@
 """Console script for igel."""
 import sys
 import argparse
-from igel import IgelModel
+from igel import Igel, models_dict, metrics_dict
+import pandas as pd
 
 
 class CLI(object):
     """CLI describes a command line interface for interacting with igel, there
-    are several different functions that can be performed. These functions are:
-
-    - fit - fits a model on the input file specified to it
-    - predict - Given a list of $hat{y}$ values, compute $d(\\hat{y}, y) under a
-      specified metric
+    are several different functions that can be performed.
 
     """
 
     available_args = {
+        # fit, evaluate and predict args:
         "dp": "data_path",
         "yml": "yaml_path",
+        "DP": "data_paths",
+
+        # models arguments
+        "name": "model_name",
+        "model": "model_name",
+        "type": "model_type",
+        "tg": "target"
     }
 
     def __init__(self):
         self.parser = argparse.ArgumentParser(
             description='Igel CLI Runner',
             usage='''
+                     ___           _    ____ _     ___
+                    |_ _|__ _  ___| |  / ___| |   |_ _|
+                     | |/ _` |/ _ \ | | |   | |    | |
+                     | | (_| |  __/ | | |___| |___ | |
+                    |___\__, |\___|_|  \____|_____|___|
+                        |___/
+
 
                     igel <command> [<args>]
                     - Available sub-commands at the moment are:
+<<<<<<< HEAD
                        algorithms          get a list of all supported algorithms by igel
+=======
+                       init                initialize a yaml file with default parameters
+>>>>>>> 335dd91c7111ffb63283e823f7d773b36f21cf98
                        fit                 fits a model
                        evaluate            evaluate the performance of a pre-fitted model
                        predict             Predicts using a pre-fitted model
+                       experiment          this command will run fit, evaluate and predict together
+                       help                get help about how to use igel
+                       models              get a list of supported machine learning algorithms/models
+                       metrics             get a list of all supported metrics
 
                     - Available arguments:
+
+                        # for usage with the fit, evaluate or predict command:
                         --data_path         Path to your dataset
                         --yaml_file         Path to your yaml file
+
+                        # for usage with the experiment command
+                        --data_paths        Paths to data you want to use for fitting, evaluating and predict respectively
+                        --yaml_file         Path to the yaml file that will be used when fitting the model
+
+                        # for getting help with the models command:
+                        --model_type        type of the model you want to get help on -> whether regression, classification or clustering
+                        --model_name        name of the model you want to get help on
                         ------------------------------------------
-                        or for a short version
-                        -dp                 Path to your dataset
-                        -yml                Path to your yaml file
+
+                        or for the short version
+                        # for usage with the fit, evaluate or predict command:
+                        -dp         Path to your dataset
+                        -yml        Path to your yaml file
+
+                      # for usage with the experiment command
+                        -DP        Paths to data you want to use for fitting, evaluating and predict respectively
+                        -yml       Path to the yaml file that will be used when fitting the model
+
+                        # for getting help with the models command:
+                        -type        type of the model you want to get help on -> whether regression or classification
+                        -name        name of the model you want to get help on
+                        ------------------------------------------
+
+                    - Quick Start:
+
+                    igel -h                                                             # print this help guide
+
+                    igel init -type regression -model RandomForest                      # automatically create a yaml file in the working directory
+                                                                                        # with some default parameters to get you started fast
+
+                    igel models                                                         # type this to get a list of supported models
+
+                    igel models -type regression -name RandomForest                     # this will give you a help on how to use the
+                                                                                        # RandomForestRegressor and will provide
+                                                                                        # you a link to get more help in the sklearn website
+
+                    igel metrics                                                        # get a list of all supported metrics
+
+                    igel fit -dp "path_to_data" -yml "path_to_yaml_file"                # fit a model
+
+                    igel evaluate -dp "path_to_data"                                    # evaluate the trained/pre-fitted model
+
+                    igel predict -dp "path_to_data"                                     # make predictions using the trained/pre-fitted model
+
+                    igel experiment -DP "path_to_train_data \                           # this will run fit using the trian data first,
+                                        path_to_evaluation_data \                       # then will run evaluate using the evaluation data
+                                        path_to_data_you_want_to_predict_on"            # and finally, will generate predictions on the last
+                                    -yml "path_to_yaml_file"                            # data you passed to predict on.
+
+
+
 ''')
 
         self.parser.add_argument('command', help='Subcommand to run')
@@ -76,6 +146,7 @@ class CLI(object):
 
         dict_args = {self.args[i].replace('-', ''): self.args[i + 1] for i in range(0, len(self.args) - 1, 2)}
         dict_args = self.validate_args(dict_args)
+        dict_args['cmd'] = self.cmd.command
         return dict_args
 
     def parse_command(self):
@@ -93,14 +164,155 @@ class CLI(object):
         # use dispatch pattern to invoke method with same name
         return cmd
 
-    def fit(self):
-        IgelModel(self.cmd.command, **self.dict_args).fit()
+    def help(self, *args, **kwargs):
+        self.parser.print_help()
 
-    def predict(self):
-        IgelModel(self.cmd.command, **self.dict_args).predict()
+    def init(self, *args, **kwargs):
+        Igel.create_init_mock_file(**self.dict_args)
 
-    def evaluate(self):
-        IgelModel(self.cmd.command, **self.dict_args).evaluate()
+    def fit(self, *args, **kwargs):
+        print("""
+         _____          _       _
+        |_   _| __ __ _(_)_ __ (_)_ __   __ _
+          | || '__/ _` | | '_ \| | '_ \ / _` |
+          | || | | (_| | | | | | | | | | (_| |
+          |_||_|  \__,_|_|_| |_|_|_| |_|\__, |
+                                        |___/
+        """)
+        Igel(**self.dict_args)
+
+    def predict(self, *args, **kwargs):
+        print("""
+         ____               _ _      _   _
+        |  _ \ _ __ ___  __| (_) ___| |_(_) ___  _ __
+        | |_) | '__/ _ \/ _` | |/ __| __| |/ _ \| '_ \
+        |  __/| | |  __/ (_| | | (__| |_| | (_) | | | |
+        |_|   |_|  \___|\__,_|_|\___|\__|_|\___/|_| |_|
+
+
+        """)
+        Igel(**self.dict_args)
+
+    def evaluate(self, *args, **kwargs):
+        print("""
+         _____            _             _   _
+        | ____|_   ____ _| |_   _  __ _| |_(_) ___  _ __
+        |  _| \ \ / / _` | | | | |/ _` | __| |/ _ \| '_ \
+        | |___ \ V / (_| | | |_| | (_| | |_| | (_) | | | |
+        |_____| \_/ \__,_|_|\__,_|\__,_|\__|_|\___/|_| |_|
+
+        """)
+        Igel(**self.dict_args)
+
+    def _print_models_overview(self):
+        print(f"\nIgel's supported models overview: \n")
+        reg_algs = list(models_dict.get('regression').keys())
+        clf_algs = list(models_dict.get('classification').keys())
+        cluster_algs = list(models_dict.get('clustering').keys())
+        df_algs = pd.DataFrame.from_dict({
+            "regression": reg_algs,
+            "classification": clf_algs,
+            "clustering": cluster_algs
+        }, orient="index").transpose().fillna('----')
+
+        df = self._tableize(df_algs)
+        print(df)
+
+    def models(self):
+        """
+        show an overview of all models supported by igel
+        """
+        if not self.dict_args or len(self.dict_args.keys()) <= 1:
+            self._print_models_overview()
+        else:
+            model_name = self.dict_args.get('model_name', None)
+            model_type = self.dict_args.get('model_type', None)
+
+            if not model_name:
+                print(f"Please enter a supported model")
+                self._print_models_overview()
+            else:
+                if not model_type:
+                    print(f"Please enter a type argument to get help on the chosen model\n"
+                          f"type can be whether regression or classification \n")
+                    self._print_models_overview()
+                    return
+                if model_type not in ('regression', 'classification'):
+                    raise Exception(f"{model_type} is not supported! \n"
+                                    f"model_type need to be regression or classification")
+
+                models = models_dict.get(model_type)
+                model_data = models.get(model_name)
+                model, link, *cv_class = model_data.values()
+                print(f"model type: {model_type} \n"
+                      f"model name: {model_name} \n"
+                      f"sklearn model class: {model.__name__} \n"
+
+                      f"{'-' * 60}\n"
+                      f"You can click the link below to know more about the optional arguments "
+                      f"that you can use with your chosen model ({model_name}).\n"
+                      f"You can provide these optional arguments in the yaml file if you want to use them\n"
+                      f"link: {link} \n")
+
+    def metrics(self):
+        """
+        show an overview of all metrics supported by igel
+        """
+        print(f"\nIgel's supported metrics overview: \n")
+        reg_metrics = [func.__name__ for func in metrics_dict.get('regression')]
+        clf_metrics = [func.__name__ for func in metrics_dict.get('classification')]
+
+        df_metrics = pd.DataFrame.from_dict({
+            "regression": reg_metrics,
+            "classification": clf_metrics
+        }, orient="index").transpose().fillna('----')
+
+        df_metrics = self._tableize(df_metrics)
+        print(df_metrics)
+
+    def experiment(self):
+        print("""
+         _____                      _                      _
+        | ____|_  ___ __   ___ _ __(_)_ __ ___   ___ _ __ | |_
+        |  _| \ \/ / '_ \ / _ \ '__| | '_ ` _ \ / _ \ '_ \| __|
+        | |___ >  <| |_) |  __/ |  | | | | | | |  __/ | | | |_
+        |_____/_/\_\ .__/ \___|_|  |_|_| |_| |_|\___|_| |_|\__|
+                   |_|
+
+        """)
+        data_paths = self.dict_args['data_paths']
+        yaml_path = self.dict_args['yaml_path']
+        train_data_path, eval_data_path, pred_data_path = data_paths.strip().split(' ')
+        # print(f"{train_data_path} | {eval_data_path} | {test_data_path}")
+        train_args = {"cmd": "fit",
+                      "yaml_path": yaml_path,
+                      "data_path": train_data_path}
+        eval_args = {"cmd": "evaluate",
+                     "data_path": eval_data_path}
+        pred_args = {"cmd": "predict",
+                     "data_path": pred_data_path}
+        Igel(**train_args)
+        Igel(**eval_args)
+        Igel(**pred_args)
+
+    def _tableize(self, df):
+        if not isinstance(df, pd.DataFrame):
+            return
+        df_columns = df.columns.tolist()
+        max_len_in_lst = lambda lst: len(sorted(lst, reverse=True, key=len)[0])
+        align_center = lambda st, sz: "{0}{1}{0}".format(" "*(1+(sz-len(st))//2), st)[:sz] if len(st) < sz else st
+        align_right = lambda st, sz: "{0}{1} ".format(" "*(sz-len(st)-1), st) if len(st) < sz else st
+        max_col_len = max_len_in_lst(df_columns)
+        max_val_len_for_col = dict([(col, max_len_in_lst(df.iloc[:,idx].astype('str'))) for idx, col in enumerate(df_columns)])
+        col_sizes = dict([(col, 2 + max(max_val_len_for_col.get(col, 0), max_col_len)) for col in df_columns])
+        build_hline = lambda row: '+'.join(['-' * col_sizes[col] for col in row]).join(['+', '+'])
+        build_data = lambda row, align: "|".join([align(str(val), col_sizes[df_columns[idx]]) for idx, val in enumerate(row)]).join(['|', '|'])
+        hline = build_hline(df_columns)
+        out = [hline, build_data(df_columns, align_center), hline]
+        for _, row in df.iterrows():
+            out.append(build_data(row.tolist(), align_right))
+        out.append(hline)
+        return "\n".join(out)
 
     def algorithms(self):
         print(f"\n\n"

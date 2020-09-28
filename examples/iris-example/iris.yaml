@@ -1,0 +1,27 @@
+# dataset operations
+dataset:
+
+    split:  # split options
+        test_size: 0.2  # 0.2 means 20% for the test data, so 80% are automatically for training
+        shuffle: True   # whether to shuffle the data before/while splitting
+        stratify: default  # If not None, data is split in a stratified fashion, using this as the class labels.
+
+    preprocess: # preprocessing options
+        missing_values: mean    # other possible values: [drop, median, most_frequent, constant] check the docs for more
+        encoding:
+            type: labelEncoding  # other possible values: [labelEncoding]
+            column: Species
+        scale:  # scaling options
+            method: standard    # standardization will scale values to have a 0 mean and 1 standard deviation  | you can also try minmax
+            target: inputs  # scale inputs. | other possible values: [outputs, all] # if you choose all then all values in the dataset will be scaled
+
+
+# model definition
+model:
+    type: classification
+    algorithm: LogisticRegression
+
+
+# target you want to predict
+target:
+    - Species

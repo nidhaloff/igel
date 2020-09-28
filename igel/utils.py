@@ -1,6 +1,17 @@
 import yaml
 
 
+def create_yaml(data, f):
+    try:
+        with open(f, 'w') as yf:
+            yaml.dump(data, yf, default_flow_style=False)
+    except yaml.YAMLError as exc:
+        print(exc)
+        return False
+    else:
+        return True
+
+
 def read_yaml(f):
     with open(f, 'r') as stream:
         try:
