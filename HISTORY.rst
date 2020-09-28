@@ -2,6 +2,13 @@
 History
 =======
 
+0.2.4 (2020-09-28)
+-------------------
+
+* added support for json as a configuration file
+* added support for providing read data options
+* added CV class support
+
 0.2.3 (2020-09-26)
 -------------------
 
