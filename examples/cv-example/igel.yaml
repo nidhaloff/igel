@@ -17,7 +17,10 @@ model:
     type: classification
     algorithm: Ridge
     use_cv_estimator: true
-
+    cross_validate:
+        cv: 3
+        n_jobs: 1
+        verbose: 1
 
 # target you want to predict
 target:

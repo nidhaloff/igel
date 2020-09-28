@@ -63,6 +63,17 @@ boilerplate code and/or thinking too much of how to start this.
 Therefore, I decided to create **igel**. Hopefully, it will make it easier for technical and non technical
 users to build machine learning models.
 
+Features
+---------
+- Supports all state of the art machine learning models (even preview models)
+- Supports different data preprocessing methods
+- Provides flexibility and data control while writing configurations
+- Supports cross validation
+- Supports yaml and json format
+- Supports different sklearn metrics for regression, classification and clustering
+- Supports multi-output/multi-target regression and classification
+- Supports multi-processing for parallel model construction
+
 Intro
 --------
 
@@ -322,6 +333,11 @@ Here is an overview of all supported configurations (for now):
         type: classification    # type of the problem you want to solve. | possible values: [regression, classification]
         algorithm: NeuralNetwork    # which algorithm you want to use. | type igel algorithms in the Terminal to know more
         arguments: default          # model arguments: you can check the available arguments for each model by running igel help in your terminal
+        use_cv_estimator: false     # if this is true, the CV class of the specific model will be used if it is supported
+        cross_validate:
+            cv: # number of kfold (default 5)
+            n_jobs:   # The number of CPUs to use to do the computation (default None)
+            verbose: # The verbosity level. (default 0)
 
     # target you want to predict
     target:

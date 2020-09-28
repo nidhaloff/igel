@@ -17,7 +17,7 @@ This example fits a machine learning model on the indian-diabetes dataset
 """
 
 mock_fit_params = {'data_path': '../data/indian-diabetes/train-indians-diabetes.csv',
-                   'yaml_path': './igel.json',
+                   'yaml_path': './igel.yaml',
                    'cmd': 'fit'}
 
 Igel(**mock_fit_params)

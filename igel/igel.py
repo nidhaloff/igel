@@ -22,7 +22,7 @@ except ImportError:
     from preprocessing import update_dataset_props
     from preprocessing import handle_missing_values, encode, normalize
 
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, cross_validate
 from sklearn.multioutput import MultiOutputClassifier, MultiOutputRegressor
 
 warnings.filterwarnings("ignore")
@@ -311,6 +311,9 @@ class Igel(object):
         x_test = None
         y_train = None
         y_test = None
+        cv_results = None
+        eval_results = None
+        cv_params = None
         if self.model_type == 'clustering':
             x_train = self._prepare_clustering_data()
         else:
@@ -326,6 +329,13 @@ class Igel(object):
                 if self.model_type == 'classification' else MultiOutputRegressor(self.model)
 
         if self.model_type != 'clustering':
+            cv_params = self.model_props.get('cross_validate', None)
+            if not cv_params:
+                logger.info(f"cross validation is not provided")
+            else:
+                cv_results = cross_validate(estimator=self.model,
+                                            X=x_train,
+                                            y=y_train, **cv_params)
             self.model.fit(x_train, y_train)
         else:
             self.model.fit(x_train)
@@ -334,7 +344,6 @@ class Igel(object):
         if saved:
             logger.info(f"model saved successfully and can be found in the {self.results_path} folder")
 
-        eval_results = None
         if self.model_type == 'clustering':
             eval_results = self.model.score(x_train)
         else:
@@ -367,7 +376,7 @@ class Igel(object):
             "results_path": str(self.results_path),
             "model_path": str(self.default_model_path),
             "target": None if self.model_type == 'clustering' else self.target,
-            "results_on_test_data": eval_results,
+            "results_on_test_data": eval_results
 
         }
         if self.model_type == 'clustering':
@@ -376,6 +385,15 @@ class Igel(object):
                 "cluster_labels": self.model.labels_
             }
             fit_description['clustering_results'] = clustering_res
+
+        if cv_params:
+            cv_res = {
+                "fit_time": cv_results['fit_time'].tolist(),
+                "score_time": cv_results['score_time'].tolist(),
+                "test_score": cv_results['test_score'].tolist()
+            }
+            fit_description['cross_validation_params'] = cv_params
+            fit_description['cross_validation_results'] = cv_res
 
         try:
             logger.info(f"saving fit description to {self.description_file}")

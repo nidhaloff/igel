@@ -8,6 +8,7 @@ History
 * added support for json as a configuration file
 * added support for providing read data options
 * added CV class support
+* added cross validation support
 
 0.2.3 (2020-09-26)
 -------------------
