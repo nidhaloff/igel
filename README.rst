@@ -468,7 +468,8 @@ The indian-diabetes-example folder contains two examples to help you get started
 The iris-example folder contains a **logistic regression** example, where some preprocessing (one hot encoding)
 is conducted on the target column to show you more the capabilities of igel.
 
-Finally, the multioutput-example contains a **multioutput regression** example.
+Furthermore, the multioutput-example contains a **multioutput regression** example.
+Finally, the cv-example contains an example using the Ridge classifier using cross validation.
 
 I suggest you play around with the examples and igel cli. However,
 you can also directly execute the fit.py, evaluate.py and predict.py if you want to.
