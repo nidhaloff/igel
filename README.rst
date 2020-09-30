@@ -158,7 +158,7 @@ However, if you are lazy (and you probably are, like me :D), you can use the ige
     """
     igel init <args>
     possible optional args are: (notice that these args are optional, so you can also just run igel init if you want)
-    -type: regression or classification
+    -type: regression, classification or clustering
     -model: model you want to use
     -target: target you want to predict
 
@@ -177,7 +177,7 @@ check it out and modify it if you want to, otherwise you can also create everyth
 
         # model definition
         model:
-            # in the type field, you can write the type of problem you want to solve. Whether regression or classification
+            # in the type field, you can write the type of problem you want to solve. Whether regression, classification or clustering
             # Then, provide the algorithm you want to use on the data. Here I'm using the random forest algorithm
             type: classification
             algorithm: RandomForest     # make sure you write the name of the algorithm in pascal case
@@ -330,7 +330,7 @@ Here is an overview of all supported configurations (for now):
 
     # model definition
     model:
-        type: classification    # type of the problem you want to solve. | possible values: [regression, classification]
+        type: classification    # type of the problem you want to solve. | possible values: [regression, classification, clustering]
         algorithm: NeuralNetwork    # which algorithm you want to use. | type igel algorithms in the Terminal to know more
         arguments: default          # model arguments: you can check the available arguments for each model by running igel help in your terminal
         use_cv_estimator: false     # if this is true, the CV class of the specific model will be used if it is supported
