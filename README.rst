@@ -474,6 +474,10 @@ Finally, the cv-example contains an example using the Ridge classifier using cro
 I suggest you play around with the examples and igel cli. However,
 you can also directly execute the fit.py, evaluate.py and predict.py if you want to.
 
+Links
+------
+
+- Article: https://medium.com/@nidhalbacc/machine-learning-without-writing-code-984b238dd890
 
 Contributions
 --------------
