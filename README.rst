@@ -395,7 +395,7 @@ That's it! Igel will use the pre-fitted model to make predictions and save it in
 Advanced Usage
 ---------------
 
-You can also carry out some preprocessing methods or other operations by providing the it in the yaml file.
+You can also carry out some preprocessing methods or other operations by providing them in the yaml file.
 Here is an example, where the data is split to 80% for training and 20% for validation/testing.
 Also, the data are shuffled while splitting.
 
