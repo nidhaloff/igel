@@ -8,6 +8,7 @@ igel
     :align: center
     :alt: igel-icon
 
+
 |
 
 |
@@ -49,6 +50,8 @@ A machine learning tool that allows you to train/fit, test and use models **with
 
 * Free software: MIT license
 * Documentation: https://igel.readthedocs.io.
+
+
 
 Motivation & Goal
 ------------------
@@ -152,6 +155,9 @@ you can run this command to get instruction on how to use the model:
 
 First step is to provide a yaml file (you can also use json if you want). You can do this manually by creating a .yaml file and editing it yourself.
 However, if you are lazy (and you probably are, like me :D), you can use the igel init command to get started fast:
+
+.. image:: assets/igel-help.gif
+
 
 .. code-block:: console
 
