@@ -1,6 +1,7 @@
 import yaml
 import json
 
+
 def create_yaml(data, f):
     try:
         with open(f, 'w') as yf:
