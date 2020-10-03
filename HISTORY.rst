@@ -2,6 +2,13 @@
 History
 =======
 
+0.2.4 (2020-10-04)
+-------------------
+
+* fixed igel initialization step
+* updated examples
+* added gids to readme
+
 0.2.4 (2020-09-28)
 -------------------
 
