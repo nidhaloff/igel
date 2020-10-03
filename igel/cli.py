@@ -28,83 +28,101 @@ class CLI(object):
         self.parser = argparse.ArgumentParser(
             description='Igel CLI Runner',
             usage='''
-                     ___           _    ____ _     ___
-                    |_ _|__ _  ___| |  / ___| |   |_ _|
-                     | |/ _` |/ _ \ | | |   | |    | |
-                     | | (_| |  __/ | | |___| |___ | |
-                    |___\__, |\___|_|  \____|_____|___|
-                        |___/
+ ___           _    ____ _     ___
+|_ _|__ _  ___| |  / ___| |   |_ _|
+ | |/ _` |/ _ \ | | |   | |    | |
+ | | (_| |  __/ | | |___| |___ | |
+|___\__, |\___|_|  \____|_____|___|
+    |___/
 
 
-                    igel <command> [<args>]
-                    - Available sub-commands at the moment are:
-                       init                initialize a yaml file with default parameters
-                       fit                 fits a model
-                       evaluate            evaluate the performance of a pre-fitted model
-                       predict             Predicts using a pre-fitted model
-                       experiment          this command will run fit, evaluate and predict together
-                       help                get help about how to use igel
-                       models              get a list of supported machine learning algorithms/models
-                       metrics             get a list of all supported metrics
+igel <command> [<args>]
+- Available sub-commands at the moment are:
+   init              initialize a yaml file with default parameters
+   fit               fits a model
+   evaluate          evaluate the performance of a pre-fitted model
+   predict           predicts using a pre-fitted model
+   experiment        this command will run fit, evaluate and predict together
+   help              get help about how to use igel
+   models            get a list of supported machine learning algorithms/models
+   metrics           get a list of all supported metrics
 
-                    - Available arguments:
+- Available arguments:
 
-                        # for usage with the fit, evaluate or predict command:
-                        --data_path         Path to your dataset
-                        --yaml_file         Path to your yaml file
+    # for usage with the fit, evaluate or predict command:
+    --data_path         Path to your dataset
+    --yaml_file         Path to your yaml file
 
-                        # for usage with the experiment command
-                        --data_paths        Paths to data you want to use for fitting, evaluating and predict respectively
-                        --yaml_file         Path to the yaml file that will be used when fitting the model
+    # for usage with the experiment command
+    --data_paths        Paths to data you want to use for fitting,
+                        evaluating and predict respectively.
 
-                        # for getting help with the models command:
-                        --model_type        type of the model you want to get help on -> whether regression, classification or clustering
-                        --model_name        name of the model you want to get help on
-                        ------------------------------------------
+    --yaml_file         Path to the yaml file that will be used
+                        when fitting the model.
 
-                        or for the short version
-                        # for usage with the fit, evaluate or predict command:
-                        -dp         Path to your dataset
-                        -yml        Path to your yaml file
+    # for getting help with the models command:
+    --model_type        type of the model you want to get help on
+                        -> whether regression, classification or clustering.
 
-                      # for usage with the experiment command
-                        -DP        Paths to data you want to use for fitting, evaluating and predict respectively
-                        -yml       Path to the yaml file that will be used when fitting the model
+    --model_name        name of the model you want to get help on.
+    ------------------------------------------
 
-                        # for getting help with the models command:
-                        -type        type of the model you want to get help on -> whether regression or classification
-                        -name        name of the model you want to get help on
-                        ------------------------------------------
+    or for the short version
+    # for usage with the fit, evaluate or predict command:
+    -dp         Path to your dataset
+    -yml        Path to your yaml file
 
-                    - Quick Start:
+    # for usage with the experiment command
+    -DP         Paths to data you want to use for fitting,
+                evaluating and predict respectively.
 
-                    igel -h                                                             # print this help guide
+    -yml        Path to the yaml file that will be used when fitting the model.
 
-                    igel init -type regression -model RandomForest                      # automatically create a yaml file in the working directory
-                                                                                        # with some default parameters to get you started fast
+    # for getting help with the models command:
+    -type       type of the model you want to get help on
+                -> whether regression or classification.
 
-                    igel models                                                         # type this to get a list of supported models
+    -name       name of the model you want to get help on.
+    ------------------------------------------
 
-                    igel models -type regression -name RandomForest                     # this will give you a help on how to use the
-                                                                                        # RandomForestRegressor and will provide
-                                                                                        # you a link to get more help in the sklearn website
+- Quick Start:
 
-                    igel metrics                                                        # get a list of all supported metrics
+igel -h
+# print this help guide
 
-                    igel fit -dp "path_to_data" -yml "path_to_yaml_file"                # fit a model
+igel init -type regression -model RandomForest
+# automatically create a yaml file in the working directory
+# with some default parameters to get you started fast
 
-                    igel evaluate -dp "path_to_data"                                    # evaluate the trained/pre-fitted model
+igel models
+# type this to get a list of supported models
 
-                    igel predict -dp "path_to_data"                                     # make predictions using the trained/pre-fitted model
+igel models -type regression -name RandomForest
+# this will give you a help on how to use the
+# RandomForestRegressor and will provide
+# you a link to get more help in the sklearn website
 
-                    igel experiment -DP "path_to_train_data \                           # this will run fit using the trian data first,
-                                        path_to_evaluation_data \                       # then will run evaluate using the evaluation data
-                                        path_to_data_you_want_to_predict_on"            # and finally, will generate predictions on the last
-                                    -yml "path_to_yaml_file"                            # data you passed to predict on.
+igel metrics
+# get a list of all supported metrics
 
+igel fit -dp "path_to_data" -yml "path_to_yaml_file"
+# fit a model
 
+igel evaluate -dp "path_to_data"
+# evaluate the trained/pre-fitted model
 
-''')
+igel predict -dp "path_to_data"
+# make predictions using the trained/pre-fitted model
+
+igel experiment -DP "path_to_train_data \\
+                    path_to_evaluation_data \\
+                    path_to_data_you_want_to_predict_on"
+                -yml "path_to_yaml_file"
+# this will run fit using the trian data first,
+# then will run evaluate using the evaluation data
+# and finally, will generate predictions on the last
+# data you passed to predict on.
+                    ''')
 
         self.parser.add_argument('command', help='Subcommand to run')
         self.cmd = self.parse_command()
@@ -230,12 +248,12 @@ class CLI(object):
             else:
                 if not model_type:
                     print(f"Please enter a type argument to get help on the chosen model\n"
-                          f"type can be whether regression or classification \n")
+                          f"type can be whether regression, classification or clustering \n")
                     self._print_models_overview()
                     return
                 if model_type not in ('regression', 'classification'):
                     raise Exception(f"{model_type} is not supported! \n"
-                                    f"model_type need to be regression or classification")
+                                    f"model_type need to be regression, classification or clustering")
 
                 models = models_dict.get(model_type)
                 model_data = models.get(model_name)
@@ -245,10 +263,10 @@ class CLI(object):
                       f"sklearn model class: {model.__name__} \n"
 
                       f"{'-' * 60}\n"
-                      f"You can click the link below to know more about the optional arguments "
+                      f"You can click the link below to know more about the optional arguments\n"
                       f"that you can use with your chosen model ({model_name}).\n"
-                      f"You can provide these optional arguments in the yaml file if you want to use them\n"
-                      f"link: {link} \n")
+                      f"You can provide these optional arguments in the yaml file if you want to use them.\n"
+                      f"link:\n{link} \n")
 
     def metrics(self):
         """
