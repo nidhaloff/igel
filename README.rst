@@ -282,6 +282,11 @@ You can combine the train, evaluate and predict phases using one single command 
     This will run fit using train_data, evaluate using eval_data and further generate predictions using the test_data
     """
 
+- Demo:
+
+.. image:: assets/igel-experiment.gif
+
+
 - Alternatively, you can also write code if you want to:
 
 ..  code-block:: python
