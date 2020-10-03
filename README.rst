@@ -153,10 +153,16 @@ you can run this command to get instruction on how to use the model:
     Take some time and read the output of help command. You ll save time later if you understand how to use igel.
     """
 
+- Demo:
+
+.. image:: assets/igel-help.gif
+
+---------------------------------------------------------------------------------------------------------
+
 First step is to provide a yaml file (you can also use json if you want). You can do this manually by creating a .yaml file and editing it yourself.
 However, if you are lazy (and you probably are, like me :D), you can use the igel init command to get started fast:
 
-.. image:: assets/igel-help.gif
+
 
 
 .. code-block:: console
@@ -178,6 +184,12 @@ However, if you are lazy (and you probably are, like me :D), you can use the ige
 
 After runnig the command, an igel.yaml file will be created for you in the current working directory. You can
 check it out and modify it if you want to, otherwise you can also create everything from scratch.
+
+- Demo:
+
+.. image:: assets/igel-init.gif
+
+-----------------------------------------------------------------------------------------------------------
 
 .. code-block:: yaml
 
@@ -220,6 +232,12 @@ Run this command in terminal to fit/train a model, where you provide the **path 
     Furthermore, a description can be found in the description.json file inside the model_results folder.
     """
 
+- Demo:
+
+.. image:: assets/igel-fit.gif
+
+--------------------------------------------------------------------------------------------------------
+
 You can then evaluate the trained/pre-fitted model:
 
 .. code-block:: console
@@ -229,6 +247,13 @@ You can then evaluate the trained/pre-fitted model:
     This will automatically generate an evaluation.json file in the current directory, where all evaluation results are stored
     """
 
+- Demo:
+
+.. image:: assets/igel-eval.gif
+
+------------------------------------------------------------------------------------------------------
+
+
 Finally, you can use the trained/pre-fitted model to make predictions if you are happy with the evaluation results:
 
 .. code-block:: console
@@ -237,6 +262,15 @@ Finally, you can use the trained/pre-fitted model to make predictions if you are
     """
     This will generate a predictions.csv file in your current directory, where all predictions are stored in a csv file
     """
+
+- Demo:
+
+.. image:: assets/igel-pred.gif
+
+.. image:: assets/igel-predict.gif
+
+----------------------------------------------------------------------------------------------------------
+
 
 You can combine the train, evaluate and predict phases using one single command called experiment:
 
