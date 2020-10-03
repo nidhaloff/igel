@@ -4,7 +4,6 @@ dataset:
     split:  # split options
         test_size: 0.2  # 0.2 means 20% for the test data, so 80% are automatically for training
         shuffle: True   # whether to shuffle the data before/while splitting
-        stratify: default  # If not None, data is split in a stratified fashion, using this as the class labels.
 
     preprocess:
         scale:  # scaling options
