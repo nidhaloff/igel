@@ -24,7 +24,7 @@ configs = {
     "dataset_props": {
 
         "type": "csv",
-        "read_data_options": "default",
+        "read_data_options": None,
         "split": {
             "test_size": 0.2,
             "shuffle": True,
@@ -42,7 +42,7 @@ configs = {
     "model_props": {
         "type": "classification",
         "algorithm": "RandomForest",
-        "arguments": "default"
+        "arguments": None
     },
 
     "available_dataset_props": {
