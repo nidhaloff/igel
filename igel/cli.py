@@ -186,7 +186,24 @@ class CLI(object):
         self.parser.print_help()
 
     def init(self, *args, **kwargs):
-        Igel.create_init_mock_file(**self.dict_args)
+        """
+        initialize a dummy/default yaml file as a starting point. The user can provide args directly in the terminal
+        usage:
+            igel init <args>
+
+        if not args are provided, the user will be prompted to enter basic information.
+        """
+        d = dict(self.dict_args)
+        d.pop('cmd')
+        if not d:
+            model_type = input("enter type of the problem you want to solve: [regression] ") or "regression"
+            d['model_type'] = model_type
+            model_name = input("enter algorithm you want to use: [NeuralNetwork] ") or "NeuralNetwork"
+            d['model_name'] = model_name
+            target = input("enter the target you want to predict (this is usually a column name in your csv dataset):  ")
+            d['target'] = target
+
+        Igel.create_init_mock_file(**d)
 
     def fit(self, *args, **kwargs):
         print("""
@@ -197,6 +214,7 @@ class CLI(object):
           |_||_|  \__,_|_|_| |_|_|_| |_|\__, |
                                         |___/
         """)
+        print(self.dict_args)
         Igel(**self.dict_args)
 
     def predict(self, *args, **kwargs):
