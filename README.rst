@@ -336,6 +336,11 @@ a >= 0.2.6 version.
 
 .. image:: assets/igel-fit-interactive.gif
 
+As you can see, you don't need to memorize the arguments, you can just let igel ask you to enter them.
+Igel will provide you with a nice message explaining which argument you need to enter.
+
+The value between brackets represents the default value. This means if you provide no value and hit return,
+then the value between brackets will be taken as the default value.
 
 Overview
 ----------
