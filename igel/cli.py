@@ -4,7 +4,7 @@ import argparse
 from igel import Igel, models_dict, metrics_dict
 import pandas as pd
 import colorama as clrm
-
+from colorama import Fore
 clrm.init(autoreset=True)
 
 class CLI(object):
@@ -29,7 +29,7 @@ class CLI(object):
     def __init__(self):
         self.parser = argparse.ArgumentParser(
             description='Igel CLI Runner',
-            usage='''
+            usage=f'''
  ___           _    ____ _     ___
 |_ _|__ _  ___| |  / ___| |   |_ _|
  | |/ _` |/ _ \ | | |   | |    | |
@@ -38,8 +38,8 @@ class CLI(object):
     |___/
 
 
-igel <command> [<args>]
-- Available sub-commands at the moment are:
+{Fore.GREEN}igel <command> [<args>]{Fore.WHITE}
+{Fore.BLUE}- Available sub-commands at the moment are:{Fore.WHITE}
    init              initialize a yaml file with default parameters
    fit               fits a model
    evaluate          evaluate the performance of a pre-fitted model
@@ -49,20 +49,20 @@ igel <command> [<args>]
    models            get a list of supported machine learning algorithms/models
    metrics           get a list of all supported metrics
 
-- Available arguments:
+{Fore.BLUE}- Available arguments:{Fore.WHITE}
 
-    # for usage with the fit, evaluate or predict command:
+    {Fore.CYAN}# for usage with the fit, evaluate or predict command:{Fore.WHITE}
     --data_path         Path to your dataset
     --yaml_file         Path to your yaml file
 
-    # for usage with the experiment command
+    {Fore.CYAN}# for usage with the experiment command:{Fore.WHITE}
     --data_paths        Paths to data you want to use for fitting,
                         evaluating and predict respectively.
 
     --yaml_file         Path to the yaml file that will be used
                         when fitting the model.
 
-    # for getting help with the models command:
+    {Fore.CYAN}# for getting help with the models command:{Fore.WHITE}
     --model_type        type of the model you want to get help on
                         -> whether regression, classification or clustering.
 
@@ -70,56 +70,56 @@ igel <command> [<args>]
     ------------------------------------------
 
     or for the short version
-    # for usage with the fit, evaluate or predict command:
+    {Fore.CYAN}# for usage with the fit, evaluate or predict command:{Fore.WHITE}
     -dp         Path to your dataset
     -yml        Path to your yaml file
 
-    # for usage with the experiment command
+    {Fore.CYAN}# for usage with the experiment command:{Fore.WHITE}
     -DP         Paths to data you want to use for fitting,
                 evaluating and predict respectively.
 
     -yml        Path to the yaml file that will be used when fitting the model.
 
-    # for getting help with the models command:
+    {Fore.CYAN}# for getting help with the models command:{Fore.WHITE}
     -type       type of the model you want to get help on
-                -> whether regression or classification.
+                -> whether regression, classification or clustering.
 
     -name       name of the model you want to get help on.
     ------------------------------------------
 
-- Quick Start:
+{Fore.BLUE}- Quick Start:{Fore.CYAN}
 
-igel -h
+{Fore.GREEN}igel -h{Fore.WHITE}
 # print this help guide
 
-igel init -type regression -model RandomForest
+{Fore.GREEN}igel init -type regression -model RandomForest{Fore.WHITE}
 # automatically create a yaml file in the working directory
 # with some default parameters to get you started fast
 
-igel models
+{Fore.GREEN}igel models{Fore.WHITE}
 # type this to get a list of supported models
 
-igel models -type regression -name RandomForest
+{Fore.GREEN}igel models -type regression -name RandomForest{Fore.WHITE}
 # this will give you a help on how to use the
 # RandomForestRegressor and will provide
 # you a link to get more help in the sklearn website
 
-igel metrics
+{Fore.GREEN}igel metrics{Fore.WHITE}
 # get a list of all supported metrics
 
-igel fit -dp "path_to_data" -yml "path_to_yaml_file"
+{Fore.GREEN}igel fit -dp "path_to_data" -yml "path_to_yaml_file"{Fore.WHITE}
 # fit a model
 
-igel evaluate -dp "path_to_data"
+{Fore.GREEN}igel evaluate -dp "path_to_data"{Fore.WHITE}
 # evaluate the trained/pre-fitted model
 
-igel predict -dp "path_to_data"
+{Fore.GREEN}igel predict -dp "path_to_data"{Fore.WHITE}
 # make predictions using the trained/pre-fitted model
 
-igel experiment -DP "path_to_train_data \\
+{Fore.GREEN}igel experiment -DP "path_to_train_data \\
                     path_to_evaluation_data \\
                     path_to_data_you_want_to_predict_on"
-                -yml "path_to_yaml_file"
+                -yml "path_to_yaml_file"{Fore.WHITE}
 # this will run fit using the trian data first,
 # then will run evaluate using the evaluation data
 # and finally, will generate predictions on the last
@@ -268,7 +268,7 @@ igel experiment -DP "path_to_train_data \\
                       f"You can click the link below to know more about the optional arguments\n"
                       f"that you can use with your chosen model ({model_name}).\n"
                       f"You can provide these optional arguments in the yaml file if you want to use them.\n"
-                      f"link:\n{link} \n")
+                      f"link:\n{Fore.GREEN}{link}{Fore.WHITE} \n")
 
     def metrics(self):
         """
