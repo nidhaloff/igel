@@ -1,0 +1,22 @@
+{
+    "dataset": {
+        "split": {
+            "test_size": 0.2
+        },
+
+        "preprocess": {
+            "scale": {
+                "method": "standard",
+                "target": "inputs"
+            }
+        }
+    },
+
+    "model": {
+        "type": "classification",
+        "algorithm": "Ridge",
+        "use_cv_estimator": true
+    },
+
+    "target": ["sick"]
+}

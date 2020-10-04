@@ -1,0 +1,26 @@
+# dataset operations
+dataset:
+    type: csv
+    split:  # split options
+        test_size: 0.2  # 0.2 means 20% for the test data, so 80% are automatically for training
+        shuffle: True   # whether to shuffle the data before/while splitting
+
+    preprocess:
+        scale:  # scaling options
+            method: standard    # standardization will scale values to have a 0 mean and 1 standard deviation  | you can also try minmax
+            target: inputs  # scale inputs. | other possible values: [outputs, all] # if you choose all then all values in the dataset will be scaled
+
+
+# model definition
+model:
+    type: classification
+    algorithm: Ridge
+    use_cv_estimator: true
+    cross_validate:
+        cv: 3
+        n_jobs: 1
+        verbose: 1
+
+# target you want to predict
+target:
+    - sick

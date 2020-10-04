@@ -3,10 +3,6 @@
 model:
     type: classification
     algorithm: NeuralNetwork
-    arguments:
-        max_iter: 500
-        alpha: 0.0001
-        activation: logistic
 
 # target you want to predict
 target:
