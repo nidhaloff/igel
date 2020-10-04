@@ -220,10 +220,10 @@ class CLI(object):
               f"{Fore.BLUE}{'*'*10} You entered interactive mode! {'*'*10}{Fore.BLUE} \n"
               f"This is happening because you didn't enter all mandatory arguments in order to use the cli\n"
               f"Therefore, you will need to provide few information before proceeding.\n")
-        data_path = input(f"{Fore.GREEN}enter path to your data: {default_data_path}        {Fore.WHITE}") or default_data_path
+        data_path = input(f"{Fore.GREEN}enter path to your data: [{default_data_path}]        {Fore.WHITE}") or default_data_path
         self.dict_args['data_path'] = data_path
         if yaml_needed:
-            yaml_path = input(f"{Fore.GREEN}enter path to your yaml file: {default_yaml_path}        {Fore.WHITE}") or default_yaml_path
+            yaml_path = input(f"{Fore.GREEN}enter path to your yaml file: [{default_yaml_path}]        {Fore.WHITE}") or default_yaml_path
             self.dict_args['yaml_path'] = yaml_path
 
     def fit(self, *args, **kwargs):
@@ -362,13 +362,13 @@ class CLI(object):
                   f"This is happening because you didn't enter all mandatory arguments in order to use the cli\n"
                   f"Therefore, you will need to provide few information before proceeding.\n")
             train_data_path = input(
-                f"{Fore.GREEN}enter path to your data: {default_train_data_path}        {Fore.WHITE}") or default_train_data_path
+                f"{Fore.GREEN}enter path to your data: [{default_train_data_path}]        {Fore.WHITE}") or default_train_data_path
             eval_data_path = input(
-                f"{Fore.GREEN}enter path to your data: {default_eval_data_path}        {Fore.WHITE}") or default_eval_data_path
+                f"{Fore.GREEN}enter path to your data: [{default_eval_data_path}]        {Fore.WHITE}") or default_eval_data_path
             test_data_path = input(
-                f"{Fore.GREEN}enter path to your data: {default_test_data_path}        {Fore.WHITE}") or default_test_data_path
+                f"{Fore.GREEN}enter path to your data: [{default_test_data_path}]        {Fore.WHITE}") or default_test_data_path
             yaml_path = input(
-                f"{Fore.GREEN}enter path to your yaml file: {default_yaml_path}        {Fore.WHITE}") or default_yaml_path
+                f"{Fore.GREEN}enter path to your yaml file: [{default_yaml_path}]        {Fore.WHITE}") or default_yaml_path
 
             # prepare the dict arguments:
             train_args = {"cmd": "fit",
