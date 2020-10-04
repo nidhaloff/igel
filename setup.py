@@ -15,7 +15,8 @@ with open('HISTORY.rst') as history_file:
 requirements = [
     'pandas==1.1.1',
     'PyYAML==5.3.1',
-    'scikit-learn==0.23.2'
+    'scikit-learn==0.23.2',
+    'colorama==0.4.3'
 ]
 
 setup_requirements = ['pytest-runner']

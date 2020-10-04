@@ -7,6 +7,7 @@ import colorama as clrm
 from colorama import Fore
 clrm.init(autoreset=True)
 
+
 class CLI(object):
     """CLI describes a command line interface for interacting with igel, there
     are several different functions that can be performed.
