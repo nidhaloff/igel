@@ -34,17 +34,7 @@ class Igel(object):
     """
     Igel is the base model to use the fit, evaluate and predict functions of the sklearn library
     """
-<<<<<<< HEAD
-    supported_types = ('regression', 'classification')          # supported types that can be selected in the yaml file
-    results_path = configs.get('results_path')                  # path to the results folder
-    default_model_path = configs.get('default_model_path')      # path to the pre-fitted model
-    description_file = configs.get('description_file')          # path to the description.json file
-    evaluation_file = configs.get('evaluation_file')            # path to the evaluation.json file
-    prediction_file = configs.get('prediction_file')            # path to the predictions.csv
-    default_dataset_props = configs.get('dataset_props')        # dataset props that can be changed from the yaml file
-    default_model_props = configs.get('models_props')           # model props that can be changed from the yaml file
-    models_dict = models_dict
-=======
+
     available_commands = ('fit', 'evaluate', 'predict', 'experiment')
     supported_types = ('regression', 'classification', 'clustering')
     results_path = configs.get('results_path')  # path to the results folder
@@ -54,7 +44,6 @@ class Igel(object):
     prediction_file = configs.get('prediction_file')  # path to the predictions.csv
     default_dataset_props = configs.get('dataset_props')  # dataset props that can be changed from the yaml file
     default_model_props = configs.get('model_props')  # model props that can be changed from the yaml file
->>>>>>> 335dd91c7111ffb63283e823f7d773b36f21cf98
     model = None
 
     def __init__(self, **cli_args):
