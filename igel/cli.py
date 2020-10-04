@@ -233,7 +233,7 @@ class CLI(object):
                           f"type can be whether regression, classification or clustering \n")
                     self._print_models_overview()
                     return
-                if model_type not in ('regression', 'classification'):
+                if model_type not in ('regression', 'classification', 'clustering'):
                     raise Exception(f"{model_type} is not supported! \n"
                                     f"model_type need to be regression, classification or clustering")
 
