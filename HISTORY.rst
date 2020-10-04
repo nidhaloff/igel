@@ -2,7 +2,14 @@
 History
 =======
 
-0.2.4 (2020-10-04)
+0.2.6 (2020-10-05)
+-------------------
+
+* added interactive mode in cli
+* added colors in cli to improve readability
+* updated setup
+
+0.2.5 (2020-10-03)
 -------------------
 
 * fixed igel initialization step

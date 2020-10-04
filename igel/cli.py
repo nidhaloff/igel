@@ -186,7 +186,45 @@ class CLI(object):
         self.parser.print_help()
 
     def init(self, *args, **kwargs):
-        Igel.create_init_mock_file(**self.dict_args)
+        """
+        initialize a dummy/default yaml file as a starting point. The user can provide args directly in the terminal
+        usage:
+            igel init <args>
+
+        if not args are provided, the user will be prompted to enter basic information.
+        """
+        d = dict(self.dict_args)
+        d.pop('cmd')
+        if not d:
+            print(f""
+                  f"{Fore.BLUE}{'*' * 10} You entered interactive mode! {'*' * 10}{Fore.BLUE} \n"
+                  f"This is happening because you didn't enter all mandatory arguments in order to use the cli\n"
+                  f"Therefore, you will need to provide few information before proceeding.\n")
+            model_type = input(f"{Fore.GREEN}enter type of the problem you want to solve: [regression]       ") or "regression"
+            d['model_type'] = model_type
+            model_name = input(f"{Fore.GREEN}enter algorithm you want to use: [NeuralNetwork]        ") or "NeuralNetwork"
+            d['model_name'] = model_name
+            target = input(f"{Fore.GREEN}enter the target you want to predict {Fore.WHITE} "
+                           "(this is usually a column name in your csv dataset):        ")
+            d['target'] = target
+
+        Igel.create_init_mock_file(**d)
+
+    def _accept_user_input(self, yaml_needed: bool = False,
+                           default_data_path: str = './train_data.csv',
+                           default_yaml_path: str = './igel.yaml'):
+        """
+        accept user input if the user did not provide all mandatory args in the terminal.
+        """
+        print(f""
+              f"{Fore.BLUE}{'*'*10} You entered interactive mode! {'*'*10}{Fore.BLUE} \n"
+              f"This is happening because you didn't enter all mandatory arguments in order to use the cli\n"
+              f"Therefore, you will need to provide few information before proceeding.\n")
+        data_path = input(f"{Fore.GREEN}enter path to your data: {default_data_path}        {Fore.WHITE}") or default_data_path
+        self.dict_args['data_path'] = data_path
+        if yaml_needed:
+            yaml_path = input(f"{Fore.GREEN}enter path to your yaml file: {default_yaml_path}        {Fore.WHITE}") or default_yaml_path
+            self.dict_args['yaml_path'] = yaml_path
 
     def fit(self, *args, **kwargs):
         print("""
@@ -197,6 +235,11 @@ class CLI(object):
           |_||_|  \__,_|_|_| |_|_|_| |_|\__, |
                                         |___/
         """)
+        d = dict(self.dict_args)
+        d.pop('cmd')
+        if not d:
+            self._accept_user_input(yaml_needed=True)
+
         Igel(**self.dict_args)
 
     def predict(self, *args, **kwargs):
@@ -209,6 +252,10 @@ class CLI(object):
 
 
         """)
+        d = dict(self.dict_args)
+        d.pop('cmd')
+        if not d:
+            self._accept_user_input()
         Igel(**self.dict_args)
 
     def evaluate(self, *args, **kwargs):
@@ -220,10 +267,15 @@ class CLI(object):
         |_____| \_/ \__,_|_|\__,_|\__,_|\__|_|\___/|_| |_|
 
         """)
+        d = dict(self.dict_args)
+        d.pop('cmd')
+        if not d:
+            self._accept_user_input()
+
         Igel(**self.dict_args)
 
     def _print_models_overview(self):
-        print(f"\nIgel's supported models overview: \n")
+        print(f"{Fore.GREEN}\nIgel's supported models overview: \n")
         reg_algs = list(models_dict.get('regression').keys())
         clf_algs = list(models_dict.get('classification').keys())
         cluster_algs = list(models_dict.get('clustering').keys())
@@ -251,12 +303,12 @@ class CLI(object):
                 self._print_models_overview()
             else:
                 if not model_type:
-                    print(f"Please enter a type argument to get help on the chosen model\n"
+                    print(f"{Fore.RED}Please enter a type argument to get help on the chosen model\n"
                           f"type can be whether regression, classification or clustering \n")
                     self._print_models_overview()
                     return
                 if model_type not in ('regression', 'classification', 'clustering'):
-                    raise Exception(f"{model_type} is not supported! \n"
+                    raise Exception(f"{Fore.RED}{model_type} is not supported! \n"
                                     f"model_type need to be regression, classification or clustering")
 
                 models = models_dict.get(model_type)
@@ -276,7 +328,7 @@ class CLI(object):
         """
         show an overview of all metrics supported by igel
         """
-        print(f"\nIgel's supported metrics overview: \n")
+        print(f"{Fore.GREEN}\nIgel's supported metrics overview: \n")
         reg_metrics = [func.__name__ for func in metrics_dict.get('regression')]
         clf_metrics = [func.__name__ for func in metrics_dict.get('classification')]
 
@@ -298,20 +350,52 @@ class CLI(object):
                    |_|
 
         """)
-        data_paths = self.dict_args['data_paths']
-        yaml_path = self.dict_args['yaml_path']
-        train_data_path, eval_data_path, pred_data_path = data_paths.strip().split(' ')
-        # print(f"{train_data_path} | {eval_data_path} | {test_data_path}")
-        train_args = {"cmd": "fit",
-                      "yaml_path": yaml_path,
-                      "data_path": train_data_path}
-        eval_args = {"cmd": "evaluate",
-                     "data_path": eval_data_path}
-        pred_args = {"cmd": "predict",
-                     "data_path": pred_data_path}
+        d = dict(self.dict_args)
+        d.pop('cmd')
+        if not d:
+            default_train_data_path = './train_data.csv'
+            default_eval_data_path = './eval_data.csv'
+            default_test_data_path = './test_data.csv'
+            default_yaml_path = './igel.yaml'
+            print(f""
+                  f"{Fore.BLUE}{'*' * 10} You entered interactive mode! {'*' * 10}{Fore.BLUE} \n"
+                  f"This is happening because you didn't enter all mandatory arguments in order to use the cli\n"
+                  f"Therefore, you will need to provide few information before proceeding.\n")
+            train_data_path = input(
+                f"{Fore.GREEN}enter path to your data: {default_train_data_path}        {Fore.WHITE}") or default_train_data_path
+            eval_data_path = input(
+                f"{Fore.GREEN}enter path to your data: {default_eval_data_path}        {Fore.WHITE}") or default_eval_data_path
+            test_data_path = input(
+                f"{Fore.GREEN}enter path to your data: {default_test_data_path}        {Fore.WHITE}") or default_test_data_path
+            yaml_path = input(
+                f"{Fore.GREEN}enter path to your yaml file: {default_yaml_path}        {Fore.WHITE}") or default_yaml_path
+
+            # prepare the dict arguments:
+            train_args = {"cmd": "fit",
+                          "yaml_path": yaml_path,
+                          "data_path": train_data_path}
+            eval_args = {"cmd": "evaluate",
+                         "data_path": eval_data_path}
+            pred_args = {"cmd": "predict",
+                         "data_path": test_data_path}
+
+        else:
+            data_paths = self.dict_args['data_paths']
+            yaml_path = self.dict_args['yaml_path']
+            train_data_path, eval_data_path, pred_data_path = data_paths.strip().split(' ')
+            # print(f"{train_data_path} | {eval_data_path} | {test_data_path}")
+            train_args = {"cmd": "fit",
+                          "yaml_path": yaml_path,
+                          "data_path": train_data_path}
+            eval_args = {"cmd": "evaluate",
+                         "data_path": eval_data_path}
+            pred_args = {"cmd": "predict",
+                         "data_path": pred_data_path}
+
         Igel(**train_args)
         Igel(**eval_args)
         Igel(**pred_args)
+
 
     def _tableize(self, df):
         if not isinstance(df, pd.DataFrame):
