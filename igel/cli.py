@@ -78,6 +78,7 @@ class CLI(object):
     -DP         Paths to data you want to use for fitting,
                 evaluating and predict respectively.
 
+
     -yml        Path to the yaml file that will be used when fitting the model.
 
     {Fore.CYAN}# for getting help with the models command:{Fore.WHITE}

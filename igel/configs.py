@@ -24,11 +24,9 @@ configs = {
     "dataset_props": {
 
         "type": "csv",
-        "read_data_options": "default",
         "split": {
             "test_size": 0.2,
-            "shuffle": True,
-            "stratify": "default"
+            "shuffle": True
         },
         "preprocess": {
             "missing_values": "mean",
@@ -41,8 +39,7 @@ configs = {
     },
     "model_props": {
         "type": "classification",
-        "algorithm": "RandomForest",
-        "arguments": "default"
+        "algorithm": "NeuralNetwork"
     },
 
     "available_dataset_props": {
