@@ -51,7 +51,11 @@ A machine learning tool that allows you to train/fit, test and use models **with
 * Free software: MIT license
 * Documentation: https://igel.readthedocs.io.
 
+.. contents:: Table of Contents
+    :depth: 3
 
+|
+|
 
 Motivation & Goal
 ------------------
@@ -304,6 +308,34 @@ You can combine the train, evaluate and predict phases using one single command 
     """
     check the examples folder for more
     """
+
+Interactive Mode
+------------------
+
+Interactive mode is new in >= v0.2.6
+
+This mode basically offers you the freedom to write arguments on your way.
+You are not restricted to write the arguments directly when using the command.
+
+This means practically that you can use the commands (fit, evaluate, predict, experiment etc..)
+without specifying any additional arguments. For example:
+
+..  code-block:: python
+
+    igel fit
+
+if you just write this and click enter, you will be prompted to provide the additional mandatory arguments.
+Any version <= 0.2.5 will throw an error in this case, which why you need to make sure that you have
+a >= 0.2.6 version.
+
+- Demo (init command):
+
+.. image:: assets/igel-init-interactive.gif
+
+- Demo (fit command):
+
+.. image:: assets/igel-fit-interactive.gif
+
 
 Overview
 ----------
