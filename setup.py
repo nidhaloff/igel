@@ -4,7 +4,6 @@
 
 from setuptools import setup, find_packages
 from igel import __version__, __email__, __author__
-import os
 
 with open('README.rst') as readme_file:
     readme = readme_file.read()

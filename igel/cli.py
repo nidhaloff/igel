@@ -1,7 +1,7 @@
 """Console script for igel."""
 import sys
 import argparse
-from igel import Igel, models_dict, metrics_dict
+from igel import Igel, models_dict, metrics_dict, __version__
 import pandas as pd
 
 
@@ -285,41 +285,47 @@ igel experiment -DP "path_to_train_data \\
         df = self._tableize(df_algs)
         print(df)
 
+    def _show_model_infos(self, model_name: str, model_type: str):
+        if not model_name:
+            print(f"Please enter a supported model")
+            self._print_models_overview()
+        else:
+            if not model_type:
+                print(f"Please enter a type argument to get help on the chosen model\n"
+                      f"type can be whether regression, classification or clustering \n")
+                self._print_models_overview()
+                return
+            if model_type not in ('regression', 'classification', 'clustering'):
+                raise Exception(f"{model_type} is not supported! \n"
+                                f"model_type need to be regression, classification or clustering")
+
+            models = models_dict.get(model_type)
+            model_data = models.get(model_name)
+            model, link, *cv_class = model_data.values()
+            print(f"model type: {model_type} \n"
+                  f"model name: {model_name} \n"
+                  f"sklearn model class: {model.__name__} \n"
+
+                  f"{'-' * 60}\n"
+                  f"You can click the link below to know more about the optional arguments\n"
+                  f"that you can use with your chosen model ({model_name}).\n"
+                  f"You can provide these optional arguments in the yaml file if you want to use them.\n"
+                  f"link:\n{link} \n")
+
     def models(self):
         """
         show an overview of all models supported by igel
         """
         if not self.dict_args or len(self.dict_args.keys()) <= 1:
             self._print_models_overview()
+            print("-"*100)
+            model_name = input("Enter the model name, you want to get infos about (e.g NeuralNetwork):    ")
+            model_type = input("Enter the type (choose from regression, classification or clustering):   ")
+            self._show_model_infos(model_name, model_type)
         else:
             model_name = self.dict_args.get('model_name', None)
             model_type = self.dict_args.get('model_type', None)
-
-            if not model_name:
-                print(f"Please enter a supported model")
-                self._print_models_overview()
-            else:
-                if not model_type:
-                    print(f"Please enter a type argument to get help on the chosen model\n"
-                          f"type can be whether regression, classification or clustering \n")
-                    self._print_models_overview()
-                    return
-                if model_type not in ('regression', 'classification', 'clustering'):
-                    raise Exception(f"{model_type} is not supported! \n"
-                                    f"model_type need to be regression, classification or clustering")
-
-                models = models_dict.get(model_type)
-                model_data = models.get(model_name)
-                model, link, *cv_class = model_data.values()
-                print(f"model type: {model_type} \n"
-                      f"model name: {model_name} \n"
-                      f"sklearn model class: {model.__name__} \n"
-
-                      f"{'-' * 60}\n"
-                      f"You can click the link below to know more about the optional arguments\n"
-                      f"that you can use with your chosen model ({model_name}).\n"
-                      f"You can provide these optional arguments in the yaml file if you want to use them.\n"
-                      f"link:\n{link} \n")
+            self._show_model_infos(model_name, model_type)
 
     def metrics(self):
         """
@@ -338,6 +344,9 @@ igel experiment -DP "path_to_train_data \\
         print(df_metrics)
 
     def experiment(self):
+        """
+        run a whole experiment: this is a pipeline that includes fit, evaluate and predict.
+        """
         print("""
          _____                      _                      _
         | ____|_  ___ __   ___ _ __(_)_ __ ___   ___ _ __ | |_
@@ -393,8 +402,10 @@ igel experiment -DP "path_to_train_data \\
         Igel(**eval_args)
         Igel(**pred_args)
 
-
     def _tableize(self, df):
+        """
+        pretty-print a dataframe as table
+        """
         if not isinstance(df, pd.DataFrame):
             return
         df_columns = df.columns.tolist()
@@ -412,6 +423,27 @@ igel experiment -DP "path_to_train_data \\
             out.append(build_data(row.tolist(), align_right))
         out.append(hline)
         return "\n".join(out)
+
+    def version(self):
+        print(f"igel version: {__version__}")
+
+    def info(self):
+        print(f"""
+            package name:           igel
+            version:                {__version__}
+            author:                 Nidhal Baccouri
+            maintainer:             Nidhal Baccouri
+            contact:                nidhalbacc@gmail.com
+            license:                MIT
+            description:            use machine learning without writing code
+            dependencies:           pandas, sklearn, pyyaml
+            requires python:        >= 3.6
+            First release:          27.08.2020
+            official repo:          https://github.com/nidhaloff/igel
+            written in:             100% python
+            status:                 stable
+            operating system:       independent
+        """)
 
 
 def main():

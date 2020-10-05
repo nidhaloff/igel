@@ -144,7 +144,7 @@ Igel's supported models:
 Quick Start
 ------------
 
-you can run this command to get instruction on how to use the model:
+you can run this command to get instructions:
 
 .. code-block:: console
 
@@ -215,8 +215,14 @@ check it out and modify it if you want to, otherwise you can also create everyth
 
 In the example above, I'm using random forest to classify whether someone have
 diabetes or not depending on some features in the dataset
-I used this `indian-diabetes dataset <https://www.kaggle.com/uciml/pima-indians-diabetes-database>`_)
+I used the famous indian diabetes in this example `indian-diabetes dataset <https://www.kaggle.com/uciml/pima-indians-diabetes-database>`_)
 
+Notice that I passed :code:`n_estimators` and :code:`max_depth` as additional arguments to the model.
+If you don't provide arguments then the default will be used.
+You don't have to memorize the arguments for each model. You can always run :code:`igel models`, which will
+get you to interactive mode, where you will be prompted to enter the model you want to use and type of the problem
+you want to solve. Igel will then show you information about the model and a link that you can follow to see
+a list of available arguments and how to use these.
 
 - The expected way to use igel is from terminal (igel CLI):
 
