@@ -60,14 +60,14 @@ A machine learning tool that allows you to train/fit, test and use models **with
 Motivation & Goal
 ------------------
 
-The goal of the project is to provide machine learning for **everyone**, both technical and non technical
+The goal of the project is to provide machine learning for **everyone**, both technical and non-technical
 users.
 
 I needed a tool sometimes, which I can use to fast create a machine learning prototype. Whether to build
 some proof of concept or create a fast draft model to prove a point. I find myself often stuck at writing
 boilerplate code and/or thinking too much of how to start this.
 
-Therefore, I decided to create **igel**. Hopefully, it will make it easier for technical and non technical
+Therefore, I decided to create **igel**. Hopefully, it will make it easier for technical and non-technical
 users to build machine learning models.
 
 Features
