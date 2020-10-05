@@ -355,7 +355,7 @@ Here is an overview of all supported configurations (for now):
     # dataset operations
     dataset:
         type: csv  # [str] -> type of your dataset
-        read_data_options: # options you want to supply for reading your data (See the detailed overview about this in the next section -  :ref:`Read Data Options`)
+        read_data_options: # options you want to supply for reading your data (See the detailed overview about this in the next -  :ref:`section<Read Data Options>`)
             sep:  # [str] -> Delimiter to use.
             delimiter:  # [str] -> Alias for sep.
             header:     # [int, list of int] -> Row number(s) to use as the column names, and the start of the data.
