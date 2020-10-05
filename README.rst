@@ -446,7 +446,7 @@ Hence, you can provide this in the read_data_options. Just add the :code:`sep: "
 
 
 
-.. list-table:: Dataset Configuration
+.. list-table:: Supported Read Data Options
    :widths: 25 25 50
    :header-rows: 1
 

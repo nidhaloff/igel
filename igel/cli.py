@@ -3,9 +3,6 @@ import sys
 import argparse
 from igel import Igel, models_dict, metrics_dict
 import pandas as pd
-import colorama as clrm
-from colorama import Fore
-clrm.init(autoreset=True)
 
 
 class CLI(object):
@@ -39,8 +36,8 @@ class CLI(object):
     |___/
 
 
-{Fore.GREEN}igel <command> [<args>]{Fore.WHITE}
-{Fore.BLUE}- Available sub-commands at the moment are:{Fore.WHITE}
+igel <command> [<args>]
+- Available sub-commands at the moment are:
    init              initialize a yaml file with default parameters
    fit               fits a model
    evaluate          evaluate the performance of a pre-fitted model
@@ -50,20 +47,20 @@ class CLI(object):
    models            get a list of supported machine learning algorithms/models
    metrics           get a list of all supported metrics
 
-{Fore.BLUE}- Available arguments:{Fore.WHITE}
+- Available arguments:
 
-    {Fore.CYAN}# for usage with the fit, evaluate or predict command:{Fore.WHITE}
+    # for usage with the fit, evaluate or predict command:
     --data_path         Path to your dataset
     --yaml_file         Path to your yaml file
 
-    {Fore.CYAN}# for usage with the experiment command:{Fore.WHITE}
+    # for usage with the experiment command:
     --data_paths        Paths to data you want to use for fitting,
                         evaluating and predict respectively.
 
     --yaml_file         Path to the yaml file that will be used
                         when fitting the model.
 
-    {Fore.CYAN}# for getting help with the models command:{Fore.WHITE}
+    # for getting help with the models command:
     --model_type        type of the model you want to get help on
                         -> whether regression, classification or clustering.
 
@@ -71,57 +68,57 @@ class CLI(object):
     ------------------------------------------
 
     or for the short version
-    {Fore.CYAN}# for usage with the fit, evaluate or predict command:{Fore.WHITE}
+    # for usage with the fit, evaluate or predict command:
     -dp         Path to your dataset
     -yml        Path to your yaml file
 
-    {Fore.CYAN}# for usage with the experiment command:{Fore.WHITE}
+    # for usage with the experiment command:
     -DP         Paths to data you want to use for fitting,
                 evaluating and predict respectively.
 
 
     -yml        Path to the yaml file that will be used when fitting the model.
 
-    {Fore.CYAN}# for getting help with the models command:{Fore.WHITE}
+    # for getting help with the models command:
     -type       type of the model you want to get help on
                 -> whether regression, classification or clustering.
 
     -name       name of the model you want to get help on.
     ------------------------------------------
 
-{Fore.BLUE}- Quick Start:{Fore.CYAN}
+- Quick Start:
 
-{Fore.GREEN}igel -h{Fore.WHITE}
+igel -h
 # print this help guide
 
-{Fore.GREEN}igel init -type regression -model RandomForest{Fore.WHITE}
+igel init -type regression -model RandomForest
 # automatically create a yaml file in the working directory
 # with some default parameters to get you started fast
 
-{Fore.GREEN}igel models{Fore.WHITE}
+igel models
 # type this to get a list of supported models
 
-{Fore.GREEN}igel models -type regression -name RandomForest{Fore.WHITE}
+igel models -type regression -name RandomForest
 # this will give you a help on how to use the
 # RandomForestRegressor and will provide
 # you a link to get more help in the sklearn website
 
-{Fore.GREEN}igel metrics{Fore.WHITE}
+igel metrics
 # get a list of all supported metrics
 
-{Fore.GREEN}igel fit -dp "path_to_data" -yml "path_to_yaml_file"{Fore.WHITE}
+igel fit -dp "path_to_data" -yml "path_to_yaml_file"
 # fit a model
 
-{Fore.GREEN}igel evaluate -dp "path_to_data"{Fore.WHITE}
+igel evaluate -dp "path_to_data"
 # evaluate the trained/pre-fitted model
 
-{Fore.GREEN}igel predict -dp "path_to_data"{Fore.WHITE}
+igel predict -dp "path_to_data"
 # make predictions using the trained/pre-fitted model
 
-{Fore.GREEN}igel experiment -DP "path_to_train_data \\
+igel experiment -DP "path_to_train_data \\
                     path_to_evaluation_data \\
                     path_to_data_you_want_to_predict_on"
-                -yml "path_to_yaml_file"{Fore.WHITE}
+                -yml "path_to_yaml_file"
 # this will run fit using the trian data first,
 # then will run evaluate using the evaluation data
 # and finally, will generate predictions on the last
@@ -197,14 +194,14 @@ class CLI(object):
         d.pop('cmd')
         if not d:
             print(f""
-                  f"{Fore.BLUE}{'*' * 10} You entered interactive mode! {'*' * 10}{Fore.BLUE} \n"
+                  f"{'*' * 10} You entered interactive mode! {'*' * 10} \n"
                   f"This is happening because you didn't enter all mandatory arguments in order to use the cli\n"
                   f"Therefore, you will need to provide few information before proceeding.\n")
-            model_type = input(f"{Fore.GREEN}enter type of the problem you want to solve: [regression]       ") or "regression"
+            model_type = input(f"enter type of the problem you want to solve: [regression]       ") or "regression"
             d['model_type'] = model_type
-            model_name = input(f"{Fore.GREEN}enter algorithm you want to use: [NeuralNetwork]        ") or "NeuralNetwork"
+            model_name = input(f"enter algorithm you want to use: [NeuralNetwork]        ") or "NeuralNetwork"
             d['model_name'] = model_name
-            target = input(f"{Fore.GREEN}enter the target you want to predict {Fore.WHITE} "
+            target = input(f"enter the target you want to predict  "
                            "(this is usually a column name in your csv dataset):        ")
             d['target'] = target
 
@@ -217,13 +214,13 @@ class CLI(object):
         accept user input if the user did not provide all mandatory args in the terminal.
         """
         print(f""
-              f"{Fore.BLUE}{'*'*10} You entered interactive mode! {'*'*10}{Fore.BLUE} \n"
+              f"{'*'*10} You entered interactive mode! {'*'*10} \n"
               f"This is happening because you didn't enter all mandatory arguments in order to use the cli\n"
               f"Therefore, you will need to provide few information before proceeding.\n")
-        data_path = input(f"{Fore.GREEN}enter path to your data: [{default_data_path}]        {Fore.WHITE}") or default_data_path
+        data_path = input(f"enter path to your data: [{default_data_path}]        ") or default_data_path
         self.dict_args['data_path'] = data_path
         if yaml_needed:
-            yaml_path = input(f"{Fore.GREEN}enter path to your yaml file: [{default_yaml_path}]        {Fore.WHITE}") or default_yaml_path
+            yaml_path = input(f"enter path to your yaml file: [{default_yaml_path}]        ") or default_yaml_path
             self.dict_args['yaml_path'] = yaml_path
 
     def fit(self, *args, **kwargs):
@@ -275,7 +272,7 @@ class CLI(object):
         Igel(**self.dict_args)
 
     def _print_models_overview(self):
-        print(f"{Fore.GREEN}\nIgel's supported models overview: \n")
+        print(f"\nIgel's supported models overview: \n")
         reg_algs = list(models_dict.get('regression').keys())
         clf_algs = list(models_dict.get('classification').keys())
         cluster_algs = list(models_dict.get('clustering').keys())
@@ -303,12 +300,12 @@ class CLI(object):
                 self._print_models_overview()
             else:
                 if not model_type:
-                    print(f"{Fore.RED}Please enter a type argument to get help on the chosen model\n"
+                    print(f"Please enter a type argument to get help on the chosen model\n"
                           f"type can be whether regression, classification or clustering \n")
                     self._print_models_overview()
                     return
                 if model_type not in ('regression', 'classification', 'clustering'):
-                    raise Exception(f"{Fore.RED}{model_type} is not supported! \n"
+                    raise Exception(f"{model_type} is not supported! \n"
                                     f"model_type need to be regression, classification or clustering")
 
                 models = models_dict.get(model_type)
@@ -322,13 +319,13 @@ class CLI(object):
                       f"You can click the link below to know more about the optional arguments\n"
                       f"that you can use with your chosen model ({model_name}).\n"
                       f"You can provide these optional arguments in the yaml file if you want to use them.\n"
-                      f"link:\n{Fore.GREEN}{link}{Fore.WHITE} \n")
+                      f"link:\n{link} \n")
 
     def metrics(self):
         """
         show an overview of all metrics supported by igel
         """
-        print(f"{Fore.GREEN}\nIgel's supported metrics overview: \n")
+        print(f"\nIgel's supported metrics overview: \n")
         reg_metrics = [func.__name__ for func in metrics_dict.get('regression')]
         clf_metrics = [func.__name__ for func in metrics_dict.get('classification')]
 
@@ -358,17 +355,17 @@ class CLI(object):
             default_test_data_path = './test_data.csv'
             default_yaml_path = './igel.yaml'
             print(f""
-                  f"{Fore.BLUE}{'*' * 10} You entered interactive mode! {'*' * 10}{Fore.BLUE} \n"
+                  f"{'*' * 10} You entered interactive mode! {'*' * 10} \n"
                   f"This is happening because you didn't enter all mandatory arguments in order to use the cli\n"
                   f"Therefore, you will need to provide few information before proceeding.\n")
             train_data_path = input(
-                f"{Fore.GREEN}enter path to your data: [{default_train_data_path}]        {Fore.WHITE}") or default_train_data_path
+                f"enter path to your data: [{default_train_data_path}]        ") or default_train_data_path
             eval_data_path = input(
-                f"{Fore.GREEN}enter path to your data: [{default_eval_data_path}]        {Fore.WHITE}") or default_eval_data_path
+                f"enter path to your data: [{default_eval_data_path}]        ") or default_eval_data_path
             test_data_path = input(
-                f"{Fore.GREEN}enter path to your data: [{default_test_data_path}]        {Fore.WHITE}") or default_test_data_path
+                f"enter path to your data: [{default_test_data_path}]        ") or default_test_data_path
             yaml_path = input(
-                f"{Fore.GREEN}enter path to your yaml file: [{default_yaml_path}]        {Fore.WHITE}") or default_yaml_path
+                f"enter path to your yaml file: [{default_yaml_path}]        ") or default_yaml_path
 
             # prepare the dict arguments:
             train_args = {"cmd": "fit",
