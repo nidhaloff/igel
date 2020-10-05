@@ -45,7 +45,7 @@ igel
 |
 |
 
-A machine learning tool that allows you to train/fit, test and use models **without writing code**
+A delightful machine learning tool that allows you to train/fit, test and use models **without writing code**
 
 
 * Free software: MIT license
@@ -219,7 +219,7 @@ I used the famous indian diabetes in this example `indian-diabetes dataset <http
 
 Notice that I passed :code:`n_estimators` and :code:`max_depth` as additional arguments to the model.
 If you don't provide arguments then the default will be used.
-You don't have to memorize the arguments for each model. You can always run :code:`igel models`, which will
+You don't have to memorize the arguments for each model. You can always run :code:`igel models` in your terminal, which will
 get you to interactive mode, where you will be prompted to enter the model you want to use and type of the problem
 you want to solve. Igel will then show you information about the model and a link that you can follow to see
 a list of available arguments and how to use these.

@@ -116,8 +116,8 @@ class Igel(object):
                 model_class = model.get('cv_class', None)
                 if model_class:
                     logger.info(
-                    f"cross validation estimator detected. "
-                    f"Switch to the CV version of the {model_algorithm} algorithm")
+                                f"cross validation estimator detected. "
+                                f"Switch to the CV version of the {model_algorithm} algorithm")
                 else:
                     logger.info(
                         f"No CV class found for the {model_algorithm} algorithm"

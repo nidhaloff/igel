@@ -2,7 +2,14 @@
 History
 =======
 
-0.2.6 (2020-10-05)
+0.2.7 (2020-10-05)
+-------------------
+
+* removed colorama (since it was causing bugs on jupyter)
+* improved interactive mode
+* added commands to get version and infos about the package
+
+0.2.6 (2020-10-04)
 -------------------
 
 * added interactive mode in cli
