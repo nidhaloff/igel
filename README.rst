@@ -355,7 +355,7 @@ Here is an overview of all supported configurations (for now):
     # dataset operations
     dataset:
         type: csv  # [str] -> type of your dataset
-        read_data_options: # options you want to supply for reading your data
+        read_data_options: # options you want to supply for reading your data (see the detailed overview about this in the next section)
             sep:  # [str] -> Delimiter to use.
             delimiter:  # [str] -> Alias for sep.
             header:     # [int, list of int] -> Row number(s) to use as the column names, and the start of the data.
@@ -397,41 +397,40 @@ Here is an overview of all supported configurations (for now):
 
 
         split:  # split options
-            test_size: 0.2  # 0.2 means 20% for the test data, so 80% are automatically for training
-            shuffle: True   # whether to shuffle the data before/while splitting
-            stratify: None  # If not None, data is split in a stratified fashion, using this as the class labels.
+            test_size: 0.2  #[float] -> 0.2 means 20% for the test data, so 80% are automatically for training
+            shuffle: true   # [bool] -> whether to shuffle the data before/while splitting
+            stratify: None  # [list, None] -> If not None, data is split in a stratified fashion, using this as the class labels.
 
         preprocess: # preprocessing options
-            missing_values: mean    # other possible values: [drop, median, most_frequent, constant] check the docs for more
+            missing_values: mean    # [str] -> other possible values: [drop, median, most_frequent, constant] check the docs for more
             encoding:
-                type: oneHotEncoding  # other possible values: [labelEncoding]
+                type: oneHotEncoding  # [str] -> other possible values: [labelEncoding]
             scale:  # scaling options
-                method: standard    # standardization will scale values to have a 0 mean and 1 standard deviation  | you can also try minmax
-                target: inputs  # scale inputs. | other possible values: [outputs, all] # if you choose all then all values in the dataset will be scaled
+                method: standard    # [str] -> standardization will scale values to have a 0 mean and 1 standard deviation  | you can also try minmax
+                target: inputs  # [str] -> scale inputs. | other possible values: [outputs, all] # if you choose all then all values in the dataset will be scaled
 
 
     # model definition
     model:
-        type: classification    # type of the problem you want to solve. | possible values: [regression, classification, clustering]
-        algorithm: NeuralNetwork    # which algorithm you want to use. | type igel algorithms in the Terminal to know more
-        arguments: default          # model arguments: you can check the available arguments for each model by running igel help in your terminal
-        use_cv_estimator: false     # if this is true, the CV class of the specific model will be used if it is supported
+        type: classification    # [str] -> type of the problem you want to solve. | possible values: [regression, classification, clustering]
+        algorithm: NeuralNetwork    # [str (notice the pascal case)] -> which algorithm you want to use. | type igel algorithms in the Terminal to know more
+        arguments:          # model arguments: you can check the available arguments for each model by running igel help in your terminal
+        use_cv_estimator: false     # [bool] -> if this is true, the CV class of the specific model will be used if it is supported
         cross_validate:
-            cv: # number of kfold (default 5)
-            n_jobs:   # The number of CPUs to use to do the computation (default None)
-            verbose: # The verbosity level. (default 0)
+            cv: # [int] -> number of kfold (default 5)
+            n_jobs:   # [signed int] -> The number of CPUs to use to do the computation (default None)
+            verbose: # [int] -> The verbosity level. (default 0)
 
     # target you want to predict
-    target:
+    target:  # list of strings: basically put here the column(s), you want to predict that exist in your csv dataset
         - put the target you want to predict here
         - you can assign many target if you are making a multioutput prediction
 
-Detailed Overview
+Read Data Options
 ------------------
 
-A detailed overview of the configurations you can provide in the yaml (or json) file is given below:
-
-- Dataset Configuration
+A detailed overview of the configurations you can provide in the yaml (or json) file is given below.
+Notice that you will certainly not need all the configuration values for the dataset.
 
 .. list-table:: Dataset Configuration
    :widths: 25 25 50
@@ -511,7 +510,49 @@ A detailed overview of the configurations you can provide in the yaml (or json) 
    * - parse_dates
      - bool or list of int or names or list of lists or dict, default False
      - The behavior is as follows: boolean. If True -> try parsing the index. list of int or names. e.g. If [1, 2, 3] -> try parsing columns 1, 2, 3 each as a separate date column. list of lists. e.g. If [[1, 3]] -> combine columns 1 and 3 and parse as a single date column. dict, e.g. {‘foo’ : [1, 3]} -> parse columns 1, 3 as date and call result ‘foo’ If a column or index cannot be represented as an array of datetimes, say because of an unparseable value or a mixture of timezones, the column or index will be returned unaltered as an object data type.
+   * - infer_datetime_format
+     - bool, default False
+     - If True and parse_dates is enabled, pandas will attempt to infer the format of the datetime strings in the columns, and if it can be inferred, switch to a faster method of parsing them. In some cases this can increase the parsing speed by 5-10x.
+   * - keep_date_col
+     - bool, default False
+     - If True and parse_dates specifies combining multiple columns then keep the original columns.
+   * - date_parser
+     - function, optional
+     - Function to use for converting a sequence of string columns to an array of datetime instances. The default uses dateutil.parser.parser to do the conversion. Pandas will try to call date_parser in three different ways, advancing to the next if an exception occurs: 1) Pass one or more arrays (as defined by parse_dates) as arguments; 2) concatenate (row-wise) the string values from the columns defined by parse_dates into a single array and pass that; and 3) call date_parser once for each row using one or more strings (corresponding to the columns defined by parse_dates) as arguments.
+   * - dayfirst
+     - bool, default False
+     - DD/MM format dates, international and European format.
 
+   * - cache_dates
+     - bool, default True
+     - If True, use a cache of unique, converted dates to apply the datetime conversion. May produce significant speed-up when parsing duplicate date strings, especially ones with timezone offsets.
+   * - thousands
+     - str, optional
+     - Thousands separator.
+   * - decimal
+     - str, default ‘.’
+     - Character to recognize as decimal point (e.g. use ‘,’ for European data).
+   * - lineterminator
+     - str (length 1), optional
+     - Character to break file into lines. Only valid with C parser.
+   * - escapechar
+     - str (length 1), optional
+     - One-character string used to escape other characters.
+   * - comment
+     - str, optional
+     - Indicates remainder of line should not be parsed. If found at the beginning of a line, the line will be ignored altogether.
+   * - encoding
+     - str, optional
+     - Encoding to use for UTF when reading/writing (ex. ‘utf-8’).
+   * - dialect
+     - str or csv.Dialect, optional
+     - If provided, this parameter will override values (default or not) for the following parameters: delimiter, doublequote, escapechar, skipinitialspace, quotechar, and quoting
+   * - low_memory
+     - bool, default True
+     - Internally process the file in chunks, resulting in lower memory use while parsing, but possibly mixed type inference. To ensure no mixed types either set False, or specify the type with the dtype parameter. Note that the entire file is read into a single DataFrame regardless,
+   * - memory_map
+     - bool, default False
+     - map the file object directly onto memory and access the data directly from there. Using this option can improve performance because there is no longer any I/O overhead.
 
 
 E2E Example
