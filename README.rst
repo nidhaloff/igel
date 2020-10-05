@@ -429,8 +429,22 @@ Here is an overview of all supported configurations (for now):
 Read Data Options
 ------------------
 
+.. note::
+    igel uses pandas under the hood to read & parse the data. Hence, you can
+    find this data optional parameters also in the pandas official documentation.
+
 A detailed overview of the configurations you can provide in the yaml (or json) file is given below.
-Notice that you will certainly not need all the configuration values for the dataset.
+Notice that you will certainly not need all the configuration values for the dataset. They are optional.
+Generally, igel will figure out how to read your dataset.
+
+However, you can help it by providing extra fields using this read_data_options section.
+For example, one of the helpful values in my opinion is the "sep", which defines how your columns
+in the csv dataset are separated. Generally, csv datasets are separated by commas, which is also the default value
+here. However, it may be separated by a semi column in your case.
+
+Hence, you can provide this in the read_data_options. Just add the :code:`sep: ";"` under read_data_options.
+
+
 
 .. list-table:: Dataset Configuration
    :widths: 25 25 50
