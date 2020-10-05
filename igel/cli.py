@@ -321,7 +321,8 @@ igel experiment -DP "path_to_train_data \\
             print("-"*100)
             model_name = input("Enter the model name, you want to get infos about (e.g NeuralNetwork):    ")
             model_type = input("Enter the type (choose from regression, classification or clustering):   ")
-            self._show_model_infos(model_name, model_type)
+            if model_name and model_type:
+                self._show_model_infos(model_name, model_type)
         else:
             model_name = self.dict_args.get('model_name', None)
             model_type = self.dict_args.get('model_type', None)
