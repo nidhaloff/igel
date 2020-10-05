@@ -354,77 +354,205 @@ Here is an overview of all supported configurations (for now):
 
     # dataset operations
     dataset:
-        type: csv
-        read_data_options: # options you want to supply for reading your data
-            sep:  # Delimiter to use.
-            delimiter:  # Alias for sep.
-            header:     # Row number(s) to use as the column names, and the start of the data.
-            names:  # List of column names to use
-            index_col: # Column(s) to use as the row labels of the DataFrame,
-            usecols:    # Return a subset of the columns
-            squeeze:    # If the parsed data only contains one column then return a Series.
-            prefix:     # Prefix to add to column numbers when no header, e.g. ‘X’ for X0, X1, …
-            mangle_dupe_cols:   # Duplicate columns will be specified as ‘X’, ‘X.1’, …’X.N’, rather than ‘X’…’X’. Passing in False will cause data to be overwritten if there are duplicate names in the columns.
-            dtype:  # Data type for data or columns
-            engine:     # Parser engine to use. The C engine is faster while the python engine is currently more feature-complete.
-            converters: # Dict of functions for converting values in certain columns. Keys can either be integers or column labels.
-            true_values: # Values to consider as True.
-            false_values: # Values to consider as False.
-            skipinitialspace: # Skip spaces after delimiter.
-            skiprows: # Line numbers to skip (0-indexed) or number of lines to skip (int) at the start of the file.
-            skipfooter: # Number of lines at bottom of file to skip
-            nrows: # Number of rows of file to read. Useful for reading pieces of large files.
-            na_values: # Additional strings to recognize as NA/NaN.
-            keep_default_na: # Whether or not to include the default NaN values when parsing the data.
-            na_filter: # Detect missing value markers (empty strings and the value of na_values). In data without any NAs, passing na_filter=False can improve the performance of reading a large file.
-            verbose: # Indicate number of NA values placed in non-numeric columns.
-            skip_blank_lines: # If True, skip over blank lines rather than interpreting as NaN values.
-            parse_dates: # try parsing the dates
-            infer_datetime_format: # If True and parse_dates is enabled, pandas will attempt to infer the format of the datetime strings in the columns, and if it can be inferred, switch to a faster method of parsing them.
-            keep_date_col: # If True and parse_dates specifies combining multiple columns then keep the original columns.
-            dayfirst: # DD/MM format dates, international and European format.
-            cache_dates: # If True, use a cache of unique, converted dates to apply the datetime conversion.
-            thousands: # the thousands operator
-            decimal: # Character to recognize as decimal point (e.g. use ‘,’ for European data).
-            lineterminator: # Character to break file into lines.
-            escapechar: # One-character string used to escape other characters.
-            comment: # Indicates remainder of line should not be parsed. If found at the beginning of a line, the line will be ignored altogether. This parameter must be a single character.
-            encoding: # Encoding to use for UTF when reading/writing (ex. ‘utf-8’).
-            dialect: # If provided, this parameter will override values (default or not) for the following parameters: delimiter, doublequote, escapechar, skipinitialspace, quotechar, and quoting
-            delim_whitespace: # Specifies whether or not whitespace (e.g. ' ' or '    ') will be used as the sep
-            low_memory: # Internally process the file in chunks, resulting in lower memory use while parsing, but possibly mixed type inference.
-            memory_map: # If a filepath is provided for filepath_or_buffer, map the file object directly onto memory and access the data directly from there. Using this option can improve performance because there is no longer any I/O overhead.
+        type: csv  # [str] -> type of your dataset
+        read_data_options: # options you want to supply for reading your data (See the detailed overview about this in the next section)
+            sep:  # [str] -> Delimiter to use.
+            delimiter:  # [str] -> Alias for sep.
+            header:     # [int, list of int] -> Row number(s) to use as the column names, and the start of the data.
+            names:  # [list] -> List of column names to use
+            index_col: # [int, str, list of int, list of str, False] -> Column(s) to use as the row labels of the DataFrame,
+            usecols:    # [list, callable] -> Return a subset of the columns
+            squeeze:    # [bool] -> If the parsed data only contains one column then return a Series.
+            prefix:     # [str] -> Prefix to add to column numbers when no header, e.g. ‘X’ for X0, X1, …
+            mangle_dupe_cols:   # [bool] -> Duplicate columns will be specified as ‘X’, ‘X.1’, …’X.N’, rather than ‘X’…’X’. Passing in False will cause data to be overwritten if there are duplicate names in the columns.
+            dtype:  # [Type name, dict maping column name to type] -> Data type for data or columns
+            engine:     # [str] -> Parser engine to use. The C engine is faster while the python engine is currently more feature-complete.
+            converters: # [dict] -> Dict of functions for converting values in certain columns. Keys can either be integers or column labels.
+            true_values: # [list] -> Values to consider as True.
+            false_values: # [list] -> Values to consider as False.
+            skipinitialspace: # [bool] -> Skip spaces after delimiter.
+            skiprows: # [list-like] -> Line numbers to skip (0-indexed) or number of lines to skip (int) at the start of the file.
+            skipfooter: # [int] -> Number of lines at bottom of file to skip
+            nrows: # [int] -> Number of rows of file to read. Useful for reading pieces of large files.
+            na_values: # [scalar, str, list, dict] ->  Additional strings to recognize as NA/NaN.
+            keep_default_na: # [bool] ->  Whether or not to include the default NaN values when parsing the data.
+            na_filter: # [bool] -> Detect missing value markers (empty strings and the value of na_values). In data without any NAs, passing na_filter=False can improve the performance of reading a large file.
+            verbose: # [bool] -> Indicate number of NA values placed in non-numeric columns.
+            skip_blank_lines: # [bool] -> If True, skip over blank lines rather than interpreting as NaN values.
+            parse_dates: # [bool, list of int, list of str, list of lists, dict] ->  try parsing the dates
+            infer_datetime_format: # [bool] -> If True and parse_dates is enabled, pandas will attempt to infer the format of the datetime strings in the columns, and if it can be inferred, switch to a faster method of parsing them.
+            keep_date_col: # [bool] -> If True and parse_dates specifies combining multiple columns then keep the original columns.
+            dayfirst: # [bool] -> DD/MM format dates, international and European format.
+            cache_dates: # [bool] -> If True, use a cache of unique, converted dates to apply the datetime conversion.
+            thousands: # [str] -> the thousands operator
+            decimal: # [str] -> Character to recognize as decimal point (e.g. use ‘,’ for European data).
+            lineterminator: # [str] -> Character to break file into lines.
+            escapechar: # [str] ->  One-character string used to escape other characters.
+            comment: # [str] -> Indicates remainder of line should not be parsed. If found at the beginning of a line, the line will be ignored altogether. This parameter must be a single character.
+            encoding: # [str] -> Encoding to use for UTF when reading/writing (ex. ‘utf-8’).
+            dialect: # [str, csv.Dialect] -> If provided, this parameter will override values (default or not) for the following parameters: delimiter, doublequote, escapechar, skipinitialspace, quotechar, and quoting
+            delim_whitespace: # [bool] -> Specifies whether or not whitespace (e.g. ' ' or '    ') will be used as the sep
+            low_memory: # [bool] -> Internally process the file in chunks, resulting in lower memory use while parsing, but possibly mixed type inference.
+            memory_map: # [bool] -> If a filepath is provided for filepath_or_buffer, map the file object directly onto memory and access the data directly from there. Using this option can improve performance because there is no longer any I/O overhead.
 
 
         split:  # split options
-            test_size: 0.2  # 0.2 means 20% for the test data, so 80% are automatically for training
-            shuffle: True   # whether to shuffle the data before/while splitting
-            stratify: None  # If not None, data is split in a stratified fashion, using this as the class labels.
+            test_size: 0.2  #[float] -> 0.2 means 20% for the test data, so 80% are automatically for training
+            shuffle: true   # [bool] -> whether to shuffle the data before/while splitting
+            stratify: None  # [list, None] -> If not None, data is split in a stratified fashion, using this as the class labels.
 
         preprocess: # preprocessing options
-            missing_values: mean    # other possible values: [drop, median, most_frequent, constant] check the docs for more
+            missing_values: mean    # [str] -> other possible values: [drop, median, most_frequent, constant] check the docs for more
             encoding:
-                type: oneHotEncoding  # other possible values: [labelEncoding]
+                type: oneHotEncoding  # [str] -> other possible values: [labelEncoding]
             scale:  # scaling options
-                method: standard    # standardization will scale values to have a 0 mean and 1 standard deviation  | you can also try minmax
-                target: inputs  # scale inputs. | other possible values: [outputs, all] # if you choose all then all values in the dataset will be scaled
+                method: standard    # [str] -> standardization will scale values to have a 0 mean and 1 standard deviation  | you can also try minmax
+                target: inputs  # [str] -> scale inputs. | other possible values: [outputs, all] # if you choose all then all values in the dataset will be scaled
 
 
     # model definition
     model:
-        type: classification    # type of the problem you want to solve. | possible values: [regression, classification, clustering]
-        algorithm: NeuralNetwork    # which algorithm you want to use. | type igel algorithms in the Terminal to know more
-        arguments: default          # model arguments: you can check the available arguments for each model by running igel help in your terminal
-        use_cv_estimator: false     # if this is true, the CV class of the specific model will be used if it is supported
+        type: classification    # [str] -> type of the problem you want to solve. | possible values: [regression, classification, clustering]
+        algorithm: NeuralNetwork    # [str (notice the pascal case)] -> which algorithm you want to use. | type igel algorithms in the Terminal to know more
+        arguments:          # model arguments: you can check the available arguments for each model by running igel help in your terminal
+        use_cv_estimator: false     # [bool] -> if this is true, the CV class of the specific model will be used if it is supported
         cross_validate:
-            cv: # number of kfold (default 5)
-            n_jobs:   # The number of CPUs to use to do the computation (default None)
-            verbose: # The verbosity level. (default 0)
+            cv: # [int] -> number of kfold (default 5)
+            n_jobs:   # [signed int] -> The number of CPUs to use to do the computation (default None)
+            verbose: # [int] -> The verbosity level. (default 0)
 
     # target you want to predict
-    target:
+    target:  # list of strings: basically put here the column(s), you want to predict that exist in your csv dataset
         - put the target you want to predict here
         - you can assign many target if you are making a multioutput prediction
+
+Read Data Options
+------------------
+
+A detailed overview of the configurations you can provide in the yaml (or json) file is given below.
+Notice that you will certainly not need all the configuration values for the dataset.
+
+.. list-table:: Dataset Configuration
+   :widths: 25 25 50
+   :header-rows: 1
+
+   * - Parameter
+     - Type
+     - Explanation
+   * - sep
+     - str, default ‘,’
+     - Delimiter to use. If sep is None, the C engine cannot automatically detect the separator, but the Python parsing engine can, meaning the latter will be used and automatically detect the separator by Python’s builtin sniffer tool, csv.Sniffer. In addition, separators longer than 1 character and different from '\s+' will be interpreted as regular expressions and will also force the use of the Python parsing engine. Note that regex delimiters are prone to ignoring quoted data. Regex example: '\r\t'.
+   * - delimiter
+     - default None
+     - Alias for sep.
+   * - header
+     - int, list of int, default ‘infer’
+     - Row number(s) to use as the column names, and the start of the data. Default behavior is to infer the column names: if no names are passed the behavior is identical to header=0 and column names are inferred from the first line of the file, if column names are passed explicitly then the behavior is identical to header=None. Explicitly pass header=0 to be able to replace existing names. The header can be a list of integers that specify row locations for a multi-index on the columns e.g. [0,1,3]. Intervening rows that are not specified will be skipped (e.g. 2 in this example is skipped). Note that this parameter ignores commented lines and empty lines if skip_blank_lines=True, so header=0 denotes the first line of data rather than the first line of the file.
+   * - names
+     - array-like, optional
+     - List of column names to use. If the file contains a header row, then you should explicitly pass header=0 to override the column names. Duplicates in this list are not allowed.
+   * - index_col
+     - int, str, sequence of int / str, or False, default None
+     - Column(s) to use as the row labels of the DataFrame, either given as string name or column index. If a sequence of int / str is given, a MultiIndex is used. Note: index_col=False can be used to force pandas to not use the first column as the index, e.g. when you have a malformed file with delimiters at the end of each line.
+   * - usecols
+     - list-like or callable, optional
+     - Return a subset of the columns. If list-like, all elements must either be positional (i.e. integer indices into the document columns) or strings that correspond to column names provided either by the user in names or inferred from the document header row(s). For example, a valid list-like usecols parameter would be [0, 1, 2] or ['foo', 'bar', 'baz']. Element order is ignored, so usecols=[0, 1] is the same as [1, 0]. To instantiate a DataFrame from data with element order preserved use pd.read_csv(data, usecols=['foo', 'bar'])[['foo', 'bar']] for columns in ['foo', 'bar'] order or pd.read_csv(data, usecols=['foo', 'bar'])[['bar', 'foo']] for ['bar', 'foo'] order. If callable, the callable function will be evaluated against the column names, returning names where the callable function evaluates to True. An example of a valid callable argument would be lambda x: x.upper() in ['AAA', 'BBB', 'DDD']. Using this parameter results in much faster parsing time and lower memory usage.
+   * - squeeze
+     - bool, default False
+     - If the parsed data only contains one column then return a Series.
+
+   * - prefix
+     - str, optional
+     - Prefix to add to column numbers when no header, e.g. ‘X’ for X0, X1, …
+   * - mangle_dupe_cols
+     - bool, default True
+     - Duplicate columns will be specified as ‘X’, ‘X.1’, …’X.N’, rather than ‘X’…’X’. Passing in False will cause data to be overwritten if there are duplicate names in the columns.
+   * - dtype
+     - {‘c’, ‘python’}, optional
+     - Parser engine to use. The C engine is faster while the python engine is currently more feature-complete.
+   * - converters
+     - dict, optional
+     - Dict of functions for converting values in certain columns. Keys can either be integers or column labels.
+   * - true_values
+     - list, optional
+     - Values to consider as True.
+
+   * - false_values
+     - list, optional
+     - Values to consider as False.
+   * - skipinitialspace
+     - bool, default False
+     - Skip spaces after delimiter.
+   * - skiprows
+     - list-like, int or callable, optional
+     - Line numbers to skip (0-indexed) or number of lines to skip (int) at the start of the file. If callable, the callable function will be evaluated against the row indices, returning True if the row should be skipped and False otherwise. An example of a valid callable argument would be lambda x: x in [0, 2].
+   * - skipfooter
+     - int, default 0
+     - Number of lines at bottom of file to skip (Unsupported with engine=’c’).
+   * - nrows
+     - int, optional
+     - Number of rows of file to read. Useful for reading pieces of large files.
+   * - na_values
+     - scalar, str, list-like, or dict, optional
+     - Additional strings to recognize as NA/NaN. If dict passed, specific per-column NA values. By default the following values are interpreted as NaN: ‘’, ‘#N/A’, ‘#N/A N/A’, ‘#NA’, ‘-1.#IND’, ‘-1.#QNAN’, ‘-NaN’, ‘-nan’, ‘1.#IND’, ‘1.#QNAN’, ‘<NA>’, ‘N/A’, ‘NA’, ‘NULL’, ‘NaN’, ‘n/a’, ‘nan’, ‘null’.
+   * - keep_default_na
+     - bool, default True
+     - Whether or not to include the default NaN values when parsing the data. Depending on whether na_values is passed in, the behavior is as follows: If keep_default_na is True, and na_values are specified, na_values is appended to the default NaN values used for parsing. If keep_default_na is True, and na_values are not specified, only the default NaN values are used for parsing. If keep_default_na is False, and na_values are specified, only the NaN values specified na_values are used for parsing. If keep_default_na is False, and na_values are not specified, no strings will be parsed as NaN. Note that if na_filter is passed in as False, the keep_default_na and na_values parameters will be ignored.
+   * - na_filter
+     - bool, default True
+     - Detect missing value markers (empty strings and the value of na_values). In data without any NAs, passing na_filter=False can improve the performance of reading a large file.
+   * - verbose
+     - bool, default False
+     - Indicate number of NA values placed in non-numeric columns.
+   * - skip_blank_lines
+     - bool, default True
+     - If True, skip over blank lines rather than interpreting as NaN values.
+   * - parse_dates
+     - bool or list of int or names or list of lists or dict, default False
+     - The behavior is as follows: boolean. If True -> try parsing the index. list of int or names. e.g. If [1, 2, 3] -> try parsing columns 1, 2, 3 each as a separate date column. list of lists. e.g. If [[1, 3]] -> combine columns 1 and 3 and parse as a single date column. dict, e.g. {‘foo’ : [1, 3]} -> parse columns 1, 3 as date and call result ‘foo’ If a column or index cannot be represented as an array of datetimes, say because of an unparseable value or a mixture of timezones, the column or index will be returned unaltered as an object data type.
+   * - infer_datetime_format
+     - bool, default False
+     - If True and parse_dates is enabled, pandas will attempt to infer the format of the datetime strings in the columns, and if it can be inferred, switch to a faster method of parsing them. In some cases this can increase the parsing speed by 5-10x.
+   * - keep_date_col
+     - bool, default False
+     - If True and parse_dates specifies combining multiple columns then keep the original columns.
+   * - date_parser
+     - function, optional
+     - Function to use for converting a sequence of string columns to an array of datetime instances. The default uses dateutil.parser.parser to do the conversion. Pandas will try to call date_parser in three different ways, advancing to the next if an exception occurs: 1) Pass one or more arrays (as defined by parse_dates) as arguments; 2) concatenate (row-wise) the string values from the columns defined by parse_dates into a single array and pass that; and 3) call date_parser once for each row using one or more strings (corresponding to the columns defined by parse_dates) as arguments.
+   * - dayfirst
+     - bool, default False
+     - DD/MM format dates, international and European format.
+
+   * - cache_dates
+     - bool, default True
+     - If True, use a cache of unique, converted dates to apply the datetime conversion. May produce significant speed-up when parsing duplicate date strings, especially ones with timezone offsets.
+   * - thousands
+     - str, optional
+     - Thousands separator.
+   * - decimal
+     - str, default ‘.’
+     - Character to recognize as decimal point (e.g. use ‘,’ for European data).
+   * - lineterminator
+     - str (length 1), optional
+     - Character to break file into lines. Only valid with C parser.
+   * - escapechar
+     - str (length 1), optional
+     - One-character string used to escape other characters.
+   * - comment
+     - str, optional
+     - Indicates remainder of line should not be parsed. If found at the beginning of a line, the line will be ignored altogether.
+   * - encoding
+     - str, optional
+     - Encoding to use for UTF when reading/writing (ex. ‘utf-8’).
+   * - dialect
+     - str or csv.Dialect, optional
+     - If provided, this parameter will override values (default or not) for the following parameters: delimiter, doublequote, escapechar, skipinitialspace, quotechar, and quoting
+   * - low_memory
+     - bool, default True
+     - Internally process the file in chunks, resulting in lower memory use while parsing, but possibly mixed type inference. To ensure no mixed types either set False, or specify the type with the dtype parameter. Note that the entire file is read into a single DataFrame regardless,
+   * - memory_map
+     - bool, default False
+     - map the file object directly onto memory and access the data directly from there. Using this option can improve performance because there is no longer any I/O overhead.
 
 
 E2E Example
