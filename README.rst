@@ -148,7 +148,7 @@ Run :code:`igel version` to check the version.
 
 Run :code:`igel info` to get meta data about the project.
 
-you can run this command to get instructions:
+You can run the help command to get instructions:
 
 .. code-block:: console
 
