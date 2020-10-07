@@ -340,7 +340,8 @@ class Igel(object):
                                             X=x_train,
                                             y=y_train, **cv_params)
             self.model.fit(x_train, y_train)
-        else:
+
+        else:   # if the model type is clustering
             self.model.fit(x_train)
 
         saved = self._save_model(self.model)
