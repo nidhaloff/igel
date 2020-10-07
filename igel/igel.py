@@ -284,23 +284,23 @@ class Igel(object):
         return self._process_data(target='predict')
 
     def get_evaluation(self, model, x_test, y_true, y_pred, **kwargs):
-        res = None
         try:
             res = evaluate_model(model_type=self.model_type,
-                                  model=model,
-                                  x_test=x_test,
-                                  y_pred=y_pred,
-                                  y_true=y_true,
-                                  get_score_only=False,
-                                  **kwargs)
+                                 model=model,
+                                 x_test=x_test,
+                                 y_pred=y_pred,
+                                 y_true=y_true,
+                                 get_score_only=False,
+                                 **kwargs)
         except Exception as e:
+            logger.debug(e)
             res = evaluate_model(model_type=self.model_type,
-                                  model=model,
-                                  x_test=x_test,
-                                  y_pred=y_pred,
-                                  y_true=y_true,
-                                  get_score_only=True,
-                                  **kwargs)
+                                 model=model,
+                                 x_test=x_test,
+                                 y_pred=y_pred,
+                                 y_true=y_true,
+                                 get_score_only=True,
+                                 **kwargs)
         return res
 
     def fit(self, **kwargs):
@@ -334,6 +334,8 @@ class Igel(object):
             if not cv_params:
                 logger.info(f"cross validation is not provided")
             else:
+                # perform cross validation
+                logger.info("performing cross validation ...")
                 cv_results = cross_validate(estimator=self.model,
                                             X=x_train,
                                             y=y_train, **cv_params)
@@ -482,17 +484,3 @@ class Igel(object):
         else:
             logger.warning(f"something went wrong while initializing a default file")
 
-
-if __name__ == '__main__':
-    mock_fit_params = {'data_path': '/home/nidhal/projects/igel/examples/multioutput-example/linnerud.csv',
-                       'yaml_path': '/home/nidhal/projects/igel/examples/multioutput-example/multioutput.yaml',
-                       #/home/nidhal/projects/igel/examples/indian-diabetes-example/random-forest.yaml
-                       'cmd': 'fit'}
-    mock_eval_params = {'data_path': '/home/nidhal/projects/igel/examples/data/indian-diabetes/eval-indians-diabetes.csv',
-                        'cmd': 'evaluate'}
-    mock_pred_params = {'data_path': '/home/nidhal/projects/igel/examples/data/indian-diabetes/test-indians-diabetes.csv',
-                        'cmd': 'predict'}
-
-    Igel(**mock_fit_params)
-    # Igel(**mock_eval_params)
-    # Igel(**mock_pred_params)

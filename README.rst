@@ -167,8 +167,12 @@ You can run the help command to get instructions:
 
 ---------------------------------------------------------------------------------------------------------
 
-First step is to provide a yaml file (you can also use json if you want). You can do this manually by creating a .yaml file and editing it yourself.
-However, if you are lazy (and you probably are, like me :D), you can use the igel init command to get started fast:
+First step is to provide a yaml file (you can also use json if you want)
+
+You can do this manually by creating a .yaml file (called igel.yaml by convention but you can name if whatever you want)
+and editing it yourself.
+However, if you are lazy (and you probably are, like me :D), you can use the igel init command to get started fast,
+which will create a basic config file for you on the fly.
 
 
 
