@@ -37,7 +37,7 @@ However, if you are lazy (and you probably are, like me :D), you can use the ige
     """
     $ igel init
 
-After runnig the command, an igel.yaml file will be created for you in the current working directory. You can
+After running the command, an igel.yaml file will be created for you in the current working directory. You can
 check it out and modify it if you want to, otherwise you can also create everything from scratch.
 
 
