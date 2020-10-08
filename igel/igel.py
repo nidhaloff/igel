@@ -338,7 +338,9 @@ class Igel(object):
                 logger.info("performing cross validation ...")
                 cv_results = cross_validate(estimator=self.model,
                                             X=x_train,
-                                            y=y_train, **cv_params)
+                                            y=y_train,
+                                            **cv_params)
+
             self.model.fit(x_train, y_train)
 
         else:   # if the model type is clustering
