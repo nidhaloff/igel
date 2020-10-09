@@ -16,11 +16,16 @@ model:
     type: classification
     algorithm: RandomForest
     hyperparameter_search:
-        max_depth:
-            - 6
-            - 10
-        n_estimators: [100, 300]
-        max_features: [auto, sqrt]
+        method: grid_search
+        parameter_grid:
+            max_depth: [6, 10]
+            n_estimators: [100, 300]
+            max_features: [auto, sqrt]
+        arguments:
+            cv: 5
+            refit: true
+            return_train_score: false
+            verbose: 0
 
 # target you want to predict
 target:

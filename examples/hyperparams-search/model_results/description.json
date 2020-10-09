@@ -1,0 +1,76 @@
+{
+    "model": "RandomForestClassifier",
+    "arguments": "default",
+    "type": "classification",
+    "algorithm": "RandomForest",
+    "dataset_props": {
+        "type": "csv",
+        "split": {
+            "test_size": 0.2,
+            "shuffle": true
+        },
+        "preprocess": {
+            "scale": {
+                "method": "standard",
+                "target": "inputs"
+            }
+        }
+    },
+    "model_props": {
+        "type": "classification",
+        "algorithm": "RandomForest",
+        "hyperparameter_search": {
+            "method": "grid_search",
+            "parameter_grid": {
+                "max_depth": [
+                    6,
+                    10
+                ],
+                "n_estimators": [
+                    100,
+                    300
+                ],
+                "max_features": [
+                    "auto",
+                    "sqrt"
+                ]
+            },
+            "arguments": {
+                "cv": 5,
+                "refit": true,
+                "return_train_score": false,
+                "verbose": 0
+            }
+        }
+    },
+    "data_path": "../data/indian-diabetes/train-indians-diabetes.csv",
+    "train_data_shape": [
+        614,
+        8
+    ],
+    "test_data_shape": [
+        154,
+        8
+    ],
+    "train_data_size": 614,
+    "test_data_size": 154,
+    "results_path": "/home/nidhal/projects/igel/examples/hyperparams-search/model_results",
+    "model_path": "/home/nidhal/projects/igel/examples/hyperparams-search/model_results/model.sav",
+    "target": [
+        "sick"
+    ],
+    "results_on_test_data": {
+        "accuracy_score": 0.7662337662337663,
+        "f1_score": 0.6249999999999999,
+        "precision_score": 0.7317073170731707,
+        "recall_score": 0.5454545454545454
+    },
+    "hyperparameter_search_results": {
+        "best_params": 0.7687858190057311,
+        "best_score": {
+            "max_depth": 6,
+            "max_features": "auto",
+            "n_estimators": 300
+        }
+    }
+}
