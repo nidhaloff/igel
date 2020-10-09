@@ -76,6 +76,7 @@ Features
 - Supports different data preprocessing methods
 - Provides flexibility and data control while writing configurations
 - Supports cross validation
+- Supports both hyperparameter search (version >= 0.2.8)
 - Supports yaml and json format
 - Supports different sklearn metrics for regression, classification and clustering
 - Supports multi-output/multi-target regression and classification
@@ -90,6 +91,7 @@ a **single line of code**
 All you need is a **yaml** (or **json**) file, where you need to describe what you are trying to do. That's it!
 
 Igel supports all sklearn's machine learning functionality, whether regression, classification or clustering.
+Precisely, you can use **63** different machine learning model in igel.
 
 Installation
 -------------
@@ -434,6 +436,16 @@ Here is an overview of all supported configurations (for now):
             cv: # [int] -> number of kfold (default 5)
             n_jobs:   # [signed int] -> The number of CPUs to use to do the computation (default None)
             verbose: # [int] -> The verbosity level. (default 0)
+        hyperparameter_search:
+            method: grid_search   # method you want to use: grid_search and random_search are supported
+            parameter_grid:     # put your parameters grid here that you want to use, an example is provided below
+                param1: [val1, val2]
+                param2: [val1, val2]
+            arguments:  # additional arguments you want to provide for the hyperparameter search
+                cv: 5   # number of folds
+                refit: true   # whether to refit the model after the search
+                return_train_score: false   # whether to return the train score
+                verbose: 0      # verbosity level
 
     # target you want to predict
     target:  # list of strings: basically put here the column(s), you want to predict that exist in your csv dataset
@@ -708,6 +720,8 @@ is conducted on the target column to show you more the capabilities of igel.
 
 Furthermore, the multioutput-example contains a **multioutput regression** example.
 Finally, the cv-example contains an example using the Ridge classifier using cross validation.
+
+You can also find a cross validation and a hyperparameter search examples in the folder.
 
 I suggest you play around with the examples and igel cli. However,
 you can also directly execute the fit.py, evaluate.py and predict.py if you want to.
