@@ -16,7 +16,7 @@ model:
     type: classification
     algorithm: RandomForest
     hyperparameter_search:
-        method: grid_search
+        method: random_search
         parameter_grid:
             max_depth: [6, 10]
             n_estimators: [100, 300]
