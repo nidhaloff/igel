@@ -2,6 +2,15 @@
 History
 =======
 
+
+
+0.2.8 (2020-10-09)
+-------------------
+
+* implemented hyperparameter search
+* added examples
+
+
 0.2.7 (2020-10-05)
 -------------------
 
