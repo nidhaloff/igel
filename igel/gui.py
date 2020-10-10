@@ -63,6 +63,7 @@ def opvars():
     tk.Entry(root,textvariable=var).grid(column=1,row=opvars_rowcount)
     opvars_rowcount +=1
     opvars_complete.append([op,var])
+    pass
 
 def param_grid_add_row():
     global param_rowcount
@@ -71,11 +72,16 @@ def param_grid_add_row():
     params_list = []
     for col in range(param_grid_no_cols.get()):
         var = tk.StringVar()
-        tk.Entry(root,textvariable=var).grid(column=7+col,row=param_rowcount)
+        tk.Entry(root,textvariable=var).grid(column=5+col,row=param_rowcount)
         params_list.append(var)
+    param_complete.append(params_list)
     param_rowcount+=1
     pass
 
+def get_model_type():
+    global model_type
+    global model_type_var
+    model_type_var = model_type.get()
 
 def main():
     global root
@@ -141,13 +147,12 @@ def main():
 
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    tk.Label(root, text='Model Definition').grid(column=6,row=0)
+    tk.Label(root, text='Model Definition').grid(column=4,row=9)
 
-    tk.Label(root, text='Model Type').grid(column=6,row=1)
-    modeltype_var = tk.StringVar(root)
-    modeltype_var.set('regression')
-    tk.OptionMenu(root,modeltype_var,'regression','classification','clustering').grid(column=7,row=1)
-
+    model_type_list = ['regression','classification','clustering']
+    global model_type
+    model_type = optionmenu('Model Type',4,10,model_type_list)
+    # tk.Button(root, text='Confirm Type',command=get_model_type).grid(column=6,row=10)
     algo_options_regression = []
     algo_options_classification = []
     algo_options_clustering = []
@@ -159,73 +164,115 @@ def main():
         algo_options_regression.append(temp_algo_list[0])
         algo_options_classification.append(temp_algo_list[1])
         algo_options_clustering.append(temp_algo_list[2])
-    tk.Label(root, text='Algorithm').grid(column=6,row=2)
-    algo_var = tk.StringVar(root)
-    # algo_var.set(algo_options[0])
-    if modeltype_var.get()=='regression':
+    global model_type_var
+    model_type_var = 'regression'
+    if model_type_var=='regression':
         algo_options=algo_options_regression
-    elif modeltype_var.get()=='classification':
+    elif model_type_var=='classification':
         algo_options=algo_options_classification
-    elif modeltype_var.get()=='clustering':
+    elif model_type_var=='clustering':
         algo_options=algo_options_clustering
-    tk.OptionMenu(root,algo_var,*algo_options).grid(column=7,row=2)
+    model_algorithm = optionmenu('Algorithm',4,11,algo_options)
 
-    model_arguments = entry_str('Arguments (Seperate by comma)',6,3)
+    model_arguments = entry_str('Arguments (Seperate by comma)',4,12)
 
-    model_use_cv_estimator = checkbox_bool('Use CV Estimator',6,4)
+    model_use_cv_estimator = checkbox_bool('Use CV Estimator',4,13)
 
-    tk.Label(root, text='Cross Validate').grid(column=6,row=5)
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    model_cross_validate_cv = entry_int('CV',6,6,5)
+    tk.Label(root, text='Cross Validate').grid(column=4,row=14)
 
-    model_cross_validate_n_jobs = entry_int('N Jobs',6,7)
+    model_cross_validate_cv = entry_int('CV',4,15,5)
 
-    model_cross_validate_verbose = entry_int('Verbose',6,8,0)
+    model_cross_validate_n_jobs = entry_int('N Jobs',4,16)
 
-    tk.Label(root,text='Hyperparameter Search').grid(column=6,row=9)
+    model_cross_validate_verbose = entry_int('Verbose',4,17,0)
+
+    tk.Label(root,text='Hyperparameter Search').grid(column=4,row=18)
 
     model_hyperparameter_search_method_list = ['grid_search','random_search']
-    model_hyperparameter_search_method = optionmenu('Method',6,10,model_hyperparameter_search_method_list)
+    model_hyperparameter_search_method = optionmenu('Method',4,19,model_hyperparameter_search_method_list)
 
-    tk.Label(root, text='Parameter Grid').grid(column=6,row=11)
+    tk.Label(root, text='Parameter Grid').grid(column=4,row=20)
     global param_grid_no_cols
-    param_grid_no_cols = entry_int('Number of Columns',6,12,2)
-    tk.Button(root, text='Add Grid Row',command=param_grid_add_row).grid(column=8,row=12)
+    param_grid_no_cols = entry_int('Number of Columns',4,21,2)
     global param_rowcount
     global param_complete
-    param_rowcount = 13
+    param_complete = []
+    param_rowcount = 22
+    tk.Button(root, text='Add Grid Row',command=param_grid_add_row).grid(column=6,row=21)
 
+    model_hyperparameter_search_arguments = entry_str('Arguments (Seperate by comma)',6,0)
 
+    model_hyperparameter_search_arguments_cv = entry_int('CV',6,1,5)
 
+    model_hyperparameter_search_arguments_refit = checkbox_bool('Refit',6,2)
 
+    model_hyperparameter_search_arguments_return_train_score = checkbox_bool('Return Train Score',6,3)
 
+    model_hyperparameter_search_arguments_verbose = entry_int('Verbose',6,4,0)
 
+    target = entry_str('Target (Seperate by comma)',6,5)
 
     root.mainloop()
 
-# fix this shit!!!!!!!!
-    for x in opvars_complete:
-        print('%s : %s'%(x[0],x[1].get()))
-
-
     opvars_dict = {}
+    for x in opvars_complete:
+        opvars_dict[x[0]] = x[1].get()
+
+    parameter_grid_dict = {}
+    param_num = 1
+    for x in param_complete:
+        param_getter_list = []
+        for i in x:
+            param_getter_list.append(i.get())
+        param_num_str = 'param%d'%param_num
+        parameter_grid_dict[param_num_str] = param_getter_list
+        param_num+=1
 
     yaml_dict = {
-    'dataset':filename,
-    'type':filetype,
-    'read_data_options':'other dict',
-    'split_test_size':testsize_var.get(),
-    'split_shuffle':shuffle_var.get(),
-    'split_stratify':stratify_var.get().split(','),
-    'preprocess_missing_values': 'get',
-    'preprocess_encoding_type': encoding_var.get(),
-    'preprocess_scale_method':scalemodel_var.get(),
-    'preprocess_scale_target':scaletarget_var.get(),
-    'model_type':modeltype_var.get(),
-    'model_algorithm':'get',
-    'model_arguments':args_var.get(),
-    'model_use_cv_estimator':cvestimator_var.get(),
-    'model_cross_validate_cv':cv_var.get()
+        'dataset':[filename, {
+            'type':filetype,
+            'read_data_options':opvars_dict,
+            'split': {
+                'test_size':split_test_size.get(),
+                'shuffle':split_shuffle.get(),
+                'stratify':split_stratify.get().split(',')
+            },
+            'preprocess': {
+                'missing_values': preprocess_missing_values.get(),
+                'encoding': {
+                    'type':preprocess_encoding_type.get()
+                },
+                'scale': {
+                    'method':preprocess_scale_method.get(),
+                    'target':preprocess_scale_target.get()
+                }
+            }
+        }],
+        'model': {
+            'type': model_type.get(),
+            'algorithm':model_algorithm.get(),
+            'arguments':model_arguments.get().split(','),
+            'use_cv_estimator':model_use_cv_estimator.get(),
+            'cross_validate': {
+                'cv':model_cross_validate_cv.get(),
+                'n_jobs':model_cross_validate_n_jobs.get(),
+                'verbose':model_cross_validate_verbose.get()
+            },
+            'hyperparameter_search': {
+                'method':model_hyperparameter_search_method.get(),
+                'parameter_grid':parameter_grid_dict,
+                'arguments':[model_hyperparameter_search_arguments.get().split(','),{
+                    'cv':model_hyperparameter_search_arguments_cv.get(),
+                    'refit':model_hyperparameter_search_arguments_refit.get(),
+                    'return_train_score':model_hyperparameter_search_arguments_return_train_score.get(),
+                    'verbose':model_hyperparameter_search_arguments_verbose.get()
+                }]
+            }
+
+        },
+        'target': target.get().split(',')
     }
 
     print(yaml_dict)
