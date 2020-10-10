@@ -14,6 +14,7 @@ try:
     from igel.data import models_dict, metrics_dict
     from igel.preprocessing import update_dataset_props
     from igel.preprocessing import handle_missing_values, encode, normalize
+    from igel.hyperparams import hyperparameter_search
 except ImportError:
     from utils import read_yaml, create_yaml, extract_params, _reshape, read_json
     from data import evaluate_model
@@ -21,6 +22,7 @@ except ImportError:
     from data import models_dict, metrics_dict
     from preprocessing import update_dataset_props
     from preprocessing import handle_missing_values, encode, normalize
+    from hyperparams import hyperparameter_search
 
 from sklearn.model_selection import train_test_split, cross_validate
 from sklearn.multioutput import MultiOutputClassifier, MultiOutputRegressor
@@ -315,6 +317,8 @@ class Igel(object):
         cv_results = None
         eval_results = None
         cv_params = None
+        hp_search_results = {}
+
         if self.model_type == 'clustering':
             x_train = self._prepare_clustering_data()
         else:
@@ -338,7 +342,26 @@ class Igel(object):
                 logger.info("performing cross validation ...")
                 cv_results = cross_validate(estimator=self.model,
                                             X=x_train,
-                                            y=y_train, **cv_params)
+                                            y=y_train,
+                                            **cv_params)
+            hyperparams_props = self.model_props.get('hyperparameter_search', None)
+            if hyperparams_props:
+                method = hyperparams_props.get('method', None)
+                grid_params = hyperparams_props.get('parameter_grid', None)
+                hp_args = hyperparams_props.get('arguments', None)
+                logger.info(f"Performing hyperparameter search using -> {method}")
+                logger.info(f"Grid parameters entered by the user: {grid_params}")
+                logger.info(f"Additional hyperparameter arguments: {hp_args}")
+                best_estimator, best_params, best_score = hyperparameter_search(model=self.model,
+                                                                                method=method,
+                                                                                params=grid_params,
+                                                                                x_train=x_train,
+                                                                                y_train=y_train,
+                                                                                **hp_args)
+                hp_search_results['best_params'] = best_params
+                hp_search_results['best_score'] = best_score
+                self.model = best_estimator
+
             self.model.fit(x_train, y_train)
 
         else:   # if the model type is clustering
@@ -380,7 +403,8 @@ class Igel(object):
             "results_path": str(self.results_path),
             "model_path": str(self.default_model_path),
             "target": None if self.model_type == 'clustering' else self.target,
-            "results_on_test_data": eval_results
+            "results_on_test_data": eval_results,
+            "hyperparameter_search_results": hp_search_results
 
         }
         if self.model_type == 'clustering':
