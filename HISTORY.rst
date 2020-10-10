@@ -8,7 +8,7 @@ History
 -------------------
 
 * implemented hyperparameter search
-* added examples
+* added a hyperparameter example
 
 
 0.2.7 (2020-10-05)
