@@ -346,6 +346,7 @@ class Igel(object):
                                             **cv_params)
             hyperparams_props = self.model_props.get('hyperparameter_search', None)
             if hyperparams_props:
+                # perform hyperparameter search
                 method = hyperparams_props.get('method', None)
                 grid_params = hyperparams_props.get('parameter_grid', None)
                 hp_args = hyperparams_props.get('arguments', None)
@@ -438,6 +439,7 @@ class Igel(object):
         x_val = None
         y_true = None
         eval_results = None
+
         try:
             model = self._load_model()
             if self.model_type != 'clustering':
