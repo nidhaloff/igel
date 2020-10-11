@@ -79,9 +79,34 @@ def param_grid_add_row():
     pass
 
 def get_model_type():
+    global textbase
+    global model_algorithm_menu
+    global model_algorithm_var
     global model_type
-    global model_type_var
+    model_algorithm_var.set('')
     model_type_var = model_type.get()
+    algo_options_regression = []
+    algo_options_classification = []
+    algo_options_clustering = []
+    for line in textbase[107:134]:
+        temp_algo_list = []
+        for i in line.split('|'):
+            temp_algo_list.append(i)
+        temp_algo_list = [i.strip() for i in temp_algo_list[1:4]]
+        algo_options_regression.append(temp_algo_list[0])
+        algo_options_classification.append(temp_algo_list[1])
+        algo_options_clustering.append(temp_algo_list[2])
+
+    if model_type_var=='regression':
+        algo_options=algo_options_regression
+    elif model_type_var=='classification':
+        algo_options=algo_options_classification
+    elif model_type_var=='clustering':
+        algo_options=algo_options_clustering
+
+    model_algorithm_menu['menu'].delete(0,'end')
+    for option in algo_options:
+        model_algorithm_menu['menu'].add_command(label=option, command=tk._setit(model_algorithm_var,option))
 
 def main():
     global root
@@ -94,14 +119,15 @@ def main():
     rootdir = '/'
     if platform.system()=='Windows':
         rootdir='C:\\'
-    # filename = askopenfilename(initialdir=rootdir)
-    filename = askopenfilename()
+    filename = askopenfilename(initialdir=rootdir)
+    # filename = askopenfilename()
     tk.Label(root, text='Chosen File: %s'%filename).grid(column=0,row=0)
     # get filetype
     filetype = filename.split('/')[-1].split('.')[-1]
     tk.Label(root, text='File Type: %s'%filetype).grid(column=0,row=1)
 
     # do the whole read_data_options nonsense
+    global textbase
     textbase = readme().split('\n')
     read_data_options = []
     for line in textbase[276:314]:
@@ -152,27 +178,16 @@ def main():
     model_type_list = ['regression','classification','clustering']
     global model_type
     model_type = optionmenu('Model Type',4,10,model_type_list)
-    # tk.Button(root, text='Confirm Type',command=get_model_type).grid(column=6,row=10)
-    algo_options_regression = []
-    algo_options_classification = []
-    algo_options_clustering = []
-    for line in textbase[107:134]:
-        temp_algo_list = []
-        for i in line.split('|'):
-            temp_algo_list.append(i)
-        temp_algo_list = [i.strip() for i in temp_algo_list[1:4]]
-        algo_options_regression.append(temp_algo_list[0])
-        algo_options_classification.append(temp_algo_list[1])
-        algo_options_clustering.append(temp_algo_list[2])
-    global model_type_var
-    model_type_var = 'regression'
-    if model_type_var=='regression':
-        algo_options=algo_options_regression
-    elif model_type_var=='classification':
-        algo_options=algo_options_classification
-    elif model_type_var=='clustering':
-        algo_options=algo_options_clustering
-    model_algorithm = optionmenu('Algorithm',4,11,algo_options)
+
+    tk.Button(root, text='Confirm Type',command=get_model_type).grid(column=6,row=10)
+
+    global model_algorithm_menu
+    global model_algorithm_var
+    tk.Label(root, text='Algorithm').grid(column=4,row=11)
+    model_algorithm_var = tk.StringVar(root)
+    model_algorithm_var.set('select model type')
+    model_algorithm_menu = tk.OptionMenu(root,model_algorithm_var,'select model type')
+    model_algorithm_menu.grid(column=5,row=11)
 
     model_arguments = entry_str('Arguments (Seperate by comma)',4,12)
 
@@ -184,7 +199,7 @@ def main():
 
     model_cross_validate_cv = entry_int('CV',4,15,5)
 
-    model_cross_validate_n_jobs = entry_int('N Jobs',4,16)
+    model_cross_validate_n_jobs = entry_str('N Jobs',4,16)
 
     model_cross_validate_verbose = entry_int('Verbose',4,17,0)
 
@@ -202,7 +217,7 @@ def main():
     param_rowcount = 22
     tk.Button(root, text='Add Grid Row',command=param_grid_add_row).grid(column=6,row=21)
 
-    model_hyperparameter_search_arguments = entry_str('Arguments (Seperate by comma)',6,0)
+    # model_hyperparameter_search_arguments = entry_str('Arguments (Seperate by comma)',6,0)
 
     model_hyperparameter_search_arguments_cv = entry_int('CV',6,1,5)
 
@@ -252,7 +267,7 @@ def main():
         }],
         'model': {
             'type': model_type.get(),
-            'algorithm':model_algorithm.get(),
+            'algorithm':model_algorithm_var.get(),
             'arguments':model_arguments.get().split(','),
             'use_cv_estimator':model_use_cv_estimator.get(),
             'cross_validate': {
@@ -263,19 +278,19 @@ def main():
             'hyperparameter_search': {
                 'method':model_hyperparameter_search_method.get(),
                 'parameter_grid':parameter_grid_dict,
-                'arguments':[model_hyperparameter_search_arguments.get().split(','),{
+                'arguments':{
                     'cv':model_hyperparameter_search_arguments_cv.get(),
                     'refit':model_hyperparameter_search_arguments_refit.get(),
                     'return_train_score':model_hyperparameter_search_arguments_return_train_score.get(),
                     'verbose':model_hyperparameter_search_arguments_verbose.get()
-                }]
+                }
             }
 
         },
         'target': target.get().split(',')
     }
 
-    print(yaml_dict)
+    return(yaml_dict)
 
 
 if __name__ == '__main__':
