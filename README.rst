@@ -191,12 +191,12 @@ which will create a basic config file for you on the fly.
 
     Example:
     If I want to use neural networks to classify whether someone is sick or not using the indian-diabetes dataset,
-    then I would use this command to initliaze a yaml file:
+    then I would use this command to initialize a yaml file:
     $ igel init -type "classification" -model "NeuralNetwork" -target "sick"
     """
     $ igel init
 
-After runnig the command, an igel.yaml file will be created for you in the current working directory. You can
+After running the command, an igel.yaml file will be created for you in the current working directory. You can
 check it out and modify it if you want to, otherwise you can also create everything from scratch.
 
 - Demo:
@@ -333,7 +333,7 @@ Interactive mode is new in >= v0.2.6
 This mode basically offers you the freedom to write arguments on your way.
 You are not restricted to write the arguments directly when using the command.
 
-This means practically that you can use the commands (fit, evaluate, predict, experiment etc..)
+This means practically that you can use the commands (fit, evaluate, predict, experiment etc.)
 without specifying any additional arguments. For example:
 
 ..  code-block:: python
