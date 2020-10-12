@@ -2,7 +2,12 @@
 History
 =======
 
+0.2.9 (2020-10-12)
+-------------------
 
+* Fixed bug in clustering
+* added a clustering example
+* added support for clustering arguments
 
 0.2.8 (2020-10-09)
 -------------------
