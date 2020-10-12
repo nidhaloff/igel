@@ -6,7 +6,7 @@ History
 -------------------
 
 * Fixed bug in clustering
-* added a clustering example
+* added a clustering example using kmeans
 * added support for clustering arguments
 
 0.2.8 (2020-10-09)
