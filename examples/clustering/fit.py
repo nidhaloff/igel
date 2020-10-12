@@ -16,7 +16,7 @@ This example fits a machine learning model on the indian-diabetes dataset
 
 """
 
-mock_fit_params = {'data_path': '../data/clustering-data/train.csv',
+mock_fit_params = {'data_path': '../data/clustering-data/test.txt',
                    'yaml_path': './igel.yaml',
                    'cmd': 'fit'}
 
