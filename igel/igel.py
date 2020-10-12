@@ -346,6 +346,7 @@ class Igel(object):
                                             **cv_params)
             hyperparams_props = self.model_props.get('hyperparameter_search', None)
             if hyperparams_props:
+
                 # perform hyperparameter search
                 method = hyperparams_props.get('method', None)
                 grid_params = hyperparams_props.get('parameter_grid', None)
