@@ -86,7 +86,7 @@ class Igel(object):
             with open(self.description_file, 'r') as f:
                 dic = json.load(f)
                 self.target: list = dic.get("target")  # target to predict as a list
-                self.model_type: str = dic.get("type")  # type of the model -> regression or classification
+                self.model_type: str = dic.get("type")  # type of the model -> regression, classification or clustering
                 self.dataset_props: dict = dic.get('dataset_props')  # dataset props entered while fitting
         getattr(self, self.command)()
 
@@ -183,8 +183,9 @@ class Igel(object):
         read and return data as x and y
         @return: list of separate x and y
         """
-        assert isinstance(self.target, list), "provide target(s) as a list in the yaml file"
+
         if self.model_type != "clustering":
+            assert isinstance(self.target, list), "provide target(s) as a list in the yaml file"
             assert len(self.target) > 0, "please provide at least a target to predict"
 
         try:
@@ -411,8 +412,8 @@ class Igel(object):
         }
         if self.model_type == 'clustering':
             clustering_res = {
-                "cluster_centers": self.model.cluster_centers_,
-                "cluster_labels": self.model.labels_
+                "cluster_centers": self.model.cluster_centers_.tolist(),
+                "cluster_labels": self.model.labels_.tolist()
             }
             fit_description['clustering_results'] = clustering_res
 
@@ -475,11 +476,13 @@ class Igel(object):
             y_pred = _reshape(y_pred)
             logger.info(f"predictions shape: {y_pred.shape} | shape len: {len(y_pred.shape)}")
             logger.info(f"predict on targets: {self.target}")
+            if not self.target:
+                self.target = ['result']
             df_pred = pd.DataFrame.from_dict(
                 {self.target[i]: y_pred[:, i] if len(y_pred.shape) > 1 else y_pred for i in range(len(self.target))})
 
             logger.info(f"saving the predictions to {self.prediction_file}")
-            df_pred.to_csv(self.prediction_file)
+            df_pred.to_csv(self.prediction_file, index=False)
 
         except Exception as e:
             logger.exception(f"Error while preparing predictions: {e}")

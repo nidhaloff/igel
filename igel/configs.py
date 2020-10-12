@@ -25,7 +25,7 @@ configs = {
 
         "type": "csv",
         "split": {
-            "test_size": 0.2,
+            "test_size": 0.1,
             "shuffle": True
         },
         "preprocess": {
