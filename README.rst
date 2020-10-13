@@ -411,6 +411,9 @@ Here is an overview of all supported configurations (for now):
             low_memory: # [bool] -> Internally process the file in chunks, resulting in lower memory use while parsing, but possibly mixed type inference.
             memory_map: # [bool] -> If a filepath is provided for filepath_or_buffer, map the file object directly onto memory and access the data directly from there. Using this option can improve performance because there is no longer any I/O overhead.
 
+        random_numbers: # random numbers options in case you wanted to generate the same random numbers on each run
+            generate_reproducible:  # [bool] -> set this to true to generate reproducible results
+            seed:   # [int] -> the seed number is optional. A seed will be set up for you if you didn't provide any
 
         split:  # split options
             test_size: 0.2  #[float] -> 0.2 means 20% for the test data, so 80% are automatically for training
