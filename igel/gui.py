@@ -3,29 +3,6 @@ import platform
 import tkinter as tk
 from tkinter.filedialog import askopenfilename
 
-# really shitty function to get the readme as stantard ascii
-def readme():
-    try:
-        import docutils
-    except ImportError:
-        try:
-            with open(os.path.join(os.path.dirname(__file__), '../README.rst')) as f:
-                return f.read()
-        except (IOError, OSError):
-            return ''
-    with open(os.path.join(os.path.dirname(__file__), 'README.rst')) as f:
-        document = docutils.core.publish_doctree(f.read())
-        nodes = list(document)
-        description = ''
-        for node in nodes:
-            if str(node).startswith('<topic classes="contents"'):
-                break
-            if type(node) is docutils.nodes.comment\
-            or type(node) is docutils.nodes.title:
-                continue
-            description += node.astext() + '\n'
-        return description.encode('ascii', 'ignore').strip()
-
 def entry_str(name,col,row,set_def=None):
     tk.Label(root, text=name).grid(column=col,row=row)
     var = tk.StringVar()
@@ -85,17 +62,9 @@ def get_model_type():
     global model_type
     model_algorithm_var.set('')
     model_type_var = model_type.get()
-    algo_options_regression = []
-    algo_options_classification = []
-    algo_options_clustering = []
-    for line in textbase[107:134]:
-        temp_algo_list = []
-        for i in line.split('|'):
-            temp_algo_list.append(i)
-        temp_algo_list = [i.strip() for i in temp_algo_list[1:4]]
-        algo_options_regression.append(temp_algo_list[0])
-        algo_options_classification.append(temp_algo_list[1])
-        algo_options_clustering.append(temp_algo_list[2])
+    algo_options_regression = ['LinearRegression', 'Lasso', 'LassoLars', 'BayesianRegression', 'HuberRegression', 'Ridge', 'PoissonRegression', 'ARDRegression', 'TweedieRegression', 'TheilSenRegression', 'GammaRegression', 'RANSACRegression', 'DecisionTree', 'ExtraTree', 'RandomForest', 'ExtraTrees', 'SVM', 'LinearSVM', 'NuSVM', 'NearestNeighbor', 'NeuralNetwork', 'ElasticNet', 'BernoulliRBM', 'BoltzmannMachine', 'Adaboost', 'Bagging', 'GradientBoosting']
+    algo_options_classification = ['LogisticRegression', 'Ridge', 'DecisionTree', 'ExtraTree', 'RandomForest', 'ExtraTrees', 'SVM', 'LinearSVM', 'NuSVM', 'NearestNeighbor', 'NeuralNetwork', 'PassiveAgressiveClassifier', 'Perceptron', 'BernoulliRBM', 'BoltzmannMachine', 'CalibratedClassifier', 'Adaboost', 'Bagging', 'GradientBoosting', 'BernoulliNaiveBayes', 'CategoricalNaiveBayes', 'ComplementNaiveBayes', 'GaussianNaiveBayes', 'MultinomialNaiveBayes']
+    algo_options_clustering = ['KMeans', 'AffinityPropagation', 'Birch', 'AgglomerativeClustering', 'FeatureAgglomeration', 'DBSCAN', 'MiniBatchKMeans', 'SpectralBiclustering', 'SpectralCoclustering', 'SpectralClustering', 'MeanShift', 'OPTICS']
 
     if model_type_var=='regression':
         algo_options=algo_options_regression
@@ -126,13 +95,7 @@ def main():
     filetype = filename.split('/')[-1].split('.')[-1]
     tk.Label(root, text='File Type: %s'%filetype).grid(column=0,row=1)
 
-    # do the whole read_data_options nonsense
-    global textbase
-    textbase = readme().split('\n')
-    read_data_options = []
-    for line in textbase[276:314]:
-        read_data_options.append(line.split(':')[0].strip())
-    tk.Label(root, text='Read Data Options:').grid(column=0,row=2)
+    read_data_options = ['sep', 'delimiter', 'header', 'names', 'index_col', 'usecols', 'squeeze', 'prefix', 'mangle_dupe_cols', 'dtype', 'engine', 'converters', 'true_values', 'false_values', 'skipinitialspace', 'skiprows', 'skipfooter', 'nrows', 'na_values', 'keep_default_na', 'na_filter', 'verbose', 'skip_blank_lines', 'parse_dates', 'infer_datetime_format', 'keep_date_col', 'dayfirst', 'cache_dates', 'thousands', 'decimal', 'lineterminator', 'escapechar', 'comment', 'encoding', 'dialect', 'delim_whitespace', 'low_memory', 'memory_map']
 
 # i'm sorry this is a huge fucking mess
     global opvar_var
@@ -246,7 +209,7 @@ def main():
         param_num+=1
 
     yaml_dict = {
-        'dataset':[filename, {
+        'dataset':{
             'type':filetype,
             'read_data_options':opvars_dict,
             'split': {
@@ -264,7 +227,7 @@ def main():
                     'target':preprocess_scale_target.get()
                 }
             }
-        }],
+        },
         'model': {
             'type': model_type.get(),
             'algorithm':model_algorithm_var.get(),
@@ -290,7 +253,7 @@ def main():
         'target': target.get().split(',')
     }
 
-    return(yaml_dict)
+    return([filename,yaml_dict])
 
 
 if __name__ == '__main__':
