@@ -19,7 +19,6 @@ requirements = [
 
 setup_requirements = ['pytest-runner']
 test_requirements = ['pytest>=3']
-# docs_require = ['sphinx-copybutton']
 
 setup(
     author=__author__,
