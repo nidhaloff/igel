@@ -47,6 +47,9 @@ igel
 
 A delightful machine learning tool that allows you to train/fit, test and use models **without writing code**
 
+.. note::
+    We are currently working on a GUI desktop app for igel. You can find it under
+    `Igel-UI <https://github.com/nidhaloff/igel-ui/>`_
 
 * Free software: MIT license
 * Documentation: https://igel.readthedocs.io.
