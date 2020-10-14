@@ -2,6 +2,14 @@
 History
 =======
 
+0.3.0 (2020-10-15)
+-------------------
+
+* Provided a way to use reproducible results
+* Added support for random state generation
+* Fixed bug in dataset options
+* Linked Igel-UI
+
 0.2.9 (2020-10-12)
 -------------------
 
