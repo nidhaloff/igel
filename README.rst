@@ -108,6 +108,21 @@ Installation
 
 - Check the docs for other ways to install igel from source
 
+Running with Docker
+--------------------
+
+You can run igel inside of docker by first building the image:
+
+.. code-block:: console
+
+    $ docker build -t igel .
+
+And then running it and attaching your current directory (does not need to be the igel directory) as /data (the workdir) inside of the container:
+
+.. code-block:: console
+
+    $ docker run -it --rm -v $(pwd):/data igel fit --yaml_file 'your_file.yaml' --data_path 'your_dataset.csv'
+
 Models
 -------
 
