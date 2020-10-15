@@ -121,7 +121,7 @@ And then running it and attaching your current directory (does not need to be th
 
 .. code-block:: console
 
-    $ docker run -it --rm -v $(pwd):/data igel fit --yaml_file 'your_file.yaml' --data_path 'your_dataset.csv'
+    $ docker run -it --rm -v $(pwd):/data igel fit -yml 'your_file.yaml' -dp 'your_dataset.csv'
 
 Models
 -------
