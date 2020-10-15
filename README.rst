@@ -111,7 +111,7 @@ Installation
 Running with Docker
 --------------------
 
-- Use the official image:
+- Use the official image (recommended):
 
 You can pull the image first from docker hub
 
@@ -126,7 +126,7 @@ Then use it:
     $ docker run -it --rm -v $(pwd):/data nidhaloff/igel fit -yml 'your_file.yaml' -dp 'your_dataset.csv'
 
 
-- Create your own image locally:
+- Alternatively, you can create your own image locally if you want:
 
 You can run igel inside of docker by first building the image:
 
