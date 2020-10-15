@@ -23,8 +23,9 @@ igel
 .. image:: https://pepy.tech/badge/igel
         :target: https://pepy.tech/project/igel
 
-.. image:: https://pepy.tech/badge/igel/month
-        :target: https://pepy.tech/project/igel/month
+.. image:: https://img.shields.io/pypi/pyversions/igel
+        :alt: PyPI - Python Version
+        :target: https://pypi.python.org/pypi/igel
 
 .. image:: https://readthedocs.org/projects/igel/badge/?version=latest
         :target: https://igel.readthedocs.io/en/latest/?badge=latest
