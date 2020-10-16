@@ -13,6 +13,14 @@ igel
 
 |
 
+.. image:: https://img.shields.io/pypi/status/igel
+        :alt: PyPI - Status
+        :target: https://pypi.python.org/pypi/igel
+.. image:: https://img.shields.io/librariesio/github/nidhaloff/igel
+        :alt: Libraries.io dependency status for GitHub repo
+.. image:: https://img.shields.io/github/stars/nidhaloff/igel?style=social
+        :alt: GitHub Repo stars
+
 .. image:: https://img.shields.io/pypi/v/igel?color=green
         :alt: PyPI
         :target: https://pypi.python.org/pypi/igel
@@ -31,13 +39,6 @@ igel
         :alt: PyPI - Wheel
         :target: https://pypi.python.org/pypi/igel
 
-.. image:: https://img.shields.io/pypi/status/igel
-        :alt: PyPI - Status
-        :target: https://pypi.python.org/pypi/igel
-.. image:: https://img.shields.io/librariesio/github/nidhaloff/igel
-        :alt: Libraries.io dependency status for GitHub repo
-.. image:: https://img.shields.io/github/stars/nidhaloff/igel?style=social
-        :alt: GitHub Repo stars
 .. image:: https://img.shields.io/twitter/url?url=https%3A%2F%2Ftwitter.com%2FNidhalBaccouri
         :alt: Twitter URL
         :target: https://twitter.com/NidhalBaccouri
