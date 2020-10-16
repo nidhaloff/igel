@@ -23,10 +23,6 @@ igel
 .. image:: https://pepy.tech/badge/igel
         :target: https://pepy.tech/project/igel
 
-.. image:: https://img.shields.io/pypi/pyversions/igel
-        :alt: PyPI - Python Version
-        :target: https://pypi.python.org/pypi/igel
-
 .. image:: https://readthedocs.org/projects/igel/badge/?version=latest
         :target: https://igel.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
@@ -38,6 +34,12 @@ igel
 .. image:: https://img.shields.io/pypi/status/igel
         :alt: PyPI - Status
         :target: https://pypi.python.org/pypi/igel
+
+.. image:: https://img.shields.io/librariesio/github/nidhaloff/igel
+        :alt: Libraries.io dependency status for GitHub repo
+
+.. image:: https://img.shields.io/github/stars/nidhaloff/igel?style=social
+        :alt: GitHub Repo stars
 
 .. image:: https://img.shields.io/twitter/url?url=https%3A%2F%2Ftwitter.com%2FNidhalBaccouri
         :alt: Twitter URL
