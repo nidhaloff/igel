@@ -19,10 +19,11 @@
 #
 import os
 import sys
-import igel
-import sphinx_glpi_theme
+
 sys.path.insert(0, os.path.abspath('..'))
 
+import igel
+import sphinx_glpi_theme
 # -- General configuration ---------------------------------------------
 
 
