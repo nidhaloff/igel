@@ -9,6 +9,22 @@ logging.basicConfig(format='%(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
+def read_data_to_df(data_path: str, **read_data_options):
+    """
+    read data depending on its extension and convert it to a pandas dataframe
+    """
+
+    file_ext = data_path.split('.')[-1]
+    if file_ext == 'csv' or file_ext == 'txt':
+        return pd.read_csv(data_path, **read_data_options) if read_data_options else pd.read_csv(data_path)
+    elif file_ext == 'xlsx':
+        return pd.read_excel(data_path, **read_data_options) if read_data_options else pd.read_excel(data_path)
+    elif file_ext == 'json':
+        return pd.read_json(data_path, **read_data_options) if read_data_options else pd.read_json(data_path)
+    elif file_ext == 'html':
+        return pd.read_html(data_path, **read_data_options) if read_data_options else pd.read_html(data_path)
+
+
 def update_dataset_props(dataset_props: dict, default_dataset_props: dict):
     for key1 in default_dataset_props.keys():
         if key1 in dataset_props.keys():

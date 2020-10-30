@@ -16,7 +16,9 @@ This example fits a machine learning model on the indian-diabetes dataset
 
 """
 
-mock_fit_params = {'data_path': '../data/indian-diabetes/train-indians-diabetes.csv',
+mock_fit_params = {
+                   'data_path': '../data/indian-diabetes/train-indians-diabetes.csv',
+                   #'data_path': './data.json',
                    'yaml_path': './neural-network.yaml',
                    'cmd': 'fit'}
 

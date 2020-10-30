@@ -14,7 +14,7 @@ try:
     from igel.configs import configs
     from igel.data import models_dict, metrics_dict
     from igel.preprocessing import update_dataset_props
-    from igel.preprocessing import handle_missing_values, encode, normalize
+    from igel.preprocessing import handle_missing_values, encode, normalize, read_data_to_df
     from igel.hyperparams import hyperparameter_search
 except ImportError:
     from utils import read_yaml, create_yaml, extract_params, _reshape, read_json
@@ -22,7 +22,7 @@ except ImportError:
     from configs import configs
     from data import models_dict, metrics_dict
     from preprocessing import update_dataset_props
-    from preprocessing import handle_missing_values, encode, normalize
+    from preprocessing import handle_missing_values, encode, normalize, read_data_to_df
     from hyperparams import hyperparameter_search
 
 from sklearn.model_selection import train_test_split, cross_validate
@@ -200,9 +200,8 @@ class Igel(object):
             assert len(self.target) > 0, "please provide at least a target to predict"
 
         try:
-            read_data_options = self.dataset_props.get('read_data_options', None)
-            dataset = pd.read_csv(self.data_path) if not read_data_options else pd.read_csv(self.data_path,
-                                                                                            **read_data_options)
+            read_data_options = self.dataset_props.get('read_data_options', {})
+            dataset = read_data_to_df(data_path=self.data_path, **read_data_options)
             logger.info(f"dataset shape: {dataset.shape}")
             attributes = list(dataset.columns)
             logger.info(f"dataset attributes: {attributes}")
