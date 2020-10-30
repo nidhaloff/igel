@@ -95,4 +95,4 @@ git:  ## add, commit and push in one command
 pushDev:  ## push to the dev branch
 	git add .
 	git commit -m "$m"
-	git push origin dev
+	git push origin develop
