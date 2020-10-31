@@ -7,6 +7,7 @@ import pandas as pd
 import subprocess
 from pathlib import Path
 
+
 class CLI(object):
     """CLI describes a command line interface for interacting with igel, there
     are several different functions that can be performed.
@@ -39,92 +40,123 @@ class CLI(object):
 
 
 igel <command> [<args>]
-- Available sub-commands at the moment are:
+
+- Available commands:
    init              initialize a yaml file with default parameters
    fit               fits a model
    evaluate          evaluate the performance of a pre-fitted model
    predict           predicts using a pre-fitted model
    experiment        this command will run fit, evaluate and predict together
+   gui               open the igel UI (make sure you have nodejs installed)
    help              get help about how to use igel
+   info              get infor & metadata about igel
+   version           get the version of igel installed on your machine
    models            get a list of supported machine learning algorithms/models
    metrics           get a list of all supported metrics
 
 - Available arguments:
 
     # for usage with the fit, evaluate or predict command:
-    --data_path         Path to your dataset
-    --yaml_file         Path to your yaml file
-
-    # for usage with the experiment command:
-    --data_paths        Paths to data you want to use for fitting,
-                        evaluating and predict respectively.
-
-    --yaml_file         Path to the yaml file that will be used
-                        when fitting the model.
-
-    # for getting help with the models command:
-    --model_type        type of the model you want to get help on
-                        -> whether regression, classification or clustering.
-
-    --model_name        name of the model you want to get help on.
-    ------------------------------------------
-
-    or for the short version
-    # for usage with the fit, evaluate or predict command:
-    -dp         Path to your dataset
-    -yml        Path to your yaml file
+    -dp         Path to your dataset    (dp stand for data_path, you can use --data_path instead)
+    -yml        Path to your yaml file  (you can use --yaml_file instead)
 
     # for usage with the experiment command:
     -DP         Paths to data you want to use for fitting,
-                evaluating and predict respectively.
-
+                evaluating and predict respectively.    (you can use --data_paths instead)
 
     -yml        Path to the yaml file that will be used when fitting the model.
 
     # for getting help with the models command:
     -type       type of the model you want to get help on
-                -> whether regression, classification or clustering.
+                -> whether regression, classification or clustering.    (you can use --model_type instead)
 
-    -name       name of the model you want to get help on.
-    ------------------------------------------
+    -name       name of the model you want to get help on.    (you can use --model_name instead)
 
-- Quick Start:
 
-igel -h
-# print this help guide
+Note: you can run the commands without providing additional arguments, which will run interactive mode, where
+      you will be prompted to enter your arguments on the fly.
 
-igel init -type regression -model RandomForest
-# automatically create a yaml file in the working directory
-# with some default parameters to get you started fast
+---------------------------------------------------------------------------------------------------------------
 
-igel models
-# type this to get a list of supported models
+- HowTo:
 
-igel models -type regression -name RandomForest
-# this will give you a help on how to use the
-# RandomForestRegressor and will provide
-# you a link to get more help in the sklearn website
+    - you can always type igel -h to print the help
+    - you can run igel version to get the version installed
+    - you can run igel info to get meta data about the package
 
-igel metrics
-# get a list of all supported metrics
+    -----------------------------------------------------------
 
-igel fit -dp "path_to_data" -yml "path_to_yaml_file"
-# fit a model
+    you can let igel generate a boilerplate config file for you by running "igel init". This will automatically
+    create a yaml file in the working directory with some default parameters to get you started fast
 
-igel evaluate -dp "path_to_data"
-# evaluate the trained/pre-fitted model
+    - example for RandomForest regressor: igel init -type regression -model RandomForest
+    - you can also run this in interactive mode by just running: igel init
 
-igel predict -dp "path_to_data"
-# make predictions using the trained/pre-fitted model
+    -----------------------------------------------------------
 
-igel experiment -DP "path_to_train_data \\
-                    path_to_evaluation_data \\
-                    path_to_data_you_want_to_predict_on"
-                -yml "path_to_yaml_file"
-# this will run fit using the trian data first,
-# then will run evaluate using the evaluation data
-# and finally, will generate predictions on the last
-# data you passed to predict on.
+    you can get help on supported models by running igel models in your terminal. this will list all supported
+    models in a table. Additionally, you will be prompted to enter a model name and type that you want to get
+    help about. You can also pass arguments when running the command.
+
+    - example for getting help on how to use RandomForest: igel models -type regression -name RandomForest
+
+    ------------------------------------------------------------
+
+    you can also get help on supported metrics. Just run igel metrics to get all supported metrics
+
+    ------------------------------------------------------------
+
+    Training/fitting a model is very easy in igel. You can just run igel fit to enter interactive mode, where
+    you will be prompted to enter path to your dataset and config file. You can also provide the path to
+    your dataset and config file directly if you want by running:
+
+    - example: igel fit -dp "path_to_data" -yml "path_to_yaml_file"
+
+    This will fit a model and save it in a folder called model_results in your current working directory
+
+    -------------------------------------------------------------
+
+    Evaluating a model is also very easy. Just run the igel evaluate command to enter interactive mode.
+    Otherwise you can always enter the arguments directly.
+
+    - example: igel evaluate -dp "path_to_data"
+
+    This will evaluate the pre-trained model and save results in an evaluation.json file in the model_results dir.
+
+    --------------------------------------------------------------
+
+    Using the pre-trained model to generate predictions is straightforward. Just run the igel predict command,
+    which will run interactive mode, where you will be prompted to enter path to your predict data. Same as
+    other commands, you can also provide arguments directly when running this:
+
+    - example: igel predict -dp "path_to_data"
+
+    This will generate predictions and save it in a predictions.csv file in the model_results dir.
+
+    --------------------------------------------------------------
+
+    you can be lazy and run the fit, evaluate and predict command in one simple command called experiment.
+    Same as other command, just run igel experiment to enter interactive mode or provide arguments directly.
+
+
+    - example: igel experiment -DP "path_to_train_data \\
+                                    path_to_evaluation_data \\
+                                    path_to_data_you_want_to_predict_on" -yml "path_to_yaml_file"
+
+    This will run the fit command using the train data, then evaluate your model using the evaluation data
+    and finally generate predictions on the predict data.
+
+    ----------------------------------------------------------------
+
+    Finally, if you are a non-technical user and don't want to use the terminal, then consider using the igel UI.
+    You can run this from igel by typing igel gui, which will run the igel UI application, where you can use igel
+    with a few clicks. Make sure you have nodejs installed for this. Check the official repo for more infos.
+
+    ----------------------------------------------------------------
+
+    Happy Coding. Please consider supporting the project ;)
+    You can contact me if you have any questions/ideas to discuss.
+
                     ''')
 
         self.parser.add_argument('command', help='Subcommand to run')
@@ -193,10 +225,11 @@ igel experiment -DP "path_to_train_data \\
         os.chdir(igel_ui_path)
         print(f"switching to -> {igel_ui_path}")
         print(f"current dir: {os.getcwd()}")
-        print("installing dependencies ...")
+        print(f"make sure you have nodejs installed!!")
+
         subprocess.Popen(["node", "npm", "install", "open"], shell=True)
         subprocess.Popen(["node", "npm", "install electron", "open"], shell=True)
-        #subprocess.call('sudo npm install')
+        print("installing dependencies ...")
         print(f"dependencies installed successfully")
         print(f"node version:")
         subprocess.check_call('node -v', shell=True)
