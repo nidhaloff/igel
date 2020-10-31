@@ -2,6 +2,12 @@
 History
 =======
 
+0.3.1 (2020-10-31)
+-------------------
+
+* Added support for multiple data types (excel, json and html)
+* Added igel GUI as a sub command
+
 0.3.0 (2020-10-15)
 -------------------
 
