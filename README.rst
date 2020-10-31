@@ -82,6 +82,8 @@ users to build machine learning models.
 
 Features
 ---------
+- Usage from GUI
+- Supports most dataset types (csv, txt, excel, json, html)
 - Supports all state of the art machine learning models (even preview models)
 - Supports different data preprocessing methods
 - Provides flexibility and data control while writing configurations
@@ -102,6 +104,10 @@ All you need is a **yaml** (or **json**) file, where you need to describe what y
 
 Igel supports all sklearn's machine learning functionality, whether regression, classification or clustering.
 Precisely, you can use **63** different machine learning model in igel.
+
+Igel supports most used dataset types in the data science field. For instance, your input dataset can be
+a csv, txt, excel sheet, json or even html file that you want to fetch. All these types are supported by igel.
+In the background, igel uses pandas to read and convert your input dataset to a dataframe.
 
 Installation
 -------------
@@ -770,6 +776,20 @@ You can also find a cross validation and a hyperparameter search examples in the
 
 I suggest you play around with the examples and igel cli. However,
 you can also directly execute the fit.py, evaluate.py and predict.py if you want to.
+
+GUI
+----
+
+You can also run the igel UI if you are not familiar with the terminal. Just install igel on your machine
+as mentioned above. Then run this single command in your terminal
+
+.. code-block:: console
+
+    $ igel gui
+
+This will open up the gui, which is very simple to use. Check examples of how the gui looks like and how to use it
+here: https://github.com/nidhaloff/igel-ui
+
 
 Links
 ------
