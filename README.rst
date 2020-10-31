@@ -98,7 +98,7 @@ Intro
 --------
 
 igel is built on top of scikit-learn. It provides a simple way to use machine learning without writing
-a **single line of code**
+a **single line of code**.
 
 All you need is a **yaml** (or **json**) file, where you need to describe what you are trying to do. That's it!
 
@@ -108,6 +108,10 @@ Precisely, you can use **63** different machine learning model in igel.
 Igel supports most used dataset types in the data science field. For instance, your input dataset can be
 a csv, txt, excel sheet, json or even html file that you want to fetch. All these types are supported by igel.
 In the background, igel uses pandas to read and convert your input dataset to a dataframe.
+
+ Unlike other ML tools, igel is lightweight in the sense that it has minimal dependencies.
+Precisely, igel uses pandas in the background for data manipulation/preprocessing and sklearn for the machine
+learning part. Hence, it depends only on these two famous packages.
 
 Installation
 -------------
