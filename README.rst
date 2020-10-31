@@ -110,8 +110,8 @@ a csv, txt, excel sheet, json or even html file that you want to fetch. All thes
 In the background, igel uses pandas to read and convert your input dataset to a dataframe.
 
  Unlike other ML tools, igel is lightweight in the sense that it has minimal dependencies.
-Precisely, igel uses pandas in the background for data manipulation/preprocessing and sklearn for the machine
-learning part. Hence, it depends only on these two famous packages.
+ Precisely, igel uses pandas in the background for data manipulation/preprocessing and sklearn for the machine
+ learning part. Hence, it depends only on these two famous packages.
 
 Installation
 -------------
