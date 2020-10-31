@@ -1,9 +1,11 @@
 """Console script for igel."""
 import sys
+import os
 import argparse
 from igel import Igel, models_dict, metrics_dict, __version__
 import pandas as pd
-
+import subprocess
+from pathlib import Path
 
 class CLI(object):
     """CLI describes a command line interface for interacting with igel, there
@@ -181,6 +183,28 @@ igel experiment -DP "path_to_train_data \\
 
     def help(self, *args, **kwargs):
         self.parser.print_help()
+
+    def gui(self, *args, **kwargs):
+        igel_ui_path = Path(os.getcwd()) / 'igel-ui'
+        if not Path.exists(igel_ui_path):
+            subprocess.check_call(['git'] + ['clone', 'https://github.com/nidhaloff/igel-ui.git'])
+            print(f"igel UI cloned successfully")
+
+        os.chdir(igel_ui_path)
+        print(f"switching to -> {igel_ui_path}")
+        print(f"current dir: {os.getcwd()}")
+        print("installing dependencies ...")
+        subprocess.Popen(["node", "npm", "install", "open"], shell=True)
+        subprocess.Popen(["node", "npm", "install electron", "open"], shell=True)
+        #subprocess.call('sudo npm install')
+        print(f"dependencies installed successfully")
+        print(f"node version:")
+        subprocess.check_call('node -v', shell=True)
+        print(f"npm version:")
+        subprocess.check_call('npm -v', shell=True)
+        subprocess.check_call('npm i electron', shell=True)
+        print("running igel UI...")
+        subprocess.check_call('npm start', shell=True)
 
     def init(self, *args, **kwargs):
         """
