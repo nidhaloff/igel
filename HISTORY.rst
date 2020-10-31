@@ -6,7 +6,8 @@ History
 -------------------
 
 * Added support for multiple data types (excel, json and html)
-* Added igel GUI as a sub command
+* Added igel gui as a command
+* Integrated igel UI
 
 0.3.0 (2020-10-15)
 -------------------
