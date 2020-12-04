@@ -521,7 +521,7 @@ Generally, igel will figure out how to read your dataset.
 However, you can help it by providing extra fields using this read_data_options section.
 For example, one of the helpful values in my opinion is the "sep", which defines how your columns
 in the csv dataset are separated. Generally, csv datasets are separated by commas, which is also the default value
-here. However, it may be separated by a semi column in your case.
+here. However, it may be separated by a semicolon in your case.
 
 Hence, you can provide this in the read_data_options. Just add the :code:`sep: ";"` under read_data_options.
 
