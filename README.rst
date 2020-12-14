@@ -243,7 +243,7 @@ which will create a basic config file for you on the fly.
 
     Example:
     If I want to use neural networks to classify whether someone is sick or not using the indian-diabetes dataset,
-    then I would use this command to initialize a yaml file:
+    then I would use this command to initialize a yaml file n.b. you may need to rename outcome column in .csv to sick:
     $ igel init -type "classification" -model "NeuralNetwork" -target "sick"
     """
     $ igel init
