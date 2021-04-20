@@ -796,6 +796,25 @@ Links
 
 - Article: https://medium.com/@nidhalbacc/machine-learning-without-writing-code-984b238dd890
 
+
+
+Help/GetHelp
+---------------
+
+If you are facing any problems, please feel free to open an issue.
+Additionally, you can make contact with the author for further information/questions.
+
+Do you like igel?
+You can always help the development of this project by:
+
+- Following on github and/or twitter
+- Star the github repo
+- Watch the github repo for new releases
+- Tweet about the package
+- Help others with issues on github
+- Create issues and pull requests
+- Sponsor the project
+
 Contributions
 --------------
 
