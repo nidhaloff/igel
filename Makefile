@@ -68,7 +68,7 @@ coverage: ## check code coverage quickly with the default Python
 docs: ## generate Sphinx HTML documentation, including API docs
 	rm -f docs/igel.rst
 	rm -f docs/modules.rst
-	pip install -r dev_requirements.txt
+	pip install -r requirements_dev.txt
 	sphinx-apidoc -o docs/ igel
 	$(MAKE) -C docs clean
 	$(MAKE) -C docs html
