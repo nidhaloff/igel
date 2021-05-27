@@ -2,17 +2,7 @@
 igel
 ====
 
-.. image:: assets/logo.jpg
-    :width: 100%
-    :scale: 100%
-    :align: center
-    :alt: igel-icon
-
-
 |
-
-|
-
 
 .. image:: https://img.shields.io/pypi/v/igel?color=green
         :alt: PyPI
@@ -45,7 +35,6 @@ igel
         :alt: Twitter URL
         :target: https://twitter.com/NidhalBaccouri
 
-|
 |
 
 A delightful machine learning tool that allows you to train/fit, test and use models **without writing code**
@@ -213,7 +202,7 @@ You can run the help command to get instructions:
 
 - Demo:
 
-.. image:: assets/igel-help.gif
+.. image:: ../assets/igel-help.gif
 
 ---------------------------------------------------------------------------------------------------------
 
@@ -249,7 +238,7 @@ check it out and modify it if you want to, otherwise you can also create everyth
 
 - Demo:
 
-.. image:: assets/igel-init.gif
+.. image:: ../assets/igel-init.gif
 
 -----------------------------------------------------------------------------------------------------------
 
@@ -302,7 +291,7 @@ Run this command in terminal to fit/train a model, where you provide the **path 
 
 - Demo:
 
-.. image:: assets/igel-fit.gif
+.. image:: ../assets/igel-fit.gif
 
 --------------------------------------------------------------------------------------------------------
 
@@ -317,7 +306,7 @@ You can then evaluate the trained/pre-fitted model:
 
 - Demo:
 
-.. image:: assets/igel-eval.gif
+.. image:: ../assets/igel-eval.gif
 
 ------------------------------------------------------------------------------------------------------
 
@@ -333,9 +322,9 @@ Finally, you can use the trained/pre-fitted model to make predictions if you are
 
 - Demo:
 
-.. image:: assets/igel-pred.gif
+.. image:: ../assets/igel-pred.gif
 
-.. image:: assets/igel-predict.gif
+.. image:: ../assets/igel-predict.gif
 
 ----------------------------------------------------------------------------------------------------------
 
@@ -352,7 +341,7 @@ You can combine the train, evaluate and predict phases using one single command 
 
 - Demo:
 
-.. image:: assets/igel-experiment.gif
+.. image:: ../assets/igel-experiment.gif
 
 
 - Alternatively, you can also write code if you want to:
@@ -394,11 +383,11 @@ a >= 0.2.6 version.
 
 - Demo (init command):
 
-.. image:: assets/igel-init-interactive.gif
+.. image:: ../assets/igel-init-interactive.gif
 
 - Demo (fit command):
 
-.. image:: assets/igel-fit-interactive.gif
+.. image:: ../assets/igel-fit-interactive.gif
 
 As you can see, you don't need to memorize the arguments, you can just let igel ask you to enter them.
 Igel will provide you with a nice message explaining which argument you need to enter.
