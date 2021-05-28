@@ -5,7 +5,7 @@ Welcome to igel's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-   readme
+   README
    installation
    usage
    modules

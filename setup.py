@@ -5,7 +5,7 @@
 from setuptools import setup, find_packages
 from igel import __version__, __email__, __author__
 
-with open('README.rst') as readme_file:
+with open('docs/README.rst') as readme_file:
     readme = readme_file.read()
 
 with open('HISTORY.rst') as history_file:

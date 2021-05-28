@@ -11,7 +11,6 @@ COPY docs /igel/docs
 COPY igel /igel/igel
 COPY setup.cfg /igel/setup.cfg
 COPY setup.py /igel/setup.py
-COPY README.rst /igel/README.rst
 COPY HISTORY.rst /igel/HISTORY.rst
 COPY setup.py /igel/setup.py
 RUN cd /igel && python setup.py install
