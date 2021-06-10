@@ -460,6 +460,12 @@ Note: you can run the commands without providing additional arguments, which wil
         Igel(**eval_args)
         Igel(**pred_args)
 
+    def serve(self):
+        """
+        expose a REST endpoint in order to use the trained ML model
+        """
+        pass
+
     def _tableize(self, df):
         """
         pretty-print a dataframe as table
