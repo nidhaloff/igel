@@ -2,10 +2,15 @@
 import sys
 import os
 import argparse
-from igel import Igel, models_dict, metrics_dict, __version__
+from igel import Igel, models_dict, metrics_dict
 import pandas as pd
 import subprocess
 from pathlib import Path
+
+try:
+    from igel import __version__
+except:
+    pass
 
 
 class CLI(object):
@@ -271,7 +276,7 @@ Note: you can run the commands without providing additional arguments, which wil
         accept user input if the user did not provide all mandatory args in the terminal.
         """
         print(f""
-              f"{'*'*10} You entered interactive mode! {'*'*10} \n"
+              f"{'*' * 10} You entered interactive mode! {'*' * 10} \n"
               f"This is happening because you didn't enter all mandatory arguments in order to use the cli\n"
               f"Therefore, you will need to provide few information before proceeding.\n")
         data_path = input(f"enter path to your data: [{default_data_path}]        ") or default_data_path
@@ -375,7 +380,7 @@ Note: you can run the commands without providing additional arguments, which wil
         """
         if not self.dict_args or len(self.dict_args.keys()) <= 1:
             self._print_models_overview()
-            print("-"*100)
+            print("-" * 100)
             model_name = input("Enter the model name, you want to get infos about (e.g NeuralNetwork):    ")
             model_type = input("Enter the type (choose from regression, classification or clustering):   ")
             if model_name and model_type:
@@ -464,7 +469,7 @@ Note: you can run the commands without providing additional arguments, which wil
         """
         expose a REST endpoint in order to use the trained ML model
         """
-        pass
+
 
     def _tableize(self, df):
         """
@@ -474,13 +479,16 @@ Note: you can run the commands without providing additional arguments, which wil
             return
         df_columns = df.columns.tolist()
         max_len_in_lst = lambda lst: len(sorted(lst, reverse=True, key=len)[0])
-        align_center = lambda st, sz: "{0}{1}{0}".format(" "*(1+(sz-len(st))//2), st)[:sz] if len(st) < sz else st
-        align_right = lambda st, sz: "{0}{1} ".format(" "*(sz-len(st)-1), st) if len(st) < sz else st
+        align_center = lambda st, sz: "{0}{1}{0}".format(" " * (1 + (sz - len(st)) // 2), st)[:sz] if len(
+            st) < sz else st
+        align_right = lambda st, sz: "{0}{1} ".format(" " * (sz - len(st) - 1), st) if len(st) < sz else st
         max_col_len = max_len_in_lst(df_columns)
-        max_val_len_for_col = dict([(col, max_len_in_lst(df.iloc[:,idx].astype('str'))) for idx, col in enumerate(df_columns)])
+        max_val_len_for_col = dict(
+            [(col, max_len_in_lst(df.iloc[:, idx].astype('str'))) for idx, col in enumerate(df_columns)])
         col_sizes = dict([(col, 2 + max(max_val_len_for_col.get(col, 0), max_col_len)) for col in df_columns])
         build_hline = lambda row: '+'.join(['-' * col_sizes[col] for col in row]).join(['+', '+'])
-        build_data = lambda row, align: "|".join([align(str(val), col_sizes[df_columns[idx]]) for idx, val in enumerate(row)]).join(['|', '|'])
+        build_data = lambda row, align: "|".join(
+            [align(str(val), col_sizes[df_columns[idx]]) for idx, val in enumerate(row)]).join(['|', '|'])
         hline = build_hline(df_columns)
         out = [hline, build_data(df_columns, align_center), hline]
         for _, row in df.iterrows():

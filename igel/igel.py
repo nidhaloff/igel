@@ -2,7 +2,7 @@
 
 import pandas as pd
 import numpy as np
-import pickle
+import joblib
 import os
 import json
 import warnings
@@ -162,7 +162,7 @@ class Igel(object):
             logger.exception(f"Creating the directory {self.results_path} failed ")
         else:
             logger.info(f"Successfully created the directory in {self.results_path} ")
-            pickle.dump(model, open(self.default_model_path, 'wb'))
+            joblib.dump(model, open(self.default_model_path, 'wb'))
             return True
 
     def _load_model(self, f: str = ''):
@@ -175,10 +175,10 @@ class Igel(object):
             if not f:
                 logger.info(f"result path: {self.results_path} ")
                 logger.info(f"loading model form {self.default_model_path} ")
-                model = pickle.load(open(self.default_model_path, 'rb'))
+                model = joblib.load(open(self.default_model_path, 'rb'))
             else:
                 logger.info(f"loading from {f}")
-                model = pickle.load(open(f, 'rb'))
+                model = joblib.load(open(f, 'rb'))
             return model
         except FileNotFoundError:
             logger.error(f"File not found in {self.default_model_path} ")

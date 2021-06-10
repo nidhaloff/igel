@@ -1,5 +1,10 @@
 import yaml
 import json
+import logging
+import joblib
+from configs import configs
+
+logger = logging.getLogger(__name__)
 
 
 def create_yaml(data, f):
@@ -51,3 +56,22 @@ def _reshape(arr):
     if len(arr.shape) <= 1:
         arr = arr.reshape(-1, 1)
     return arr
+
+
+def load_trained_model(f: str = ''):
+    """
+    load a saved model from file
+    @param f: path to model
+    @return: loaded model
+    """
+    try:
+        if not f:
+            logger.info(f"result path: {configs.get('results_path')} ")
+            logger.info(f"loading model form {configs.get('default_model_path')} ")
+            model = joblib.load(open(configs.get('default_model_path'), 'rb'))
+        else:
+            logger.info(f"loading from {f}")
+            model = joblib.load(open(f, 'rb'))
+        return model
+    except FileNotFoundError:
+        logger.error(f"File not found in {configs.get('default_model_path')}")
