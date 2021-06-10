@@ -10,4 +10,4 @@ sphinx:
 python:
   version: 3.7
   install:
-    - requirements: docs/requirements_dev.txt
+    - requirements: docs/requirements_docs.txt
