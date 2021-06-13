@@ -1,15 +1,17 @@
 """Console script for igel."""
-import sys
-import os
 import argparse
-from igel import Igel, models_dict, metrics_dict
-import pandas as pd
+import os
 import subprocess
+import sys
 from pathlib import Path
+
 import igel
+import pandas as pd
+from igel import Igel, metrics_dict, models_dict
+from igel.servers import flask_server
 
 
-class CLI(object):
+class CLI:
     """CLI describes a command line interface for interacting with igel, there
     are several different functions that can be performed.
 
@@ -20,23 +22,22 @@ class CLI(object):
         "dp": "data_path",
         "yml": "yaml_path",
         "DP": "data_paths",
-
         # models arguments
         "name": "model_name",
         "model": "model_name",
         "type": "model_type",
-        "tg": "target"
+        "tg": "target",
     }
 
     def __init__(self):
         self.parser = argparse.ArgumentParser(
-            description='Igel CLI Runner',
-            usage=f'''
+            description="Igel CLI Runner",
+            usage=f"""
  ___           _    ____ _     ___
 |_ _|__ _  ___| |  / ___| |   |_ _|
- | |/ _` |/ _ \ | | |   | |    | |
+ | |/ _` |/ _ \\ | | |   | |    | |
  | | (_| |  __/ | | |___| |___ | |
-|___\__, |\___|_|  \____|_____|___|
+|___\\__, |\\___|_|  \\____|_____|___|
     |___/
 
 
@@ -158,9 +159,10 @@ Note: you can run the commands without providing additional arguments, which wil
     Happy Coding. Please consider supporting the project ;)
     You can contact me if you have any questions/ideas to discuss.
 
-                    ''')
+                    """,
+        )
 
-        self.parser.add_argument('command', help='Subcommand to run')
+        self.parser.add_argument("command", help="Subcommand to run")
         self.cmd = self.parse_command()
         self.args = sys.argv[2:]
         self.dict_args = self.convert_args_to_dict()
@@ -175,8 +177,11 @@ Note: you can run the commands without providing additional arguments, which wil
         """
         d_args = {}
         for k, v in dict_args.items():
-            if k not in self.available_args.keys() and k not in self.available_args.values():
-                print(f'Unrecognized argument -> {k}')
+            if (
+                k not in self.available_args.keys()
+                and k not in self.available_args.values()
+            ):
+                print(f"Unrecognized argument -> {k}")
                 self.parser.print_help()
                 exit(1)
 
@@ -194,9 +199,12 @@ Note: you can run the commands without providing additional arguments, which wil
         @return: args as dictionary
         """
 
-        dict_args = {self.args[i].replace('-', ''): self.args[i + 1] for i in range(0, len(self.args) - 1, 2)}
+        dict_args = {
+            self.args[i].replace("-", ""): self.args[i + 1]
+            for i in range(0, len(self.args) - 1, 2)
+        }
         dict_args = self.validate_args(dict_args)
-        dict_args['cmd'] = self.cmd.command
+        dict_args["cmd"] = self.cmd.command
         return dict_args
 
     def parse_command(self):
@@ -208,7 +216,7 @@ Note: you can run the commands without providing additional arguments, which wil
         # exclude the rest of the args too, or validation will fail
         cmd = self.parser.parse_args(sys.argv[1:2])
         if not hasattr(self, cmd.command):
-            print('Unrecognized command')
+            print("Unrecognized command")
             self.parser.print_help()
             exit(1)
         # use dispatch pattern to invoke method with same name
@@ -218,9 +226,11 @@ Note: you can run the commands without providing additional arguments, which wil
         self.parser.print_help()
 
     def gui(self, *args, **kwargs):
-        igel_ui_path = Path(os.getcwd()) / 'igel-ui'
+        igel_ui_path = Path(os.getcwd()) / "igel-ui"
         if not Path.exists(igel_ui_path):
-            subprocess.check_call(['git'] + ['clone', 'https://github.com/nidhaloff/igel-ui.git'])
+            subprocess.check_call(
+                ["git"] + ["clone", "https://github.com/nidhaloff/igel-ui.git"]
+            )
             print(f"igel UI cloned successfully")
 
         os.chdir(igel_ui_path)
@@ -229,16 +239,18 @@ Note: you can run the commands without providing additional arguments, which wil
         print(f"make sure you have nodejs installed!!")
 
         subprocess.Popen(["node", "npm", "install", "open"], shell=True)
-        subprocess.Popen(["node", "npm", "install electron", "open"], shell=True)
+        subprocess.Popen(
+            ["node", "npm", "install electron", "open"], shell=True
+        )
         print("installing dependencies ...")
         print(f"dependencies installed successfully")
         print(f"node version:")
-        subprocess.check_call('node -v', shell=True)
+        subprocess.check_call("node -v", shell=True)
         print(f"npm version:")
-        subprocess.check_call('npm -v', shell=True)
-        subprocess.check_call('npm i electron', shell=True)
+        subprocess.check_call("npm -v", shell=True)
+        subprocess.check_call("npm i electron", shell=True)
         print("running igel UI...")
-        subprocess.check_call('npm start', shell=True)
+        subprocess.check_call("npm start", shell=True)
 
     def init(self, *args, **kwargs):
         """
@@ -249,81 +261,114 @@ Note: you can run the commands without providing additional arguments, which wil
         if not args are provided, the user will be prompted to enter basic information.
         """
         d = dict(self.dict_args)
-        d.pop('cmd')
+        d.pop("cmd")
         if not d:
-            print(f""
-                  f"{'*' * 10} You entered interactive mode! {'*' * 10} \n"
-                  f"This is happening because you didn't enter all mandatory arguments in order to use the cli\n"
-                  f"Therefore, you will need to provide few information before proceeding.\n")
-            model_type = input(f"enter type of the problem you want to solve: [regression]       ") or "regression"
-            d['model_type'] = model_type
-            model_name = input(f"enter algorithm you want to use: [NeuralNetwork]        ") or "NeuralNetwork"
-            d['model_name'] = model_name
-            target = input(f"enter the target you want to predict  "
-                           "(this is usually a column name in your csv dataset):        ")
-            d['target'] = target
+            print(
+                f""
+                f"{'*' * 10} You entered interactive mode! {'*' * 10} \n"
+                f"This is happening because you didn't enter all mandatory arguments in order to use the cli\n"
+                f"Therefore, you will need to provide few information before proceeding.\n"
+            )
+            model_type = (
+                input(
+                    f"enter type of the problem you want to solve: [regression]       "
+                )
+                or "regression"
+            )
+            d["model_type"] = model_type
+            model_name = (
+                input(
+                    f"enter algorithm you want to use: [NeuralNetwork]        "
+                )
+                or "NeuralNetwork"
+            )
+            d["model_name"] = model_name
+            target = input(
+                f"enter the target you want to predict  "
+                "(this is usually a column name in your csv dataset):        "
+            )
+            d["target"] = target
 
         Igel.create_init_mock_file(**d)
 
-    def _accept_user_input(self, yaml_needed: bool = False,
-                           default_data_path: str = './train_data.csv',
-                           default_yaml_path: str = './igel.yaml'):
+    def _accept_user_input(
+        self,
+        yaml_needed: bool = False,
+        default_data_path: str = "./train_data.csv",
+        default_yaml_path: str = "./igel.yaml",
+    ):
         """
         accept user input if the user did not provide all mandatory args in the terminal.
         """
-        print(f""
-              f"{'*' * 10} You entered interactive mode! {'*' * 10} \n"
-              f"This is happening because you didn't enter all mandatory arguments in order to use the cli\n"
-              f"Therefore, you will need to provide few information before proceeding.\n")
-        data_path = input(f"enter path to your data: [{default_data_path}]        ") or default_data_path
-        self.dict_args['data_path'] = data_path
+        print(
+            f""
+            f"{'*' * 10} You entered interactive mode! {'*' * 10} \n"
+            f"This is happening because you didn't enter all mandatory arguments in order to use the cli\n"
+            f"Therefore, you will need to provide few information before proceeding.\n"
+        )
+        data_path = (
+            input(f"enter path to your data: [{default_data_path}]        ")
+            or default_data_path
+        )
+        self.dict_args["data_path"] = data_path
         if yaml_needed:
-            yaml_path = input(f"enter path to your yaml file: [{default_yaml_path}]        ") or default_yaml_path
-            self.dict_args['yaml_path'] = yaml_path
+            yaml_path = (
+                input(
+                    f"enter path to your yaml file: [{default_yaml_path}]        "
+                )
+                or default_yaml_path
+            )
+            self.dict_args["yaml_path"] = yaml_path
 
     def fit(self, *args, **kwargs):
-        print("""
+        print(
+            r"""
          _____          _       _
         |_   _| __ __ _(_)_ __ (_)_ __   __ _
           | || '__/ _` | | '_ \| | '_ \ / _` |
           | || | | (_| | | | | | | | | | (_| |
           |_||_|  \__,_|_|_| |_|_|_| |_|\__, |
                                         |___/
-        """)
+        """
+        )
         d = dict(self.dict_args)
-        d.pop('cmd')
+        d.pop("cmd")
         if not d:
             self._accept_user_input(yaml_needed=True)
 
         Igel(**self.dict_args)
 
     def predict(self, *args, **kwargs):
-        print("""
+        print(
+            """
          ____               _ _      _   _
-        |  _ \ _ __ ___  __| (_) ___| |_(_) ___  _ __
-        | |_) | '__/ _ \/ _` | |/ __| __| |/ _ \| '_ \
+        |  _ \\ _ __ ___  __| (_) ___| |_(_) ___  _ __
+        | |_) | '__/ _ \\/ _` | |/ __| __| |/ _ \\| '_ \
         |  __/| | |  __/ (_| | | (__| |_| | (_) | | | |
-        |_|   |_|  \___|\__,_|_|\___|\__|_|\___/|_| |_|
+        |_|   |_|  \\___|\\__,_|_|\\___|\\__|_|\\___/|_| |_|
 
 
-        """)
+        """
+        )
         d = dict(self.dict_args)
-        d.pop('cmd')
+        d.pop("cmd")
         if not d:
             self._accept_user_input()
         Igel(**self.dict_args)
 
     def evaluate(self, *args, **kwargs):
-        print("""
+        print(
+            """
          _____            _             _   _
         | ____|_   ____ _| |_   _  __ _| |_(_) ___  _ __
-        |  _| \ \ / / _` | | | | |/ _` | __| |/ _ \| '_ \
-        | |___ \ V / (_| | | |_| | (_| | |_| | (_) | | | |
-        |_____| \_/ \__,_|_|\__,_|\__,_|\__|_|\___/|_| |_|
+        |  _| \\ \\ / / _` | | | | |/ _` | __| |/ _ \\| '_ \
+        | |___ \\ V / (_| | | |_| | (_| | |_| | (_) | | | |
+        |_____| \\_/ \\__,_|_|\\__,_|\\__,_|\\__|_|\\___/|_| |_|
 
-        """)
+        """
+        )
         d = dict(self.dict_args)
-        d.pop('cmd')
+        d.pop("cmd")
         if not d:
             self._accept_user_input()
 
@@ -331,14 +376,21 @@ Note: you can run the commands without providing additional arguments, which wil
 
     def _print_models_overview(self):
         print(f"\nIgel's supported models overview: \n")
-        reg_algs = list(models_dict.get('regression').keys())
-        clf_algs = list(models_dict.get('classification').keys())
-        cluster_algs = list(models_dict.get('clustering').keys())
-        df_algs = pd.DataFrame.from_dict({
-            "regression": reg_algs,
-            "classification": clf_algs,
-            "clustering": cluster_algs
-        }, orient="index").transpose().fillna('----')
+        reg_algs = list(models_dict.get("regression").keys())
+        clf_algs = list(models_dict.get("classification").keys())
+        cluster_algs = list(models_dict.get("clustering").keys())
+        df_algs = (
+            pd.DataFrame.from_dict(
+                {
+                    "regression": reg_algs,
+                    "classification": clf_algs,
+                    "clustering": cluster_algs,
+                },
+                orient="index",
+            )
+            .transpose()
+            .fillna("----")
+        )
 
         df = self._tableize(df_algs)
         print(df)
@@ -349,26 +401,31 @@ Note: you can run the commands without providing additional arguments, which wil
             self._print_models_overview()
         else:
             if not model_type:
-                print(f"Please enter a type argument to get help on the chosen model\n"
-                      f"type can be whether regression, classification or clustering \n")
+                print(
+                    f"Please enter a type argument to get help on the chosen model\n"
+                    f"type can be whether regression, classification or clustering \n"
+                )
                 self._print_models_overview()
                 return
-            if model_type not in ('regression', 'classification', 'clustering'):
-                raise Exception(f"{model_type} is not supported! \n"
-                                f"model_type need to be regression, classification or clustering")
+            if model_type not in ("regression", "classification", "clustering"):
+                raise Exception(
+                    f"{model_type} is not supported! \n"
+                    f"model_type need to be regression, classification or clustering"
+                )
 
             models = models_dict.get(model_type)
             model_data = models.get(model_name)
             model, link, *cv_class = model_data.values()
-            print(f"model type: {model_type} \n"
-                  f"model name: {model_name} \n"
-                  f"sklearn model class: {model.__name__} \n"
-
-                  f"{'-' * 60}\n"
-                  f"You can click the link below to know more about the optional arguments\n"
-                  f"that you can use with your chosen model ({model_name}).\n"
-                  f"You can provide these optional arguments in the yaml file if you want to use them.\n"
-                  f"link:\n{link} \n")
+            print(
+                f"model type: {model_type} \n"
+                f"model name: {model_name} \n"
+                f"sklearn model class: {model.__name__} \n"
+                f"{'-' * 60}\n"
+                f"You can click the link below to know more about the optional arguments\n"
+                f"that you can use with your chosen model ({model_name}).\n"
+                f"You can provide these optional arguments in the yaml file if you want to use them.\n"
+                f"link:\n{link} \n"
+            )
 
     def models(self):
         """
@@ -377,13 +434,17 @@ Note: you can run the commands without providing additional arguments, which wil
         if not self.dict_args or len(self.dict_args.keys()) <= 1:
             self._print_models_overview()
             print("-" * 100)
-            model_name = input("Enter the model name, you want to get infos about (e.g NeuralNetwork):    ")
-            model_type = input("Enter the type (choose from regression, classification or clustering):   ")
+            model_name = input(
+                "Enter the model name, you want to get infos about (e.g NeuralNetwork):    "
+            )
+            model_type = input(
+                "Enter the type (choose from regression, classification or clustering):   "
+            )
             if model_name and model_type:
                 self._show_model_infos(model_name, model_type)
         else:
-            model_name = self.dict_args.get('model_name', None)
-            model_type = self.dict_args.get('model_type', None)
+            model_name = self.dict_args.get("model_name", None)
+            model_type = self.dict_args.get("model_type", None)
             self._show_model_infos(model_name, model_type)
 
     def metrics(self):
@@ -391,13 +452,19 @@ Note: you can run the commands without providing additional arguments, which wil
         show an overview of all metrics supported by igel
         """
         print(f"\nIgel's supported metrics overview: \n")
-        reg_metrics = [func.__name__ for func in metrics_dict.get('regression')]
-        clf_metrics = [func.__name__ for func in metrics_dict.get('classification')]
+        reg_metrics = [func.__name__ for func in metrics_dict.get("regression")]
+        clf_metrics = [
+            func.__name__ for func in metrics_dict.get("classification")
+        ]
 
-        df_metrics = pd.DataFrame.from_dict({
-            "regression": reg_metrics,
-            "classification": clf_metrics
-        }, orient="index").transpose().fillna('----')
+        df_metrics = (
+            pd.DataFrame.from_dict(
+                {"regression": reg_metrics, "classification": clf_metrics},
+                orient="index",
+            )
+            .transpose()
+            .fillna("----")
+        )
 
         df_metrics = self._tableize(df_metrics)
         print(df_metrics)
@@ -406,7 +473,8 @@ Note: you can run the commands without providing additional arguments, which wil
         """
         run a whole experiment: this is a pipeline that includes fit, evaluate and predict.
         """
-        print("""
+        print(
+            r"""
          _____                      _                      _
         | ____|_  ___ __   ___ _ __(_)_ __ ___   ___ _ __ | |_
         |  _| \ \/ / '_ \ / _ \ '__| | '_ ` _ \ / _ \ '_ \| __|
@@ -414,48 +482,71 @@ Note: you can run the commands without providing additional arguments, which wil
         |_____/_/\_\ .__/ \___|_|  |_|_| |_| |_|\___|_| |_|\__|
                    |_|
 
-        """)
+        """
+        )
         d = dict(self.dict_args)
-        d.pop('cmd')
+        d.pop("cmd")
         if not d:
-            default_train_data_path = './train_data.csv'
-            default_eval_data_path = './eval_data.csv'
-            default_test_data_path = './test_data.csv'
-            default_yaml_path = './igel.yaml'
-            print(f""
-                  f"{'*' * 10} You entered interactive mode! {'*' * 10} \n"
-                  f"This is happening because you didn't enter all mandatory arguments in order to use the cli\n"
-                  f"Therefore, you will need to provide few information before proceeding.\n")
-            train_data_path = input(
-                f"enter path to your data: [{default_train_data_path}]        ") or default_train_data_path
-            eval_data_path = input(
-                f"enter path to your data: [{default_eval_data_path}]        ") or default_eval_data_path
-            test_data_path = input(
-                f"enter path to your data: [{default_test_data_path}]        ") or default_test_data_path
-            yaml_path = input(
-                f"enter path to your yaml file: [{default_yaml_path}]        ") or default_yaml_path
+            default_train_data_path = "./train_data.csv"
+            default_eval_data_path = "./eval_data.csv"
+            default_test_data_path = "./test_data.csv"
+            default_yaml_path = "./igel.yaml"
+            print(
+                f""
+                f"{'*' * 10} You entered interactive mode! {'*' * 10} \n"
+                f"This is happening because you didn't enter all mandatory arguments in order to use the cli\n"
+                f"Therefore, you will need to provide few information before proceeding.\n"
+            )
+            train_data_path = (
+                input(
+                    f"enter path to your data: [{default_train_data_path}]        "
+                )
+                or default_train_data_path
+            )
+            eval_data_path = (
+                input(
+                    f"enter path to your data: [{default_eval_data_path}]        "
+                )
+                or default_eval_data_path
+            )
+            test_data_path = (
+                input(
+                    f"enter path to your data: [{default_test_data_path}]        "
+                )
+                or default_test_data_path
+            )
+            yaml_path = (
+                input(
+                    f"enter path to your yaml file: [{default_yaml_path}]        "
+                )
+                or default_yaml_path
+            )
 
             # prepare the dict arguments:
-            train_args = {"cmd": "fit",
-                          "yaml_path": yaml_path,
-                          "data_path": train_data_path}
-            eval_args = {"cmd": "evaluate",
-                         "data_path": eval_data_path}
-            pred_args = {"cmd": "predict",
-                         "data_path": test_data_path}
+            train_args = {
+                "cmd": "fit",
+                "yaml_path": yaml_path,
+                "data_path": train_data_path,
+            }
+            eval_args = {"cmd": "evaluate", "data_path": eval_data_path}
+            pred_args = {"cmd": "predict", "data_path": test_data_path}
 
         else:
-            data_paths = self.dict_args['data_paths']
-            yaml_path = self.dict_args['yaml_path']
-            train_data_path, eval_data_path, pred_data_path = data_paths.strip().split(' ')
+            data_paths = self.dict_args["data_paths"]
+            yaml_path = self.dict_args["yaml_path"]
+            (
+                train_data_path,
+                eval_data_path,
+                pred_data_path,
+            ) = data_paths.strip().split(" ")
             # print(f"{train_data_path} | {eval_data_path} | {test_data_path}")
-            train_args = {"cmd": "fit",
-                          "yaml_path": yaml_path,
-                          "data_path": train_data_path}
-            eval_args = {"cmd": "evaluate",
-                         "data_path": eval_data_path}
-            pred_args = {"cmd": "predict",
-                         "data_path": pred_data_path}
+            train_args = {
+                "cmd": "fit",
+                "yaml_path": yaml_path,
+                "data_path": train_data_path,
+            }
+            eval_args = {"cmd": "evaluate", "data_path": eval_data_path}
+            pred_args = {"cmd": "predict", "data_path": pred_data_path}
 
         Igel(**train_args)
         Igel(**eval_args)
@@ -465,7 +556,8 @@ Note: you can run the commands without providing additional arguments, which wil
         """
         expose a REST endpoint in order to use the trained ML model
         """
-
+        print("starting flask server..")
+        flask_server.run()
 
     def _tableize(self, df):
         """
@@ -475,16 +567,36 @@ Note: you can run the commands without providing additional arguments, which wil
             return
         df_columns = df.columns.tolist()
         max_len_in_lst = lambda lst: len(sorted(lst, reverse=True, key=len)[0])
-        align_center = lambda st, sz: "{0}{1}{0}".format(" " * (1 + (sz - len(st)) // 2), st)[:sz] if len(
-            st) < sz else st
-        align_right = lambda st, sz: "{0}{1} ".format(" " * (sz - len(st) - 1), st) if len(st) < sz else st
+        align_center = (
+            lambda st, sz: "{0}{1}{0}".format(
+                " " * (1 + (sz - len(st)) // 2), st
+            )[:sz]
+            if len(st) < sz
+            else st
+        )
+        align_right = (
+            lambda st, sz: "{}{} ".format(" " * (sz - len(st) - 1), st)
+            if len(st) < sz
+            else st
+        )
         max_col_len = max_len_in_lst(df_columns)
-        max_val_len_for_col = dict(
-            [(col, max_len_in_lst(df.iloc[:, idx].astype('str'))) for idx, col in enumerate(df_columns)])
-        col_sizes = dict([(col, 2 + max(max_val_len_for_col.get(col, 0), max_col_len)) for col in df_columns])
-        build_hline = lambda row: '+'.join(['-' * col_sizes[col] for col in row]).join(['+', '+'])
+        max_val_len_for_col = {
+            col: max_len_in_lst(df.iloc[:, idx].astype("str"))
+            for idx, col in enumerate(df_columns)
+        }
+        col_sizes = {
+            col: 2 + max(max_val_len_for_col.get(col, 0), max_col_len)
+            for col in df_columns
+        }
+        build_hline = lambda row: "+".join(
+            ["-" * col_sizes[col] for col in row]
+        ).join(["+", "+"])
         build_data = lambda row, align: "|".join(
-            [align(str(val), col_sizes[df_columns[idx]]) for idx, val in enumerate(row)]).join(['|', '|'])
+            [
+                align(str(val), col_sizes[df_columns[idx]])
+                for idx, val in enumerate(row)
+            ]
+        ).join(["|", "|"])
         hline = build_hline(df_columns)
         out = [hline, build_data(df_columns, align_center), hline]
         for _, row in df.iterrows():
@@ -496,7 +608,8 @@ Note: you can run the commands without providing additional arguments, which wil
         print(f"igel version: {igel.__version__}")
 
     def info(self):
-        print(f"""
+        print(
+            f"""
             package name:           igel
             version:                {igel.__version__}
             author:                 Nidhal Baccouri
@@ -511,7 +624,8 @@ Note: you can run the commands without providing additional arguments, which wil
             written in:             100% python
             status:                 stable
             operating system:       independent
-        """)
+        """
+        )
 
 
 def main():
