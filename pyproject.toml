@@ -21,6 +21,7 @@ PyYAML = "5.3.1"
 scikit-learn = "0.23.2"
 sphinx-copybutton = "0.3.1"
 joblib = "~=0.16.0"
+Flask = "^2.0.1"
 
 [tool.poetry.dev-dependencies]
 pip="20.2.2"
@@ -75,5 +76,3 @@ indent = 4
 force_grid_wrap = 0
 use_parentheses = true
 line_length = 80
-
-
