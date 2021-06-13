@@ -9,7 +9,7 @@ igel
         :target: https://pypi.python.org/pypi/igel
 
 .. image:: https://img.shields.io/travis/nidhaloff/igel.svg
-        :target: https://travis-ci.com/nidhaloff/igel
+        :target: https://github.com/nidhaloff/igel/actions?query=workflow%3Abuild
 
 .. image:: https://pepy.tech/badge/igel
         :target: https://pepy.tech/project/igel
