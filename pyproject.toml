@@ -6,6 +6,14 @@ description = "a delightful machine learning tool that allows you to train, test
 authors = ["nidhal baccouri <nidhalbacc@gmail.com>"]
 license = "MIT"
 
+# Pypi classifiers: https://pypi.org/classifiers/
+classifiers = [  # Update me
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "Operating System :: OS Independent",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
 [tool.poetry.dependencies]
 python = "^3.8"
 pandas = "1.1.1"
@@ -50,3 +58,22 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
 "igel" = "igel.cli:main"
+
+[tool.black]
+# https://github.com/psf/black
+line-length = 80
+target-version = ["py37"]
+
+[tool.isort]
+# https://github.com/timothycrosley/isort/
+known_typing = "typing,types,typing_extensions,mypy,mypy_extensions"
+sections = "FUTURE,TYPING,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER"
+include_trailing_comma = true
+default_section = "FIRSTPARTY"
+multi_line_output = 3
+indent = 4
+force_grid_wrap = 0
+use_parentheses = true
+line_length = 80
+
+
