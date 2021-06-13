@@ -33,6 +33,17 @@ scikit-learn="0.23.2"
 sphinx-copybutton="0.3.1"
 sphinx_glpi_theme="0.3"
 
+darglint = "^1.5.8"
+isort = "^5.7.0"
+pyupgrade = "^2.19.3"
+black = "^21.5b2"
+mypy = "^0.902"
+bandit = "^1.7.0"
+safety = "^1.10.3"
+pylint = "^2.6.0"
+pydocstyle = "^6.1.1"
+pre-commit = "^2.9.3"
+
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
