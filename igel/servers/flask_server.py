@@ -18,6 +18,11 @@ model = load_trained_model()
 def predict():
      json_ = request.json
      query_df = pd.DataFrame(json_)
+     print("query df: ", query_df)
      query = pd.get_dummies(query_df)
      prediction = model.predict(query)
      return jsonify({'prediction': list(prediction)})
+
+
+def run_server(*args, **kwargs):
+    app.run(debug=True)

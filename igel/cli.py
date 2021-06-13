@@ -6,11 +6,7 @@ from igel import Igel, models_dict, metrics_dict
 import pandas as pd
 import subprocess
 from pathlib import Path
-
-try:
-    from igel import __version__
-except:
-    pass
+import igel
 
 
 class CLI(object):
@@ -497,12 +493,12 @@ Note: you can run the commands without providing additional arguments, which wil
         return "\n".join(out)
 
     def version(self):
-        print(f"igel version: {__version__}")
+        print(f"igel version: {igel.__version__}")
 
     def info(self):
         print(f"""
             package name:           igel
-            version:                {__version__}
+            version:                {igel.__version__}
             author:                 Nidhal Baccouri
             maintainer:             Nidhal Baccouri
             contact:                nidhalbacc@gmail.com

@@ -2,7 +2,7 @@ import yaml
 import json
 import logging
 import joblib
-from configs import configs
+from igel.configs import configs
 
 logger = logging.getLogger(__name__)
 
