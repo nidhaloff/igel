@@ -1,92 +1,153 @@
-.PHONY: clean clean-test clean-pyc clean-build docs help
-.DEFAULT_GOAL := help
+SHELL := /usr/bin/env bash
 
-define BROWSER_PYSCRIPT
-import os, webbrowser, sys
+IMAGE := igel
+VERSION := latest
 
-from urllib.request import pathname2url
+#! An ugly hack to create individual flags
+ifeq ($(STRICT), 1)
+	POETRY_COMMAND_FLAG =
+	PIP_COMMAND_FLAG =
+	SAFETY_COMMAND_FLAG =
+	BANDIT_COMMAND_FLAG =
+	SECRETS_COMMAND_FLAG =
+	BLACK_COMMAND_FLAG =
+	DARGLINT_COMMAND_FLAG =
+	ISORT_COMMAND_FLAG =
+	MYPY_COMMAND_FLAG =
+else
+	POETRY_COMMAND_FLAG = -
+	PIP_COMMAND_FLAG = -
+	SAFETY_COMMAND_FLAG = -
+	BANDIT_COMMAND_FLAG = -
+	SECRETS_COMMAND_FLAG = -
+	BLACK_COMMAND_FLAG = -
+	DARGLINT_COMMAND_FLAG = -
+	ISORT_COMMAND_FLAG = -
+	MYPY_COMMAND_FLAG = -
+endif
 
-webbrowser.open("file://" + pathname2url(os.path.abspath(sys.argv[1])))
-endef
-export BROWSER_PYSCRIPT
+##! Please tell me how to use `for loops` to create variables in Makefile :(
+##! If you have better idea, please PR me in https://github.com/TezRomacH/python-package-template
 
-define PRINT_HELP_PYSCRIPT
-import re, sys
+ifeq ($(POETRY_STRICT), 1)
+	POETRY_COMMAND_FLAG =
+else ifeq ($(POETRY_STRICT), 0)
+	POETRY_COMMAND_FLAG = -
+endif
 
-for line in sys.stdin:
-	match = re.match(r'^([a-zA-Z_-]+):.*?## (.*)$$', line)
-	if match:
-		target, help = match.groups()
-		print("%-20s %s" % (target, help))
-endef
-export PRINT_HELP_PYSCRIPT
+ifeq ($(PIP_STRICT), 1)
+	PIP_COMMAND_FLAG =
+else ifeq ($(PIP_STRICT), 0)
+	PIP_COMMAND_FLAG = -
+endif
 
-BROWSER := python -c "$$BROWSER_PYSCRIPT"
+ifeq ($(SAFETY_STRICT), 1)
+	SAFETY_COMMAND_FLAG =
+else ifeq ($(SAFETY_STRICT), 0)
+	SAFETY_COMMAND_FLAG = -
+endif
 
-help:
-	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
+ifeq ($(BANDIT_STRICT), 1)
+	BANDIT_COMMAND_FLAG =
+else ifeq ($(BANDIT_STRICT), 0)
+	BANDIT_COMMAND_FLAG = -
+endif
 
-clean: clean-install clean-build clean-pyc clean-test ## remove all build, test, coverage and Python artifacts
+ifeq ($(SECRETS_STRICT), 1)
+	SECRETS_COMMAND_FLAG =
+else ifeq ($(SECRETS_STRICT), 0)
+	SECRETS_COMMAND_FLAG = -
+endif
 
-clean-install:
-	pip uninstall -y igel
+ifeq ($(BLACK_STRICT), 1)
+	BLACK_COMMAND_FLAG =
+else ifeq ($(BLACK_STRICT), 0)
+	BLACK_COMMAND_FLAG = -
+endif
 
-clean-build: ## remove build artifacts
-	rm -fr build/
-	rm -fr dist/
-	rm -fr .eggs/
-	find . -name '*.egg-info' -exec rm -fr {} +
-	find . -name '*.egg' -exec rm -f {} +
+ifeq ($(DARGLINT_STRICT), 1)
+	DARGLINT_COMMAND_FLAG =
+else ifeq ($(DARGLINT_STRICT), 0)
+	DARGLINT_COMMAND_FLAG = -
+endif
 
-clean-pyc: ## remove Python file artifacts
-	find . -name '*.pyc' -exec rm -f {} +
-	find . -name '*.pyo' -exec rm -f {} +
-	find . -name '*~' -exec rm -f {} +
-	find . -name '__pycache__' -exec rm -fr {} +
+ifeq ($(ISORT_STRICT), 1)
+	ISORT_COMMAND_FLAG =
+else ifeq ($(ISORT_STRICT), 0)
+	ISORT_COMMAND_FLAG = -
+endif
 
-clean-test: ## remove test and coverage artifacts
-	rm -fr .tox/
-	rm -f .coverage
-	rm -fr htmlcov/
-	rm -fr .pytest_cache
 
-lint: ## check style with flake8
-	flake8 igel tests
+ifeq ($(MYPY_STRICT), 1)
+	MYPY_COMMAND_FLAG =
+else ifeq ($(MYPY_STRICT), 0)
+	MYPY_COMMAND_FLAG = -
+endif
 
-test: ## run tests quickly with the default Python
-	pytest
+#! The end of the ugly part. I'm really sorry
 
-test-all: ## run tests on every Python version with tox
-	tox
+.PHONY: download-poetry
+download-poetry:
+	curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python3
 
-coverage: ## check code coverage quickly with the default Python
-	coverage run --source igel -m pytest
-	coverage report -m
-	coverage html
-	$(BROWSER) htmlcov/index.html
+.PHONY: install
+install:
+	poetry lock -n
+	poetry install -n
+ifneq ($(NO_PRE_COMMIT), 1)
+	poetry run pre-commit install
+endif
+#
+#.PHONY: check-safety
+#check-safety:
+#	$(POETRY_COMMAND_FLAG)poetry check
+#	$(PIP_COMMAND_FLAG)poetry run pip check
+#	$(SAFETY_COMMAND_FLAG)poetry run safety check
+#	$(BANDIT_COMMAND_FLAG)poetry run bandit -ll -r igel/
 
-docs: ## generate Sphinx HTML documentation, including API docs
-	rm -f docs/igel.rst
-	rm -f docs/modules.rst
-	pip install -r requirements_dev.txt
-	sphinx-apidoc -o docs/ igel
-	$(MAKE) -C docs clean
-	$(MAKE) -C docs html
-	$(BROWSER) docs/_build/html/index.html
+.PHONY: check-style
+check-style:
+	$(BLACK_COMMAND_FLAG)poetry run black --config pyproject.toml --diff --check ./
+	$(DARGLINT_COMMAND_FLAG)poetry run darglint -v 2 **/*.py
+	$(ISORT_COMMAND_FLAG)poetry run isort --settings-path pyproject.toml --check-only **/*.py
+	$(MYPY_COMMAND_FLAG)poetry run mypy --config-file setup.cfg igel tests/**/*.py
 
-servedocs: docs ## compile the docs watching for changes
-	watchmedo shell-command -p '*.rst' -c '$(MAKE) -C docs html' -R -D .
+.PHONY: codestyle
+codestyle:
+	-poetry run pyupgrade --py37-plus **/*.py
+	poetry run isort --settings-path pyproject.toml **/*.py
+	poetry run black --config pyproject.toml ./
 
-release: dist ## package and upload a release
-	twine upload dist/*
+.PHONY: test
+test:
+	poetry run pytest
 
-dist: clean ## builds source and wheel package
-	python setup.py sdist
-	python setup.py bdist_wheel
-	ls -l dist
+.PHONY: lint
+lint: test check-safety check-style
 
-install: clean ## install the package to the active Python's site-packages
-	python setup.py install
+# Example: make docker VERSION=latest
+# Example: make docker IMAGE=some_name VERSION=0.1.0
+.PHONY: docker
+docker:
+	@echo Building docker $(IMAGE):$(VERSION) ...
+	docker build \
+		-t $(IMAGE):$(VERSION) . \
+		-f ./docker/Dockerfile --no-cache
+
+# Example: make clean_docker VERSION=latest
+# Example: make clean_docker IMAGE=some_name VERSION=0.1.0
+.PHONY: clean_docker
+clean_docker:
+	@echo Removing docker $(IMAGE):$(VERSION) ...
+	docker rmi -f $(IMAGE):$(VERSION)
+
+.PHONY: clean_build
+clean:
+	rm -rf build/
+
+.PHONY: clean
+clean: clean_build clean_docker
+
 
 git:  ## add, commit and push in one command
 	git add .

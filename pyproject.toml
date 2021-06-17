@@ -1,0 +1,78 @@
+[tool.poetry]
+name = "igel"
+version = "0.3.1"
+readme = "docs/README.rst"
+description = "a delightful machine learning tool that allows you to train, test and use models without writing code"
+authors = ["nidhal baccouri <nidhalbacc@gmail.com>"]
+license = "MIT"
+
+# Pypi classifiers: https://pypi.org/classifiers/
+classifiers = [  # Update me
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "Operating System :: OS Independent",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+pandas = "1.1.1"
+PyYAML = "5.3.1"
+scikit-learn = "0.23.2"
+joblib = "~=0.16.0"
+fastapi = "^0.65.2"
+uvicorn = "^0.14.0"
+
+[tool.poetry.dev-dependencies]
+pip="20.2.2"
+bump2version="1.0.0"
+wheel="0.35.1"
+watchdog="0.10.3"
+flake8="3.8.3"
+tox="3.19.0"
+coverage="5.2.1"
+Sphinx="3.2.1"
+twine="3.2.0"
+Click="7.1.2"
+pytest="6.0.1"
+pytest-runner="5.2"
+pandas="1.1.1"
+PyYAML="5.3.1"
+scikit-learn="0.23.2"
+sphinx-copybutton="0.3.1"
+sphinx_glpi_theme="0.3"
+
+darglint = "^1.5.8"
+isort = "^5.7.0"
+pyupgrade = "^2.19.3"
+black = "^21.5b2"
+mypy = "^0.902"
+bandit = "^1.7.0"
+safety = "^1.10.3"
+pylint = "^2.6.0"
+pydocstyle = "^6.1.1"
+pre-commit = "^2.9.3"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+"igel" = "igel.cli:main"
+
+[tool.black]
+# https://github.com/psf/black
+line-length = 80
+target-version = ["py37"]
+
+[tool.isort]
+# https://github.com/timothycrosley/isort/
+known_typing = "typing,types,typing_extensions,mypy,mypy_extensions"
+sections = "FUTURE,TYPING,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER"
+include_trailing_comma = true
+default_section = "FIRSTPARTY"
+multi_line_output = 3
+indent = 4
+force_grid_wrap = 0
+use_parentheses = true
+line_length = 80
