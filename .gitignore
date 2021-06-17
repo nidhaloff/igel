@@ -6,6 +6,11 @@ __pycache__/
 # C extensions
 *.so
 
+# examples:
+examples/model_results
+examples/pre-release-example
+examples/serving_models
+
 # Distribution / packaging
 .Python
 env/
