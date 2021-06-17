@@ -4,11 +4,13 @@ from pathlib import Path
 stats_dir = "model_results"
 model_file = "model.joblib"
 init_file = "igel.yaml"
+post_req_data_file = "post_req_data.csv"
 res_path = Path(os.getcwd()) / stats_dir
 init_file_path = Path(os.getcwd()) / init_file
+temp_post_req_data_path = Path(os.getcwd()) / post_req_data_file
 description_file = "description.json"
 evaluation_file = "evaluation.json"
-predictions_file = "predictions.csv"
+prediction_file = "predictions.csv"
 
 configs = {
     "stats_dir": stats_dir,
@@ -17,7 +19,7 @@ configs = {
     "default_model_path": res_path / model_file,
     "description_file": res_path / description_file,
     "evaluation_file": res_path / evaluation_file,
-    "prediction_file": res_path / predictions_file,
+    "prediction_file": res_path / prediction_file,
     "init_file_path": init_file_path,
     "dataset_props": {
         "type": "csv",

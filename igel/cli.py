@@ -8,7 +8,7 @@ from pathlib import Path
 import igel
 import pandas as pd
 from igel import Igel, metrics_dict, models_dict
-from igel.servers import flask_server
+from igel.servers import fastapi_server
 
 
 class CLI:
@@ -22,6 +22,7 @@ class CLI:
         "dp": "data_path",
         "yml": "yaml_path",
         "DP": "data_paths",
+        "res_dir": "model_results_dir",
         # models arguments
         "name": "model_name",
         "model": "model_name",
@@ -156,8 +157,6 @@ Note: you can run the commands without providing additional arguments, which wil
 
     ----------------------------------------------------------------
 
-    Happy Coding. Please consider supporting the project ;)
-    You can contact me if you have any questions/ideas to discuss.
 
                     """,
         )
@@ -556,8 +555,11 @@ Note: you can run the commands without providing additional arguments, which wil
         """
         expose a REST endpoint in order to use the trained ML model
         """
-        print("starting flask server..")
-        flask_server.run()
+        print("dict args: ", self.dict_args)
+        os.environ["IGEL_MODEL_RESULTS_PATH"] = self.dict_args[
+            "model_results_dir"
+        ]
+        fastapi_server.run()
 
     def _tableize(self, df):
         """
