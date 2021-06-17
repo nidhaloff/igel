@@ -8,8 +8,8 @@ igel
         :alt: PyPI
         :target: https://pypi.python.org/pypi/igel
 
-.. image:: https://img.shields.io/travis/nidhaloff/igel.svg
-        :target: https://github.com/nidhaloff/igel/actions?query=workflow%3Abuild
+.. image:: https://img.shields.io/github/workflow/status/nidhaloff/igel/build
+        :alt: GitHub Workflow Status
 
 .. image:: https://pepy.tech/badge/igel
         :target: https://pepy.tech/project/igel
