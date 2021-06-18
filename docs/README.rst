@@ -398,6 +398,24 @@ Igel uses `FastAPI <https://fastapi.tiangolo.com/>`_ for creating the REST serve
 framework
 and `uvicorn <https://www.uvicorn.org/>`_ to run it under the hood.
 
+----------------------------------------------------------------------------------------------------------
+
+
+Use igel from python (instead of terminal)
+###########################################
+
+- Alternatively, you can also write code if you want to:
+
+..  code-block:: python
+
+    from igel import Igel
+
+    Igel(cmd="fit", data_path="path_to_your_dataset", yaml_path="path_to_your_yaml_file")
+    """
+    check the examples folder for more
+    """
+
+----------------------------------------------------------------------------------------------------------
 
 
 Interactive Mode
