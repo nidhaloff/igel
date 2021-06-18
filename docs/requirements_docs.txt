@@ -15,3 +15,4 @@ PyYAML==5.3.1
 scikit-learn==0.23.2
 sphinx-copybutton==0.3.1
 sphinx_glpi_theme==0.3
+importlib-metadata==4.5.0

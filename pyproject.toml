@@ -52,6 +52,7 @@ safety = "^1.10.3"
 pylint = "^2.6.0"
 pydocstyle = "^6.1.1"
 pre-commit = "^2.9.3"
+importlib-metadata = "^4.5.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
