@@ -4,9 +4,9 @@ from pathlib import Path
 
 import pandas as pd
 import uvicorn
-from fastapi import Body, FastAPI, Request
+from fastapi import Body, FastAPI
 from igel import Igel
-from igel.configs import configs, temp_post_req_data_path
+from igel.configs import temp_post_req_data_path
 
 logger = logging.getLogger(__name__)
 
@@ -71,7 +71,7 @@ async def predict(data: dict = Body(...)):
             return {"prediction": res.predictions.to_numpy().tolist()}
 
     except FileNotFoundError as ex:
-        logger.warning(ex)
+        logger.exception(ex)
         # remove temp file:
         if os.path.exists(temp_post_req_data_path):
             logger.info(
