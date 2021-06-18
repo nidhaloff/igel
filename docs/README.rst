@@ -7,13 +7,11 @@ igel
 .. image:: https://img.shields.io/pypi/v/igel?color=green
         :alt: PyPI
         :target: https://pypi.python.org/pypi/igel
-
-.. image:: https://img.shields.io/travis/nidhaloff/igel.svg
-        :target: https://github.com/nidhaloff/igel/actions?query=workflow%3Abuild
-
+.. image:: https://img.shields.io/github/workflow/status/nidhaloff/igel/build
+        :target: https://github.com/nidhaloff/igel/actions/workflows/build.yml
+        :alt: GitHub Workflow Status
 .. image:: https://pepy.tech/badge/igel
         :target: https://pepy.tech/project/igel
-
 .. image:: https://readthedocs.org/projects/igel/badge/?version=latest
         :target: https://igel.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status

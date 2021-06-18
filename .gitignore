@@ -7,10 +7,10 @@ __pycache__/
 *.so
 
 
-# testing funtionality
-model_results/
+# examples:
 examples/model_results
 examples/pre-release-example
+examples/serving_models
 
 
 # Distribution / packaging
