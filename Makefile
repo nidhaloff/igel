@@ -120,7 +120,7 @@ codestyle:
 
 .PHONY: test
 test:
-	poetry run pytest
+	cd tests/test_igel/ && poetry run pytest
 
 .PHONY: lint
 lint: test check-safety check-style
