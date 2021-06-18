@@ -98,7 +98,7 @@ class Igel:
             )
 
         if self.command == "fit":
-            self.yml_path = cli_args.get("yaml_path")
+            self.yml_path = str(cli_args.get("yaml_path"))
             file_ext = self.yml_path.split(".")[-1]
             logger.info(f"You passed the configurations as a {file_ext} file.")
 
