@@ -13,7 +13,7 @@ def create_yaml(data, f):
         with open(f, "w") as yf:
             yaml.dump(data, yf, default_flow_style=False)
     except yaml.YAMLError as exc:
-        print(exc)
+        logger.exception(exc)
         return False
     else:
         return True
@@ -24,7 +24,7 @@ def read_yaml(f):
         try:
             res = yaml.safe_load(stream)
         except yaml.YAMLError as exc:
-            print(exc)
+            logger.exception(exc)
         else:
             return res
 
@@ -34,7 +34,7 @@ def read_json(f):
         with open(f) as file:
             data = json.load(file)
     except Exception as e:
-        print("error while reading the json file: ", e.args)
+        logger.exception(e.args)
     else:
         return data
 
