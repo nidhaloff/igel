@@ -178,8 +178,9 @@ Igel's supported models:
         |   GradientBoosting |                       ---- |                    ---- |
         +--------------------+----------------------------+-------------------------+
 
+************
 Quick Start
-###########
+************
 
 Run :code:`igel version` to check the version.
 
