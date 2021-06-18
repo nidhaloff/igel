@@ -32,6 +32,9 @@ class CLI:
         "model": "model_name",
         "type": "model_type",
         "tg": "target",
+        # host and port for serving the model
+        "h": "host",
+        "p": "port",
     }
 
     def __init__(self):
@@ -570,10 +573,19 @@ Note: you can run the commands without providing additional arguments, which wil
         """
         expose a REST endpoint in order to use the trained ML model
         """
-        os.environ[Constants.model_results_path] = self.dict_args[
-            "model_results_dir"
-        ]
-        fastapi_server.run()
+        try:
+            os.environ[Constants.model_results_path] = self.dict_args[
+                "model_results_dir"
+            ]
+            uvicorn_params = {}
+            if "host" in self.dict_args and "port" in self.dict_args:
+                uvicorn_params["host"] = self.dict_args.get("host")
+                uvicorn_params["port"] = int(self.dict_args.get("port"))
+
+            fastapi_server.run(**uvicorn_params)
+
+        except Exception as ex:
+            logger.exception(ex)
 
     def _tableize(self, df):
         """

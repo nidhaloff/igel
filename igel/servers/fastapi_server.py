@@ -83,7 +83,7 @@ async def predict(data: dict = Body(...)):
 
 def run(**kwargs):
 
-    uvicorn.run(app)
+    uvicorn.run(app, **kwargs)
 
 
 if __name__ == "__main__":
