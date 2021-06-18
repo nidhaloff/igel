@@ -6,6 +6,13 @@ __pycache__/
 # C extensions
 *.so
 
+
+# testing funtionality
+model_results/
+examples/model_results
+examples/pre-release-example
+
+
 # Distribution / packaging
 .Python
 env/
