@@ -348,14 +348,7 @@ You can combine the train, evaluate and predict phases using one single command 
 
     from igel import Igel
 
-    # provide the arguments in a dictionary
-    params = {
-            'cmd': 'fit',    # provide the command you want to use. whether fit, evaluate or predict
-            'data_path': 'path_to_your_dataset',
-            'yaml_path': 'path_to_your_yaml_file'
-    }
-
-    Igel(**params)
+    Igel(cmd="fit", data_path="path_to_your_dataset", yaml_path="path_to_your_yaml_file")
     """
     check the examples folder for more
     """
