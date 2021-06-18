@@ -179,7 +179,7 @@ Igel's supported models:
         +--------------------+----------------------------+-------------------------+
 
 Quick Start
-------------
+###########
 
 Run :code:`igel version` to check the version.
 
