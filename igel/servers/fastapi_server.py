@@ -9,7 +9,11 @@ from igel import Igel
 from igel.configs import temp_post_req_data_path
 from igel.constants import Constants
 
-from .helper import remove_temp_data_file
+try:
+    from .helper import remove_temp_data_file
+except ImportError:
+    from igel.servers.helper import remove_temp_data_file
+
 
 logger = logging.getLogger(__name__)
 
