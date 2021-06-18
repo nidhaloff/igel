@@ -1,5 +1,6 @@
 """Console script for igel."""
 import argparse
+import logging
 import os
 import subprocess
 import sys
@@ -8,7 +9,10 @@ from pathlib import Path
 import igel
 import pandas as pd
 from igel import Igel, metrics_dict, models_dict
+from igel.constants import Constants
 from igel.servers import fastapi_server
+
+logger = logging.getLogger(__name__)
 
 
 class CLI:
@@ -180,7 +184,7 @@ Note: you can run the commands without providing additional arguments, which wil
                 k not in self.available_args.keys()
                 and k not in self.available_args.values()
             ):
-                print(f"Unrecognized argument -> {k}")
+                logger.warning(f"Unrecognized argument -> {k}")
                 self.parser.print_help()
                 exit(1)
 
@@ -215,7 +219,7 @@ Note: you can run the commands without providing additional arguments, which wil
         # exclude the rest of the args too, or validation will fail
         cmd = self.parser.parse_args(sys.argv[1:2])
         if not hasattr(self, cmd.command):
-            print("Unrecognized command")
+            logger.warning("Unrecognized command")
             self.parser.print_help()
             exit(1)
         # use dispatch pattern to invoke method with same name
@@ -230,25 +234,25 @@ Note: you can run the commands without providing additional arguments, which wil
             subprocess.check_call(
                 ["git"] + ["clone", "https://github.com/nidhaloff/igel-ui.git"]
             )
-            print(f"igel UI cloned successfully")
+            logger.info(f"igel UI cloned successfully")
 
         os.chdir(igel_ui_path)
-        print(f"switching to -> {igel_ui_path}")
-        print(f"current dir: {os.getcwd()}")
-        print(f"make sure you have nodejs installed!!")
+        logger.info(f"switching to -> {igel_ui_path}")
+        logger.info(f"current dir: {os.getcwd()}")
+        logger.info(f"make sure you have nodejs installed!!")
 
         subprocess.Popen(["node", "npm", "install", "open"], shell=True)
         subprocess.Popen(
             ["node", "npm", "install electron", "open"], shell=True
         )
-        print("installing dependencies ...")
-        print(f"dependencies installed successfully")
-        print(f"node version:")
+        logger.info("installing dependencies ...")
+        logger.info(f"dependencies installed successfully")
+        logger.info(f"node version:")
         subprocess.check_call("node -v", shell=True)
-        print(f"npm version:")
+        logger.info(f"npm version:")
         subprocess.check_call("npm -v", shell=True)
         subprocess.check_call("npm i electron", shell=True)
-        print("running igel UI...")
+        logger.info("running igel UI...")
         subprocess.check_call("npm start", shell=True)
 
     def init(self, *args, **kwargs):
@@ -555,8 +559,7 @@ Note: you can run the commands without providing additional arguments, which wil
         """
         expose a REST endpoint in order to use the trained ML model
         """
-        print("dict args: ", self.dict_args)
-        os.environ["IGEL_MODEL_RESULTS_PATH"] = self.dict_args[
+        os.environ[Constants.model_results_path] = self.dict_args[
             "model_results_dir"
         ]
         fastapi_server.run()
