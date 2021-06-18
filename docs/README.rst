@@ -360,6 +360,23 @@ You can combine the train, evaluate and predict phases using one single command 
     check the examples folder for more
     """
 
+
+The next step is to use your model in production. Igel helps you with this task too by providing the serve command.
+Running the serve command will tell igel to serve your model. Precisely, igel will automatically build
+a REST server and serve your model on a specific host and port, which you can configure by passing these as
+cli options.
+
+The easiest way is to run:
+
+.. code-block:: console
+
+    $ igel serve --model_results_dir "path_to_model_results_directory"
+
+Notice that igel needs the **--model_results_dir** or shortly -res_dir cli option in order to load the model and start the server.
+By default, igel will serve your model on **localhost:8000**, however, you can easily override this by providing a host
+and a port cli options. In fact, igel uses uvicorn and fastapi under the hood for running the REST server so you can
+provide all cli options that uvicorn uses too. Check the list here https://www.uvicorn.org/
+
 Interactive Mode
 ------------------
 

@@ -47,9 +47,7 @@ async def predict(data: dict = Body(...)):
 
         # use igel to generate predictions
         model_resutls_path = os.environ.get(Constants.model_results_path)
-        logger.info(
-            f"reading env variable.. | model_path: {model_resutls_path}"
-        )
+        logger.info(f"model_results path: {model_resutls_path}")
 
         if not model_resutls_path:
             logger.warning(
