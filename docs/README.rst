@@ -178,9 +178,9 @@ Igel's supported models:
         |   GradientBoosting |                       ---- |                    ---- |
         +--------------------+----------------------------+-------------------------+
 
-************
 Quick Start
-************
+------------
+
 
 Run :code:`igel version` to check the version.
 
@@ -204,6 +204,9 @@ You can run the help command to get instructions:
 .. image:: ../assets/igel-help.gif
 
 ---------------------------------------------------------------------------------------------------------
+
+Configuration
+##############
 
 First step is to provide a yaml file (you can also use json if you want)
 
@@ -270,6 +273,9 @@ get you to interactive mode, where you will be prompted to enter the model you w
 you want to solve. Igel will then show you information about the model and a link that you can follow to see
 a list of available arguments and how to use these.
 
+Train a model
+##############
+
 - The expected way to use igel is from terminal (igel CLI):
 
 Run this command in terminal to fit/train a model, where you provide the **path to your dataset** and the **path to the yaml file**
@@ -294,6 +300,9 @@ Run this command in terminal to fit/train a model, where you provide the **path 
 
 --------------------------------------------------------------------------------------------------------
 
+Evaluate the model
+###################
+
 You can then evaluate the trained/pre-fitted model:
 
 .. code-block:: console
@@ -309,6 +318,8 @@ You can then evaluate the trained/pre-fitted model:
 
 ------------------------------------------------------------------------------------------------------
 
+Use model for prediction
+#########################
 
 Finally, you can use the trained/pre-fitted model to make predictions if you are happy with the evaluation results:
 
@@ -327,6 +338,8 @@ Finally, you can use the trained/pre-fitted model to make predictions if you are
 
 ----------------------------------------------------------------------------------------------------------
 
+Start an Experiment
+####################
 
 You can combine the train, evaluate and predict phases using one single command called experiment:
 
@@ -342,6 +355,8 @@ You can combine the train, evaluate and predict phases using one single command 
 
 .. image:: ../assets/igel-experiment.gif
 
+Use igel from python (instead of terminal)
+###########################################
 
 - Alternatively, you can also write code if you want to:
 
@@ -357,6 +372,8 @@ You can combine the train, evaluate and predict phases using one single command 
 
 ----------------------------------------------------------------------------------------------------------
 
+Serve the model
+#################
 
 The next step is to use your model in production. Igel helps you with this task too by providing the serve command.
 Running the serve command will tell igel to serve your model. Precisely, igel will automatically build
