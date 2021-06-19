@@ -7,6 +7,11 @@ except ImportError:  # pragma: no cover
 
 from .igel import Igel, metrics_dict, models_dict
 
-__version__ = version(__name__)
+try:
+    __version__ = version(__name__)
+except PackageNotFoundError:
+    __version__ = "0.4.0"
+
+
 __author__ = "Nidhal Baccouri"
 __email__ = "nidhalbacc@gmail.com"
