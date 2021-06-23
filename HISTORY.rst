@@ -2,6 +2,17 @@
 History
 =======
 
+0.4.0 (2021-06-22)
+-------------------
+
+* Added a possibility to serve a trained model using FastAPI
+* Updated cli
+* Fixed bugs
+* Added more unit tests
+* migrated to gh actions
+* migrated to poetry
+
+
 0.3.1 (2020-10-31)
 -------------------
 
