@@ -278,7 +278,7 @@ Run this command in terminal to fit/train a model, where you provide the **path 
 
 .. code-block:: console
 
-    $ igel fit --data_path 'path_to_your_csv_dataset.csv' --yaml_file 'path_to_your_yaml_file.yaml'
+    $ igel fit --data_path 'path_to_your_csv_dataset.csv' --yaml_path 'path_to_your_yaml_file.yaml'
 
     # or shorter
 

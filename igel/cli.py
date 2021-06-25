@@ -69,7 +69,7 @@ igel <command> [<args>]
 
     # for usage with the fit, evaluate or predict command:
     -dp         Path to your dataset    (dp stand for data_path, you can use --data_path instead)
-    -yml        Path to your yaml file  (you can use --yaml_file instead)
+    -yml        Path to your yaml file  (you can use --yaml_path instead)
 
     # for usage with the experiment command:
     -DP         Paths to data you want to use for fitting,
