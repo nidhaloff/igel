@@ -82,7 +82,7 @@ a **single line of code**.
 All you need is a **yaml** (or **json**) file, where you need to describe what you are trying to do. That's it!
 
 Igel supports all sklearn's machine learning functionality, whether regression, classification or clustering.
-Precisely, you can use **63** different machine learning model in igel.
+Precisely, you can use **63** different machine learning models in igel.
 
 Igel supports most used dataset types in the data science field. For instance, your input dataset can be
 a csv, txt, excel sheet, json or even html file that you want to fetch. All these types are supported by igel.
