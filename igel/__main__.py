@@ -1,3 +1,5 @@
+import random
+
 import igel
 import typer
 from igel import Igel, metrics_dict, models_dict
@@ -5,25 +7,18 @@ from igel import Igel, metrics_dict, models_dict
 app = typer.Typer()
 
 
-def get_model_types() -> list:
-    return ["regression", "classification"]
-
-
-def get_model_names() -> list:
-    return models_dict.keys()
-
-
 @app.command()
 def init(
-    model_type: str = typer.Argument(
-        default=get_model_types,
-        help="type of the machine learning problem you want to solve : regression, classification or clustering",
+    model_type: str = typer.Option(
+        ...,
+        help="type of the machine learning problem you want to solve",
     ),
-    model_name: str = typer.Argument(
-        default=get_model_names, help="name of the model you want to use"
+    model_name: str = typer.Option(
+        ...,
+        help="name of the model you want to use. Run the igel models command to get a list of all supported models",
     ),
-    target: str = typer.Argument(
-        help="target you want to predict in your dataset"
+    target: str = typer.Option(
+        ..., help="target you want to predict in your dataset"
     ),
 ):
     Igel.create_init_mock_file(
