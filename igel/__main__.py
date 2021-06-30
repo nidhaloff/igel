@@ -1,7 +1,34 @@
 import igel
 import typer
+from igel import Igel, metrics_dict, models_dict
 
 app = typer.Typer()
+
+
+def get_model_types() -> list:
+    return ["regression", "classification"]
+
+
+def get_model_names() -> list:
+    return models_dict.keys()
+
+
+@app.command()
+def init(
+    model_type: str = typer.Argument(
+        default=get_model_types,
+        help="type of the machine learning problem you want to solve : regression, classification or clustering",
+    ),
+    model_name: str = typer.Argument(
+        default=get_model_names, help="name of the model you want to use"
+    ),
+    target: str = typer.Argument(
+        help="target you want to predict in your dataset"
+    ),
+):
+    Igel.create_init_mock_file(
+        model_type=model_type, model_name=model_name, target=target
+    )
 
 
 @app.command()
