@@ -69,7 +69,7 @@ Ready to contribute? Here's how to set up `igel` for local development.
     $ cd igel/
     $ poetry shell
     $ poetry update
-    $ python install
+    $ poetry install
 
 4. Create a branch for local development::
 
