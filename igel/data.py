@@ -397,7 +397,12 @@ models_dict = {
             "class": MultinomialNB,
             "link": "https://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.MultinomialNB.html"
                     "#sklearn.naive_bayes.MultinomialNB"
-        }
+        },
+        "CNN ": {
+            "class": Convolution Neural Network,
+            "link": "https://www.tensorflow.org/tutorials/images/cnn"
+                   
+        }        
 
 
     },
