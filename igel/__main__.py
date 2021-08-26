@@ -2,11 +2,9 @@
 import logging
 import os
 import subprocess
-import sys
 from pathlib import Path
 
 import click
-import igel
 import pandas as pd
 from igel import Igel, metrics_dict
 from igel.constants import Constants
@@ -18,6 +16,9 @@ logger = logging.getLogger(__name__)
 
 @click.group()
 def cli():
+    """
+    The igel command line interface
+    """
     pass
 
 
@@ -44,6 +45,9 @@ def cli():
     help="target you want to predict (this is usually the name of column you want to predict)",
 )
 def init(model_type: str, model_name: str, target: str) -> None:
+    """
+    Initialize a new igel project.
+    """
     Igel.create_init_mock_file(
         model_type=model_type, model_name=model_name, target=target
     )
@@ -60,6 +64,9 @@ def init(model_type: str, model_name: str, target: str) -> None:
     help="Path to your igel configuration file (yaml or json file)",
 )
 def fit(data_path: str, yaml_path: str) -> None:
+    """
+    fit/train a machine learning model
+    """
     Igel(cmd="fit", data_path=data_path, yaml_path=yaml_path)
 
 
@@ -68,12 +75,18 @@ def fit(data_path: str, yaml_path: str) -> None:
     "--data_path", "-dp", required=True, help="Path to your evaluation dataset"
 )
 def evaluate(data_path: str) -> None:
+    """
+    Evaluate the performance of an existing machine learning model
+    """
     Igel(cmd="evaluate", data_path=data_path)
 
 
 @cli.command()
 @click.option("--data_path", "-dp", required=True, help="Path to your dataset")
 def predict(data_path: str) -> None:
+    """
+    Use an existing machine learning model to generate predictions
+    """
     Igel(cmd="predict", data_path=data_path)
 
 
@@ -91,6 +104,9 @@ def predict(data_path: str) -> None:
     help="Path to your igel configuration file (yaml or json file)",
 )
 def experiment(data_paths: str, yaml_path: str) -> None:
+    """
+    train, evaluate and use pre-trained model for predictions in one command
+    """
     train_data_path, eval_data_path, pred_data_path = data_paths.strip().split(
         " "
     )
@@ -114,7 +130,7 @@ def experiment(data_paths: str, yaml_path: str) -> None:
 )
 def serve(model_results_dir: str, host: str, port: int):
     """
-    expose a REST endpoint in order to use the trained ML model
+    expose a REST endpoint in order to use the trained machine learning model
     """
     try:
         os.environ[Constants.model_results_path] = model_results_dir
@@ -167,6 +183,10 @@ def metrics():
 
 @cli.command()
 def gui():
+    """
+    Launch the igel gui application.
+    PS: you need to have nodejs on your machine
+    """
     igel_ui_path = Path(os.getcwd()) / "igel-ui"
     if not Path.exists(igel_ui_path):
         subprocess.check_call(
