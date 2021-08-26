@@ -1,0 +1,45 @@
+dataset:
+    train_file: /Users/gourav/OpenSource/mnist_png/mnist_png/mnist_dataset_training.csv 
+    test_file: /Users/gourav/OpenSource/mnist_png/mnist_png/mnist_dataset_testing.csv
+    batch_size: 32
+    image_height: 28
+    image_width: 28
+
+model:
+    type: classification
+    algorithm: CNN
+    optimizer: adam
+    learning_rate: 0.0001
+    loss_criteria: cross_entropy
+    epochs: 1
+    conv_layers:
+        - in_channels: 3
+          out_channels: 32
+          filter_size: 3
+          stride: 1
+          norm: batch_norm 
+          activation: relu
+
+        - in_channels: 32
+          out_channels: 64
+          filter_size: 3
+          stride: 2
+          norm: batch_norm 
+          activation: relu
+
+        - in_channels: 64
+          out_channels: 64
+          filter_size: 3
+          stride: 2
+          norm: batch_norm 
+          activation: relu
+
+    fc_layers:
+        - in_channels: 3136
+          out_channels: 10
+
+target:
+    - label
+
+        
+
