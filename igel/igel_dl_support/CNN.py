@@ -17,14 +17,12 @@ class CNN:
         self.class_mode=class_mode #categorical, sparse, multi-input
         self.target_size=target_size
         
-        
+ 
     
     def make_model(self,*args):
         for i in args:
             self.model_list.append(i)
         model=keras.Sequential(self.model_list)
-        print("The layers entered are:")
-        print(model.summary())
         return model
 
     def generate_dataset(self):
@@ -45,7 +43,7 @@ class CNN:
         print("Fit model on training data")
         history = model.fit(self.train_generator, epochs=self.epochs, callbacks=callbacks, validation_data=self.valid_generator)
  
-cnn= CNN(color_mode="grayscale",class_mode='sparse',target_size=(28,28))
+cnn= CNN(color_mode="grayscale",class_mode='sparse',target_size=(28,28)) #Parsed YAML dataset argument is fed here
 cnn.generate_dataset()
-model=cnn.make_model(Flatten(input_shape=(784,)),Dense(32,activation='sigmoid'),Dense(10,activation='softmax')) # Parsed YAML argument is fed here
+model=cnn.make_model(Flatten(),Dense(32,activation='sigmoid'),Dense(10,activation='softmax')) # Parsed YAML model architecture argument is fed here
 cnn.train(model)
