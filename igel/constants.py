@@ -7,4 +7,3 @@ class Constants:
     init_file = "igel.yaml"
     post_req_data_file = "post_req_data.csv"
     evaluation_file = "evaluation.json"
-    supported_model_types = ["regression", "classification", "clustering"]

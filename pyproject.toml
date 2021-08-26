@@ -23,7 +23,6 @@ scikit-learn = "0.23.2"
 joblib = "~=0.16.0"
 fastapi = "^0.65.2"
 uvicorn = "^0.14.0"
-click = "^8.0.1"
 
 [tool.poetry.dev-dependencies]
 pip="20.2.2"
@@ -35,6 +34,7 @@ tox="3.19.0"
 coverage="5.2.1"
 Sphinx="3.2.1"
 twine="3.2.0"
+Click="7.1.2"
 pytest="6.0.1"
 pytest-runner="5.2"
 pandas="1.1.1"
@@ -59,7 +59,7 @@ requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-"igel" = "igel.__main__:cli"
+"igel" = "igel.cli:main"
 
 [tool.black]
 # https://github.com/psf/black
