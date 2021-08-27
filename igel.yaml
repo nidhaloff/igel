@@ -22,9 +22,11 @@ model:
     loss: "SparseCategoricalCrossentropy"
     model_layers:
       layer1:
-        type: 'Flatten' 
+        type: 'Conv2D' 
         parameters:
-          image_size : (784,)
+          filter_size: 3
+          stride : [1,1] 
+          
       layer2: 
         type: 'Dense'
         parameters:
