@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+from torch.nn.modules import batchnorm, dropout
 import torch.utils.data as data 
 
 import torchvision
@@ -75,6 +76,7 @@ class Model (nn.Module) :
             stride = layer.get ('stride', 1)
             norm = layer.get ('norm', 'batch_norm')
             activation = layer.get ('activation', 'relu')
+            dropout = layer.get ('dropout', None)
             pool_layer = layer.get ('pool_layer', None)
             pool_size = layer.get ('pool_size', 2)
             pool_stride = layer.get ('pool_stride', 1)
@@ -82,18 +84,36 @@ class Model (nn.Module) :
             self.layers.append (
                 nn.Conv2d (in_channels=in_channels, out_channels=out_channels, kernel_size=filter_size, stride=stride, padding=math.ceil ((filter_size - stride) / 2))
             )
-            if norm == 'batch_norm' :
+            if norm is not None :
                 self.layers.append (
-                    nn.BatchNorm2d (out_channels)
+                    self.apply_norm (norm, out_channels)
                 )
-            if activation == 'relu' :
+
+            if activation is not None :
                 self.layers.append (
-                    nn.ReLU ()
+                    self.apply_activation (activation)
                 )
 
             if pool_layer == 'max_pool' :
                 self.layers.append (
                     nn.MaxPool2d (pool_size, pool_stride)
+                )
+            elif pool_layer == 'avg_pool' :
+                self.layers.append (
+                    nn.AvgPool2d (pool_size, pool_stride)
+                )
+            elif pool_layer == 'adaptive_max_pool' :
+                self.layers.append (
+                    nn.AdaptiveMaxPool2d (pool_size, pool_stride)
+                )
+            elif pool_layer == 'adaptive_avg_pool' :
+                self.layers.append (
+                    nn.AdaptiveMaxPool2d (pool_size, pool_stride)
+                )
+
+            if dropout is not None :
+                self.layers.append (
+                    self.apply_dropout (dropout, 2)
                 )
 
             default_channels = out_channels
@@ -104,22 +124,122 @@ class Model (nn.Module) :
         for layer in fc_layers :
             in_channels = layer.get ('in_channels', None)
             out_channels = layer.get ('out_channels', None)
+            norm = layer.get ('norm', None)
+            dropout = layer.get ('dropout', None)
             activation = layer.get ('activation', None)
 
             self.layers.append (
                 nn.Linear (in_channels, out_channels)
             )
-            if activation == 'relu' :
+            if norm is not None :
                 self.layers.append (
-                    nn.ReLu ()
+                    self.apply_norm (norm, out_channels)
                 )
-            if activation == 'sigmoid' :
+            if activation is not None :
                 self.layers.append (
-                    nn.sigmoid ()
+                    self.apply_activation (activation)
+                )
+            if dropout is not None :
+                self.layers.append (
+                    self.apply_dropout (dropout, 1)
                 )
 
         self.net = nn.Sequential (*self.layers)
 
+    def apply_dropout (self, dropout, layer_count) :
+        if layer_count == 1 :
+            return nn.Dropout (dropout)
+        elif layer_count == 2 :
+            return nn.Dropout2d (dropout)
+        elif layer_count == 3 :
+            return nn.Dropout3d (dropout)
+        else :
+            print ("Not supported Dropout")
+
+    def apply_activation (self, activation) :
+        if activation == 'relu' :
+            return nn.ReLU ()
+        elif activation == 'sigmoid' :
+            return nn.Sigmoid ()
+        elif activation == 'leaky_relu' :
+            return nn.LeakyReLU ()
+        elif activation == 'prelu' :
+            return nn.PReLU ()
+        elif activation == 'tanh' :
+            return nn.Tanh ()
+        elif activation == 'elu' :
+            return nn.ELU ()
+        elif activation == 'harshrink' :
+            return nn.Hardshrink ()
+        elif activation == 'hard_sigmoid' :
+            return nn.Hardsigmoid ()
+        elif activation == 'hard_tanh' :
+            return nn.Hardtanh ()
+        elif activation == 'hard_swish' :
+            return nn.Hardswish ()
+        elif activation == 'log_sigmoid' :
+            return nn.LogSigmoid ()
+        elif activation == 'multi_head_attention' :
+            return nn.MultiheadAttention ()
+        elif activation == 'relu6' :
+            return nn.ReLU6 ()
+        elif activation == 'selu' :
+            return nn.SELU ()
+        elif activation == 'celu' :
+            return nn.CELU ()
+        elif activation == 'gelu' :
+            return nn.GELU ()
+        elif activation == 'silu' :
+            return nn.SiLU ()
+        elif activation == 'mish' :
+            return nn.Mish ()
+        elif activation == 'softplus' :
+            return nn.Softplus ()
+        elif activation == 'softshrink' :
+            return nn.Softshrink ()
+        elif activation == 'softsign' :
+            return nn.Softsign ()
+        elif activation == 'tanshrink' :
+            return nn.Tanhshrink ()
+        elif activation == 'threshold' :
+            return nn.Threshold ()
+        elif activation == 'softmax2d' :
+            return nn.Softmax2d ()
+        elif activation == 'log_softmax' :
+            return nn.LogSoftmax ()
+        elif activation == 'softmax' :
+            return nn.Softmax ()
+        elif activation == 'softmin' :
+            return nn.Softmin ()
+        elif activation == 'adaptive_softmax' :
+            return nn.AdaptiveLogSoftmaxWithLoss ()
+        else :
+            print ("Activation not supported!!")
+
+    def apply_norm (self, norm, out_channels) :
+        if norm == 'batch_norm' :
+            return nn.BatchNorm2d (out_channels)
+        elif norm == 'batch_norm1d' :
+            return nn.BatchNorm1d (out_channels)
+        elif norm == 'batch_norm3d' :
+            return nn.BatchNorm3d (out_channels)
+        elif norm == 'lazy_batch_norm' :
+            return nn.LazyBatchNorm2d ()
+        elif norm == 'lazy_batch_norm1d' :
+            return nn.LazyBatchNorm1d ()
+        elif norm == 'lazy_batch_norm3d' :
+            return nn.LazyBatchNorm3d ()
+        elif norm == 'sync_batch_norm' :
+            return nn.SyncBatchNorm (out_channels)
+        elif norm == 'instance_norm' :
+            return nn.InstanceNorm2d (out_channels)
+        elif norm == 'instance_norm1d' :
+            return nn.InstanceNorm1d (out_channels)
+        elif norm == 'instance_norm3d' :
+            return nn.InstanceNorm3d (out_channels)
+        else :
+            print ("Not supported Normalization")
+        
     def forward (self, x) :
         x = self.net (x)
 
@@ -257,14 +377,11 @@ class CNN :
 
 # Just for testing these functions
 if __name__ == '__main__' :
-    
     yaml_file = open ('../tests/test_igel/igel_files/igel_cnn.yaml')
     yaml_file = yaml.safe_load (yaml_file)
 
     if not os.path.isdir ('testing_cnn') :
         os.mkdir ("testing_cnn")
-
-    print (yaml_file)
 
     cnn = CNN (yaml_file['dataset'], yaml_file['model'])
     cnn.fit (10, "testing", True)

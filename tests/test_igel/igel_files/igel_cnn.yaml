@@ -1,6 +1,6 @@
 dataset:
-    train_file: /Users/gourav/OpenSource/mnist_png/mnist_png/mnist_dataset_training.csv 
-    test_file: /Users/gourav/OpenSource/mnist_png/mnist_png/mnist_dataset_testing.csv
+    train_file: mnist_dataset_training.csv 
+    test_file: mnist_dataset_testing.csv
     batch_size: 32
     image_height: 28
     image_width: 28

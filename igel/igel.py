@@ -184,6 +184,10 @@ class Igel:
         cnn = CNN (self.dataset_props, self.model_props)
         epochs = self.model_props.get ("epochs", 10)
         cnn.fit (epochs=epochs, result_dir=self.results_path, des_file=self.description_file, evaluate_test=True)
+    
+    def evaluate_cnn (self) :
+        cnn = CNN (self.dataset_props, self.model_props)
+        cnn.evaluate (self.results_path)
 
     def _create_model(self, **kwargs):
         """
