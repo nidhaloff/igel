@@ -13,6 +13,7 @@ try:
     from igel.configs import configs
     from igel.data import evaluate_model, metrics_dict, models_dict
     from igel.hyperparams import hyperparameter_search
+    from igel.igel_cnn import CNN
     from igel.preprocessing import (
         encode,
         handle_missing_values,
@@ -173,7 +174,17 @@ class Igel:
                 self.dataset_props: dict = dic.get(
                     "dataset_props"
                 )  # dataset props entered while fitting
-        getattr(self, self.command)()
+        if self.model_props.get ("algorithm", None) == 'CNN' :
+            getattr (self, self.command + "_cnn") ()
+        else :
+            getattr(self, self.command)()
+
+    def fit_cnn (self) :
+        cnn = CNN(self.yml_path)
+        cnn.generate_dataset()
+        model = cnn.make_model(conf)
+        cnn.train(model,conf)
+        
 
     def _create_model(self, **kwargs):
         """

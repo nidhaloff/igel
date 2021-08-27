@@ -402,7 +402,7 @@ models_dict = {
             "class": Convolution Neural Network,
             "link": "https://www.tensorflow.org/tutorials/images/cnn"
                    
-        }        
+        },        
 
 
     },
