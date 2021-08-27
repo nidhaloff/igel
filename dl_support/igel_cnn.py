@@ -12,6 +12,11 @@ import yaml
 
 class CNN:
   def __init__(self,path):
+    """
+    The YAML file is parsed and all training parameters/ dataset arguments are set. 
+    We stick with the defaults in case the user doesnt provide them
+
+    """
     with open(path, 'rb') as f:
       conf = yaml.safe_load(f.read()) 
     self.batch_size= conf['model']['arguments'].get('batch_size',32)
@@ -23,14 +28,18 @@ class CNN:
     self.target_size=tuple(self.target_size)
     self.class_mode = conf['model']['arguments'].get('class_mode','categorical')
     self.image_size = conf['model']['arguments'].get('image_size',(784,))
-    print(self.image_size)
+    
 
   def make_model(self,conf):
+    """
+    Iterating over all the layers mentioned by the user, we incrementally add them to the model
+    All the layers supported by igel can be found here ---> https://keras.io/api/layers/
+    We currently support 15+ layers 
+    """
     model=keras.Sequential()
     for i in conf['model']['arguments']['model_layers'].items():
-      print("hi")
       x= i[1].get('type')
-      print(x)
+      #print(x)
       #if i[1].get('parameters'):
       size=i[1].get('parameters').get('size')
       Dense_activation=i[1].get('parameters').get('activation','sigmoid')
@@ -90,6 +99,10 @@ class CNN:
     return model
 
   def generate_dataset(self):
+    """
+    Using The ImadeDataGenerator class allows us to create batches of data (even augment them), while just providing the paths of the 
+    data in a csv file.
+    """
     df=pd.read_csv(self.filename)
     datagen=ImageDataGenerator(rescale=1./255.,validation_split=self.validation_split)
     df['label']=df['label'].astype(str)
@@ -97,6 +110,10 @@ class CNN:
     self.valid_generator=datagen.flow_from_dataframe(dataframe=df,class_mode=self.class_mode,color_mode=self.color_mode,directory=None,x_col=list(df.columns)[0],y_col=list(df.columns)[1],target_size=self.target_size,subset="validation",batch_size=self.batch_size,seed=42,shuffle=True,validate_filenames=True)
 
   def train(self,model,conf):
+    """
+    A common cause of error while running the training loop is wrong choice of loss function
+
+    """
     callbacks = [keras.callbacks.ModelCheckpoint("save_at_{epoch}.h5")]
     lossfn= conf['model']['arguments'].get('loss','SparseCategoricalCrossentropy')
     if lossfn == "SparseCategoricalCrossentropy":
@@ -116,9 +133,10 @@ class CNN:
     print("Fit model on training data")
     history = model.fit(self.train_generator, epochs=self.epochs, callbacks=callbacks, validation_data=self.valid_generator)
 
-cnn= CNN('/content/igel.yaml')
-cnn.generate_dataset()
-model = cnn.make_model(conf)
-cnn.train(model,conf)
+#Testing
+#cnn= CNN('/content/igel.yaml') 
+#cnn.generate_dataset()
+#model = cnn.make_model(conf)
+#cnn.train(model,conf)
 
 
