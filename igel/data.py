@@ -425,7 +425,7 @@ models_dict = {
 
         "Birch": {
             "class": Birch,
-            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.cluster.Birch.html#sklearn.cluster.Birch"
+            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.cluster.Birch.html#sklearn.cluster.Birch" 
         },
 
         "AgglomerativeClustering": {
