@@ -58,6 +58,8 @@ from sklearn.cluster import (KMeans,
                              SpectralClustering,
                              SpectralCoclustering)
 
+from sklearn_extra.cluster import(KMedoids)
+
 from sklearn.calibration import CalibratedClassifierCV
 from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor, ExtraTreeClassifier, ExtraTreeRegressor
 from sklearn.svm import SVC, SVR, LinearSVC, LinearSVR, NuSVC, NuSVR
@@ -407,6 +409,12 @@ models_dict = {
             "class": KMeans,
             "link": "https://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html"
                     "#sklearn.cluster.KMeans"
+        },
+
+        "KMedoids": {
+            "class":KMedoids,
+            "link": "https://scikit-learn-extra.readthedocs.io/en/stable/generated/sklearn_extra.cluster.KMedoids.html"
+            "#sklearn_extra.cluster.KMedoids"
         },
 
         "AffinityPropagation": {
