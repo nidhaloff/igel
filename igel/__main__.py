@@ -4,6 +4,7 @@ import os
 import subprocess
 from pathlib import Path
 
+import igel
 import click
 import pandas as pd
 from igel import Igel, metrics_dict
@@ -12,7 +13,7 @@ from igel.servers import fastapi_server
 from igel.utils import print_models_overview, show_model_info, tableize
 
 logger = logging.getLogger(__name__)
-
+CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
 
 @click.group()
 def cli():
@@ -22,7 +23,7 @@ def cli():
     pass
 
 
-@cli.command()
+@cli.command(context_settings=CONTEXT_SETTINGS)
 @click.option(
     "--model_type",
     "-type",
@@ -53,7 +54,7 @@ def init(model_type: str, model_name: str, target: str) -> None:
     )
 
 
-@cli.command()
+@cli.command(context_settings=CONTEXT_SETTINGS)
 @click.option(
     "--data_path", "-dp", required=True, help="Path to your training dataset"
 )
@@ -70,7 +71,7 @@ def fit(data_path: str, yaml_path: str) -> None:
     Igel(cmd="fit", data_path=data_path, yaml_path=yaml_path)
 
 
-@cli.command()
+@cli.command(context_settings=CONTEXT_SETTINGS)
 @click.option(
     "--data_path", "-dp", required=True, help="Path to your evaluation dataset"
 )
@@ -81,7 +82,7 @@ def evaluate(data_path: str) -> None:
     Igel(cmd="evaluate", data_path=data_path)
 
 
-@cli.command()
+@cli.command(context_settings=CONTEXT_SETTINGS)
 @click.option("--data_path", "-dp", required=True, help="Path to your dataset")
 def predict(data_path: str) -> None:
     """
@@ -89,8 +90,8 @@ def predict(data_path: str) -> None:
     """
     Igel(cmd="predict", data_path=data_path)
 
-
-@cli.command()
+    
+@cli.command(context_settings=CONTEXT_SETTINGS)
 @click.option(
     "--data_paths",
     "-DP",
@@ -114,8 +115,8 @@ def experiment(data_paths: str, yaml_path: str) -> None:
     Igel(cmd="evaluate", data_path=eval_data_path)
     Igel(cmd="predict", data_path=pred_data_path)
 
-
-@cli.command()
+   
+@cli.command(context_settings=CONTEXT_SETTINGS)
 @click.option(
     "--model_results_dir",
     "-res_dir",
@@ -141,7 +142,7 @@ def serve(model_results_dir: str, host: str, port: int):
         logger.exception(ex)
 
 
-@cli.command()
+@cli.command(context_settings=CONTEXT_SETTINGS)
 @click.option(
     "--model_type",
     "-type",
@@ -159,7 +160,7 @@ def models(model_type: str, model_name: str) -> None:
         show_model_info(model_type=model_type, model_name=model_name)
 
 
-@cli.command()
+@cli.command(context_settings=CONTEXT_SETTINGS)
 def metrics():
     """
     show an overview of all metrics supported by igel
@@ -181,7 +182,7 @@ def metrics():
     print(df_metrics)
 
 
-@cli.command()
+@cli.command(context_settings=CONTEXT_SETTINGS)
 def gui():
     """
     Launch the igel gui application.
@@ -210,3 +211,40 @@ def gui():
     subprocess.check_call("npm i electron", shell=True)
     logger.info("running igel UI...")
     subprocess.check_call("npm start", shell=True)
+
+    
+@cli.command(context_settings=CONTEXT_SETTINGS)
+def help():
+    """get help about how to use igel"""
+    with click.Context(cli) as ctx:
+        click.echo(cli.get_help(ctx))
+
+        
+@cli.command(context_settings=CONTEXT_SETTINGS)
+def version():
+    """get the version of igel installed on your machine"""
+    print(f"igel version: {igel.__version__}")
+
+    
+@cli.command(context_settings=CONTEXT_SETTINGS)
+def info():
+    """get info & metadata about igel"""
+    print(
+        f"""
+        package name:           igel
+        version:                {igel.__version__}
+        author:                 Nidhal Baccouri
+        maintainer:             Nidhal Baccouri
+        contact:                nidhalbacc@gmail.com
+        license:                MIT
+        description:            use machine learning without writing code
+        dependencies:           pandas, sklearn, pyyaml
+        requires python:        >= 3.6
+        First release:          27.08.2020
+        official repo:          https://github.com/nidhaloff/igel
+        written in:             100% python
+        status:                 stable
+        operating system:       independent
+    """
+    )
+
