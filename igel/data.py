@@ -58,8 +58,6 @@ from sklearn.cluster import (KMeans,
                              SpectralClustering,
                              SpectralCoclustering)
 
-from sklearn_extra.cluster import(KMedoids)
-
 from sklearn.calibration import CalibratedClassifierCV
 from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor, ExtraTreeClassifier, ExtraTreeRegressor
 from sklearn.svm import SVC, SVR, LinearSVC, LinearSVR, NuSVC, NuSVR
