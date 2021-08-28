@@ -90,16 +90,10 @@ def predict(data_path: str) -> None:
     """
     Igel(cmd="predict", data_path=data_path)
 
-if len(sys.argv) == 8:
-    narg=3
-else:
-    narg=1
-
 @cli.command(context_settings=CONTEXT_SETTINGS)
 @click.option(
     "--data_paths",
     "-DP",
-    nargs=narg,
     required=True,
     help="Path to your datasets as string separated by space",
 )
@@ -109,18 +103,17 @@ else:
     required=True,
     help="Path to your igel configuration file (yaml or json file)",
 )
-def experiment(data_paths , yaml_path: str) -> None:
+def experiment(data_paths: str, yaml_path: str) -> None:
     """
     train, evaluate and use pre-trained model for predictions in one command
     """
-    if isinstance(data_paths, str):
-        train_data_path, eval_data_path, pred_data_path = data_paths.strip().split(" ")
-    else:
-        train_data_path, eval_data_path, pred_data_path = data_paths[0], data_paths[1], data_paths[2]
-
+    train_data_path, eval_data_path, pred_data_path = data_paths.strip().split(
+        " "
+    )
     Igel(cmd="fit", data_path=train_data_path, yaml_path=yaml_path)
     Igel(cmd="evaluate", data_path=eval_data_path)
     Igel(cmd="predict", data_path=pred_data_path)
+
     
     
 @cli.command(context_settings=CONTEXT_SETTINGS)
