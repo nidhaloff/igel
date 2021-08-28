@@ -90,6 +90,7 @@ def predict(data_path: str) -> None:
     """
     Igel(cmd="predict", data_path=data_path)
 
+    
 @cli.command(context_settings=CONTEXT_SETTINGS)
 @click.option(
     "--data_paths",
@@ -114,8 +115,7 @@ def experiment(data_paths: str, yaml_path: str) -> None:
     Igel(cmd="evaluate", data_path=eval_data_path)
     Igel(cmd="predict", data_path=pred_data_path)
 
-    
-    
+   
 @cli.command(context_settings=CONTEXT_SETTINGS)
 @click.option(
     "--model_results_dir",
@@ -212,17 +212,20 @@ def gui():
     logger.info("running igel UI...")
     subprocess.check_call("npm start", shell=True)
 
+    
 @cli.command(context_settings=CONTEXT_SETTINGS)
 def help():
     """get help about how to use igel"""
     with click.Context(cli) as ctx:
         click.echo(cli.get_help(ctx))
 
+        
 @cli.command(context_settings=CONTEXT_SETTINGS)
 def version():
     """get the version of igel installed on your machine"""
     print(f"igel version: {igel.__version__}")
 
+    
 @cli.command(context_settings=CONTEXT_SETTINGS)
 def info():
     """get info & metadata about igel"""
