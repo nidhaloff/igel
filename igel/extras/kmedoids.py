@@ -347,6 +347,10 @@ class KMedoids(BaseEstimator, ClusterMixin):
             # yields the smallest distance
         return pairwise_distances_argmin(X, Y = self.cluster_centers_, metric=self.metric)
 
+    def score(self,X):
+        """Returns score"""
+        return -self.inertia_
+
 
 
 
