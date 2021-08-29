@@ -517,11 +517,7 @@ class Igel:
             )
 
         if self.model_type == "clustering":
-            if self.model.__class__.__name__ != 'KMedoids':
-                eval_results = self.model.score(x_train)
-            else:
-                eval_results = self.model.score_
-
+            eval_results = self.model.score(x_train)
         else:
             if x_test is None:
                 logger.info(
