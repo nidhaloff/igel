@@ -520,7 +520,7 @@ class Igel:
             if self.model.__class__.__name__ != 'KMedoids':
                 eval_results = self.model.score(x_train)
             else:
-                eval_results = -self.model.inertia_(x_train)
+                eval_results = self.model.score_
 
         else:
             if x_test is None:

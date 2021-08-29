@@ -73,6 +73,8 @@ from sklearn.metrics import (mean_squared_error,
                              precision_score,
                              recall_score)
 from sklearn.utils.multiclass import type_of_target
+
+from igel.extras.kmedoids import KMedoids
 import logging
 
 logging.basicConfig(format='%(levelname)s - %(message)s', level=logging.INFO)
@@ -410,7 +412,7 @@ models_dict = {
         },
 
         "KMedoids": {
-            "class":KMedoids,
+            "class": KMedoids,
             "link": "https://scikit-learn-extra.readthedocs.io/en/stable/generated/sklearn_extra.cluster.KMedoids.html"
             "#sklearn_extra.cluster.KMedoids"
         },
