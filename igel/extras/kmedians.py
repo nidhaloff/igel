@@ -40,7 +40,7 @@ class KMedians(BaseEstimator, ClusterMixin):
             A. Juan and E. Vidal. Fast Median Search in Metric Spaces. In A. Amin, D. Dori, P. Pudil, and H. Freeman, editors, Advances in Pattern Recognition, volume 1451, pages 905–912. Springer-Verlag, 1998
             Whelan, C., Harrell, G., & Wang, J. (2015). Understanding the K-Medians Problem.
 
-        init : {'random', 'heuristic'}, optional, default: 'random'
+        init : {'random'}, optional, default: 'random'
             Specify medoid initialization method. 'random' selects n_clusters
             elements from the dataset. 
 
@@ -53,7 +53,7 @@ class KMedians(BaseEstimator, ClusterMixin):
             which case only the initialization is computed which may be suitable for
             large datasets when the initialization is sufficiently efficient
 
-        tol : float, optional, default : 0.0004
+        tol : float, optional, default : 0.0001
             Specify the tolerance of change in cluster centers. If change in cluster centers is less than tolerance, algorithm stops.
 
         random_state : int, RandomState instance or None, optional
@@ -79,10 +79,11 @@ class KMedians(BaseEstimator, ClusterMixin):
             Negative of the inertia. The more negative the score, the higher the variation in cluster points, the worse the clustering. 
     """
 
-    def __init__(self, n_clusters = 4, metric = 'manhattan', method = 'per-axis', init = 'random', max_iter = 300, tol = 0.0004, random_state = None):
+    def __init__(self, n_clusters = 4, metric = 'manhattan', method = 'per-axis', init = 'random', max_iter = 300, tol = 0.0001, random_state = None):
         self.n_clusters = n_clusters
         self.metric = metric
         self.method = method
+        self.init = init
         self.max_iter = max_iter
         self.tol = tol
         self.random_state = random_state
@@ -143,7 +144,32 @@ class KMedians(BaseEstimator, ClusterMixin):
             """Randomly chooses K points within set of samples"""
             return random_state_object.choice(len(X), n_clusters)
 
+    def _compute_inertia(self, distances, labels):
+        """Compute inertia of new samples. Inertia is defined as the sum of the
+        sample distances to closest cluster centers.
+
+        Parameters
+        ----------
+        distances : {array-like, sparse matrix}, shape=(n_samples, n_clusters)
+            Distances to cluster centers.
+
+        labels : {array-like}, shape = {n_samples}
+
+        Returns
+        -------
+        Sum of sample distances to closest cluster centers.
+        """
+
+        # Define inertia as the sum of the sample-distances
+        # to closest cluster centers
+        inertia = 0
+        for i in range(self.n_clusters):
+          indices = np.argwhere(labels == i)
+          inertia += np.sum(distances[i, indices])
+        return inertia    
+
     def fit(self, X, Y = None):
+        """Fits the model to the data"""
 
         self._check_arguments()
         random_state_object = self._get_random_state(self.random_state)
@@ -158,7 +184,77 @@ class KMedians(BaseEstimator, ClusterMixin):
         if self.n_clusters > n_samples:
             raise ValueError('Number of clusters %s cannot be greater than number of samples %s' % (self.n_clusters, n_samples))
 
-        distances = pairwise_distances(X, centers, metric = self.metric)
+        centers = X[self._initialize_centers(X, self.n_clusters, random_state_object)]
+        # print(centers)
+        distances = pairwise_distances(centers, X, metric = self.metric)
+        # print("Distances:", distances)
+
+        medians = [None]* self.n_clusters
+        labels = None
+
+        if self.method == 'per-axis':
+            for i in range(self.max_iter):
+            old_centers = np.copy(centers)
+            labels = np.argmin(distances, axis = 0)
+
+            for item in range(self.n_clusters):
+                indices = np.argwhere(labels == item)
+                medians[item] = np.median(X[indices], axis = 0)
+
+            centers = np.squeeze(np.asarray(medians))
+            distances = pairwise_distances(centers, X, metric = self.metric)
+
+            if np.all(np.abs(old_centers - centers) < self.tol):
+                break
+            elif i == self.max_iter - 1:
+                    warnings.warn(
+                        "Maximum number of iteration reached before "
+                        "convergence. Consider increasing max_iter to "
+                        "improve the fit.",
+                        ConvergenceWarning,
+                    )
+        self.cluster_centers_ = centers
+        self.labels_ = np.argmin(distances, axis = 0)
+        self.inertia_ = self._compute_inertia(distances, self.labels_)
+        self.score_ = - self.inertia_
+
+    def transform(self, X):
+        """Transforms given data into cluster space of size {n_samples, n_clusters}"""
+        X = check_array(X, accept_sparse=["csr", "csc"])
+        check_is_fitted(self, "cluster_centers_")
+
+        Y = self.cluster_centers_
+        return pairwise_distances(X, Y=Y, metric=self.metric)
+
+    def predict(self, X):
+        """Predict the closest cluster for each sample in X.
+
+        Parameters
+        ----------
+        X : {array-like, sparse matrix}, shape (n_query, n_features), \
+                or (n_query, n_indexed) if metric == 'precomputed'
+            New data to predict.
+
+        Returns
+        -------
+        labels : array, shape = (n_query,)
+            Index of the cluster each sample belongs to.
+        """
+        check_is_fitted(self, "cluster_centers_")
+
+            # Return data points to clusters based on which cluster assignment
+            # yields the smallest distance
+        return pairwise_distances_argmin(X, Y = self.cluster_centers_, metric=self.metric)
+        
+    def score(self, X):
+        """Returns score"""
+        return self.score_
+
+
+        
+
+
+            
 
 
     
