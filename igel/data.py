@@ -77,6 +77,7 @@ from sklearn.utils.multiclass import type_of_target
 from igel.extras.kmedoids import KMedoids
 from igel.extras.kmedians import KMedians
 
+
 import logging
 
 logging.basicConfig(format='%(levelname)s - %(message)s', level=logging.INFO)
