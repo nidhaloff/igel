@@ -75,6 +75,7 @@ from sklearn.metrics import (mean_squared_error,
 from sklearn.utils.multiclass import type_of_target
 
 from igel.extras.kmedoids import KMedoids
+
 import logging
 
 logging.basicConfig(format='%(levelname)s - %(message)s', level=logging.INFO)

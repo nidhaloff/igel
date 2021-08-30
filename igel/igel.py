@@ -28,7 +28,7 @@ try:
         read_yaml,
     )
 except ImportError:
-    from utils import (
+    from igel.utils import (
         read_yaml,
         create_yaml,
         extract_params,
@@ -517,11 +517,7 @@ class Igel:
             )
 
         if self.model_type == "clustering":
-            if self.model.__class__.__name__ != 'KMedoids':
-                eval_results = self.model.score(x_train)
-            else:
-                eval_results = self.model.score_
-
+            eval_results = self.model.score(x_train)
         else:
             if x_test is None:
                 logger.info(
