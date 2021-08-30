@@ -22,7 +22,7 @@ class KMedians(BaseEstimator, ClusterMixin):
     Parameters
         ----------
         n_clusters : int, optional, default: 4
-            The number of clusters to form as well as the number of medoids to
+            The number of clusters to form as well as the number of medians to
             generate.
 
         metric : string, or callable, optional, default: 'euclidean'
@@ -41,7 +41,7 @@ class KMedians(BaseEstimator, ClusterMixin):
             Whelan, C., Harrell, G., & Wang, J. (2015). Understanding the K-Medians Problem.
 
         init : {'random'}, optional, default: 'random'
-            Specify medoid initialization method. 'random' selects n_clusters
+            Specify median initialization method. 'random' selects n_clusters
             elements from the dataset. 
 
             More options can be implemented from the following:
@@ -58,16 +58,16 @@ class KMedians(BaseEstimator, ClusterMixin):
 
         random_state : int, RandomState instance or None, optional
             Specify random state for the random number generator. Used to
-            initialise medoids when init='random'.
+            initialise medians when init='random'.
 
         Attributes
         ----------
         cluster_centers_ : array, shape = (n_clusters, n_features)
                 or None if metric == 'precomputed'
-            Cluster centers, i.e. medoids (elements from the original dataset)
+            Cluster centers, i.e. medians (elements from the original dataset)
 
         medoid_indices_ : array, shape = (n_clusters,)
-            The indices of the medoid rows in X
+            The indices of the median rows in X
 
         labels_ : array, shape = (n_samples,)
             Labels of each point
