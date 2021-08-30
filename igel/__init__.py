@@ -10,7 +10,7 @@ from .igel import Igel, metrics_dict, models_dict
 try:
     __version__ = version(__name__)
 except PackageNotFoundError:
-    __version__ = "0.4.0"
+    __version__ = "0.5.0"
 
 
 __author__ = "Nidhal Baccouri"
