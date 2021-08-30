@@ -38,7 +38,6 @@ class KMedoids(BaseEstimator, ClusterMixin):
             Specify the maximum number of iterations when fitting. It can be zero in
             which case only the initialization is computed which may be suitable for
             large datasets when the initialization is sufficiently efficient
-            (i.e. for 'build' init).
 
         random_state : int, RandomState instance or None, optional
             Specify random state for the random number generator. Used to
