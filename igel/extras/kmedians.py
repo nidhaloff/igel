@@ -194,25 +194,25 @@ class KMedians(BaseEstimator, ClusterMixin):
 
         if self.method == 'per-axis':
             for i in range(self.max_iter):
-            old_centers = np.copy(centers)
-            labels = np.argmin(distances, axis = 0)
+                old_centers = np.copy(centers)
+                labels = np.argmin(distances, axis = 0)
 
-            for item in range(self.n_clusters):
-                indices = np.argwhere(labels == item)
-                medians[item] = np.median(X[indices], axis = 0)
+                for item in range(self.n_clusters):
+                    indices = np.argwhere(labels == item)
+                    medians[item] = np.median(X[indices], axis = 0)
 
-            centers = np.squeeze(np.asarray(medians))
-            distances = pairwise_distances(centers, X, metric = self.metric)
+                centers = np.squeeze(np.asarray(medians))
+                distances = pairwise_distances(centers, X, metric = self.metric)
 
-            if np.all(np.abs(old_centers - centers) < self.tol):
-                break
-            elif i == self.max_iter - 1:
-                    warnings.warn(
-                        "Maximum number of iteration reached before "
-                        "convergence. Consider increasing max_iter to "
-                        "improve the fit.",
-                        ConvergenceWarning,
-                    )
+                if np.all(np.abs(old_centers - centers) < self.tol):
+                    break
+                elif i == self.max_iter - 1:
+                        warnings.warn(
+                            "Maximum number of iteration reached before "
+                            "convergence. Consider increasing max_iter to "
+                            "improve the fit.",
+                            ConvergenceWarning,
+                        )
         self.cluster_centers_ = centers
         self.labels_ = np.argmin(distances, axis = 0)
         self.inertia_ = self._compute_inertia(distances, self.labels_)
