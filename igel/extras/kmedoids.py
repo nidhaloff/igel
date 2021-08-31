@@ -5,19 +5,27 @@ K-Medoids, unlike K-Means, use existing points in the dataset as cluster centres
 Note: This algorithm is not to be confused with K-Medians, which is a version of K-Means that uses Manhattan distance and calculates the median of the cluster instead of the mean. Additionally, in K-Medians, the resulting median data point may not be part of the original sample set, whereas in K-Medoids, it is necessary for the result to be an existing sample."""
 
 import warnings
-from sklearn.exceptions import ConvergenceWarning
-
-
-from sklearn.base import BaseEstimator, ClusterMixin
-from sklearn.utils import check_array
-from sklearn.utils.validation import check_is_fitted
-from sklearn.metrics.pairwise import pairwise_distances, pairwise_distances_argmin
 
 import numpy as np
+from sklearn.base import BaseEstimator, ClusterMixin
+from sklearn.exceptions import ConvergenceWarning
+from sklearn.metrics.pairwise import (
+    pairwise_distances,
+    pairwise_distances_argmin,
+)
+from sklearn.utils import check_array
+from sklearn.utils.validation import check_is_fitted
+
 
 class KMedoids(BaseEstimator, ClusterMixin):
-
-    def __init__(self, n_clusters = 4, metric = 'euclidean', init = 'random', max_iter = 300, random_state = None):
+    def __init__(
+        self,
+        n_clusters=4,
+        metric="euclidean",
+        init="random",
+        max_iter=300,
+        random_state=None,
+    ):
         """Parameters
         ----------
         n_clusters : int, optional, default: 4
@@ -32,7 +40,7 @@ class KMedoids(BaseEstimator, ClusterMixin):
         init : {'random', 'heuristic'}, optional, default: 'random'
             Specify medoid initialization method. 'random' selects n_clusters
             elements from the dataset. 'heuristic' picks the n_clusters points
-            with the smallest sum distance to every other point. 
+            with the smallest sum distance to every other point.
 
         max_iter : int, optional, default : 300
             Specify the maximum number of iterations when fitting. It can be zero in
@@ -58,9 +66,9 @@ class KMedoids(BaseEstimator, ClusterMixin):
 
         inertia_ : float
             Sum of distances of samples to their closest cluster center.
-            
+
         score_ : float
-            Negative of the inertia. The more negative the score, the higher the variation in cluster points, the worse the clustering. """
+            Negative of the inertia. The more negative the score, the higher the variation in cluster points, the worse the clustering."""
 
         self.n_clusters = n_clusters
         self.metric = metric
@@ -68,8 +76,7 @@ class KMedoids(BaseEstimator, ClusterMixin):
         self.max_iter = max_iter
         self.random_state = random_state
 
-    
-    def _get_random_state(self, seed = None):
+    def _get_random_state(self, seed=None):
 
         if seed is None or seed is np.random:
             return np.random.mtrand._rand
@@ -78,11 +85,10 @@ class KMedoids(BaseEstimator, ClusterMixin):
         elif isinstance(seed, np.random.RandomState):
             return seed
 
-
-    def _is_nonnegative(self, value, variable, strict = True):
+    def _is_nonnegative(self, value, variable, strict=True):
         """Checks if the value passed is a non-negative integer which may or may not be equal to zero"""
 
-        if not isinstance(value,(int,np.integer)):
+        if not isinstance(value, (int, np.integer)):
             raise ValueError("%s should be an integer" % (variable))
 
         if strict:
@@ -97,30 +103,53 @@ class KMedoids(BaseEstimator, ClusterMixin):
     def _check_arguments(self):
         """Checks if all the arguments are valid"""
 
-        if self._is_nonnegative(self.n_clusters,"n_clusters") and self._is_nonnegative(self.max_iter, "max_iter") and (isinstance(self.random_state, (int, np.integer, None, np.random.RandomState))  or self.random_state is np.random):
+        if (
+            self._is_nonnegative(self.n_clusters, "n_clusters")
+            and self._is_nonnegative(self.max_iter, "max_iter")
+            and (
+                isinstance(
+                    self.random_state,
+                    (int, np.integer, None, np.random.RandomState),
+                )
+                or self.random_state is np.random
+            )
+        ):
             pass
         else:
             raise ValueError("Random state is not valid")
 
-        distance_metrics = ['euclidean', 'manhattan', 'cosine', 'cityblock', 'l1', 'l2']
-        init_methods = ['random', 'heuristic']
+        distance_metrics = [
+            "euclidean",
+            "manhattan",
+            "cosine",
+            "cityblock",
+            "l1",
+            "l2",
+        ]
+        init_methods = ["random", "heuristic"]
 
         if self.metric not in distance_metrics:
-            raise ValueError('%s not a supported distance metric' % (self.metric))
-        
+            raise ValueError(
+                "%s not a supported distance metric" % (self.metric)
+            )
+
         if self.init not in init_methods:
-            raise ValueError('%s not a supported initialization method' % (self.init))
+            raise ValueError(
+                "%s not a supported initialization method" % (self.init)
+            )
 
     def _initialize_medoids(self, d_matrix, n_clusters, random_state_object):
-        """ Implementation of two initialization methods."""
+        """Implementation of two initialization methods."""
 
-        if self.init == 'random':
+        if self.init == "random":
             """Randomly chooses K points from existing set of samples"""
             return random_state_object.choice(len(d_matrix), n_clusters)
 
-        elif self.init == 'heuristic':
+        elif self.init == "heuristic":
             """Chooses initial points as the first K points with shortest total distance to all other points  in the set. Recommended."""
-            return np.argpartition(np.sum(d_matrix, axis = 1), n_clusters - 1) [ : n_clusters]
+            return np.argpartition(np.sum(d_matrix, axis=1), n_clusters - 1)[
+                :n_clusters
+            ]
 
     def _compute_inertia(self, distances):
         """Compute inertia of new samples. Inertia is defined as the sum of the
@@ -141,13 +170,9 @@ class KMedoids(BaseEstimator, ClusterMixin):
         inertia = np.sum(np.min(distances, axis=1))
         return inertia
 
-
-    def _compute_optimal_swap(self, D,
-                            medoid_idxs,
-                            not_medoid_idxs,
-                            Djs,
-                            Ejs,
-                            n_clusters):
+    def _compute_optimal_swap(
+        self, D, medoid_idxs, not_medoid_idxs, Djs, Ejs, n_clusters
+    ):
         """Compute best cost change for all the possible swaps.
 
         Parameters
@@ -180,7 +205,11 @@ class KMedoids(BaseEstimator, ClusterMixin):
         # print("Number of samples:", len(D))
         cur_cost_change = 0.0
         not_medoid_shape = len(not_medoid_idxs)
-        cluster_i_bool, not_cluster_i_bool, second_best_medoid = None, None, None
+        cluster_i_bool, not_cluster_i_bool, second_best_medoid = (
+            None,
+            None,
+            None,
+        )
         not_second_best_medoid = None
 
         i, j, h = 0, 0, 0
@@ -189,7 +218,7 @@ class KMedoids(BaseEstimator, ClusterMixin):
         for h in range(not_medoid_shape):
             # id of the potential new medoid.
             id_h = not_medoid_idxs[h]
-            #print("\n-------------------------\nConsidering the potential data point ", id_h)
+            # print("\n-------------------------\nConsidering the potential data point ", id_h)
             for i in range(n_clusters):
                 # id of the medoid we want to replace.
                 id_i = medoid_idxs[i]
@@ -205,23 +234,22 @@ class KMedoids(BaseEstimator, ClusterMixin):
                     second_best_medoid = D[id_h, id_j] < Ejs[id_j]
                     # print("\nIs the current point ",id_j," 's distance from the potential medoid swap point'", id_h,"less than the second closest medoid? :", second_best_medoid)
 
-
                     if cluster_i_bool & second_best_medoid:
-                        cur_cost_change +=  D[id_j, id_h] - Djs[id_j]
+                        cur_cost_change += D[id_j, id_h] - Djs[id_j]
                     elif cluster_i_bool & (not second_best_medoid):
-                        cur_cost_change +=  Ejs[id_j] - Djs[id_j]
+                        cur_cost_change += Ejs[id_j] - Djs[id_j]
                     elif (not cluster_i_bool) & (D[id_j, id_h] < Djs[id_j]):
-                        cur_cost_change +=  D[id_j, id_h] - Djs[id_j]
+                        cur_cost_change += D[id_j, id_h] - Djs[id_j]
                     # print("\nCost change:", cur_cost_change)
 
                 # same for i
                 second_best_medoid = D[id_h, id_i] < Ejs[id_i]
-                if  second_best_medoid:
+                if second_best_medoid:
                     # print("\nCost change increases by distance to swap")
-                    cur_cost_change +=  D[id_i, id_h]
+                    cur_cost_change += D[id_i, id_h]
                 else:
-                     #print("\nCost changes increases by distance to next medoid")
-                    cur_cost_change +=  Ejs[id_i]
+                    # print("\nCost changes increases by distance to next medoid")
+                    cur_cost_change += Ejs[id_i]
 
                 if cur_cost_change < best_swap[2]:
                     best_swap = (id_i, id_h, cur_cost_change)
@@ -234,10 +262,10 @@ class KMedoids(BaseEstimator, ClusterMixin):
             # print("No good swap")
             return None
 
-    def fit(self, X , Y = None):
+    def fit(self, X, Y=None):
 
         """ X is the training data which must be, in general, a 2D array of dimension n_samples * n_features
-        
+
         Fit K-Medoids to the provided data.
 
         Parameters
@@ -258,34 +286,49 @@ class KMedoids(BaseEstimator, ClusterMixin):
         random_state_object = self._get_random_state(self.random_state)
 
         if Y != None:
-            raise Exception ("Clustering fit takes only one parameter")
+            raise Exception("Clustering fit takes only one parameter")
 
-        X = check_array(X, accept_sparse = ['csc','csr'])
+        X = check_array(X, accept_sparse=["csc", "csr"])
 
         n_samples, n_features = X.shape[0], X.shape[1]
 
         if self.n_clusters > n_samples:
-            raise ValueError('Number of clusters %s cannot be greater than number of samples %s' % (self.n_clusters, n_samples))
+            raise ValueError(
+                f"Number of clusters {self.n_clusters} cannot be greater than number of samples {n_samples}"
+            )
 
-        distances = pairwise_distances(X, Y, metric = self.metric)
+        distances = pairwise_distances(X, Y, metric=self.metric)
         print("Distances:", distances.shape)
-        medoids = self._initialize_medoids(distances, self.n_clusters, random_state_object)  #Initialized medoids.
-        d_closest_medoid, d_second_closest_medoid = np.sort(distances[medoids], axis=0)[[0, 1]]
-         #Step 1.
+        medoids = self._initialize_medoids(
+            distances, self.n_clusters, random_state_object
+        )  # Initialized medoids.
+        d_closest_medoid, d_second_closest_medoid = np.sort(
+            distances[medoids], axis=0
+        )[[0, 1]]
+        # Step 1.
         labels = None
 
         for i in range(self.max_iter):
-            medoids_copy = np.copy(medoids) 
-            not_medoids = np.delete(np.arange(len(distances)), medoids)            
+            medoids_copy = np.copy(medoids)
+            not_medoids = np.delete(np.arange(len(distances)), medoids)
             # Associate each data point with closest medoid
-            labels = np.argmin(distances[medoids, :], axis = 0)
+            labels = np.argmin(distances[medoids, :], axis=0)
             # For each medoid m and each observation o, compute cost of swap
-            optimal_swap = self._compute_optimal_swap(distances, medoids, not_medoids, d_closest_medoid, d_second_closest_medoid, self.n_clusters)
+            optimal_swap = self._compute_optimal_swap(
+                distances,
+                medoids,
+                not_medoids,
+                d_closest_medoid,
+                d_second_closest_medoid,
+                self.n_clusters,
+            )
             # If cost is current best, keep this medoid and o combo
             if optimal_swap:
-                current_medoid,potential_medoid,_ = optimal_swap
+                current_medoid, potential_medoid, _ = optimal_swap
                 medoids[medoids == current_medoid] = potential_medoid
-                d_closest_medoid, d_second_closest_medoid = np.sort(distances[medoids], axis=0)[[0, 1]]
+                d_closest_medoid, d_second_closest_medoid = np.sort(
+                    distances[medoids], axis=0
+                )[[0, 1]]
             # If cost function decreases (total intra-cluster sum), swap. Else terminate.
 
             if np.all(medoids_copy == medoids):
@@ -302,10 +345,9 @@ class KMedoids(BaseEstimator, ClusterMixin):
         self.labels_ = np.argmin(distances[medoids, :], axis=0)
         self.medoid_indices_ = medoids
         self.inertia_ = self._compute_inertia(self.transform(X))
-        self.score_ = - self.inertia_
+        self.score_ = -self.inertia_
         # Return self to enable method chaining
         return self
-
 
     def transform(self, X):
         """Transforms X to cluster-distance space.
@@ -343,42 +385,8 @@ class KMedoids(BaseEstimator, ClusterMixin):
         """
         check_is_fitted(self, "cluster_centers_")
 
-            # Return data points to clusters based on which cluster assignment
-            # yields the smallest distance
-        return pairwise_distances_argmin(X, Y = self.cluster_centers_, metric=self.metric)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-
-
-        
-
-
-        
-
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
+        # Return data points to clusters based on which cluster assignment
+        # yields the smallest distance
+        return pairwise_distances_argmin(
+            X, Y=self.cluster_centers_, metric=self.metric
+        )
