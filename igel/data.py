@@ -75,6 +75,8 @@ from sklearn.metrics import (mean_squared_error,
 from sklearn.utils.multiclass import type_of_target
 
 from igel.extras.kmedoids import KMedoids
+from igel.extras.kmedians import KMedians
+
 
 import logging
 
@@ -415,7 +417,13 @@ models_dict = {
         "KMedoids": {
             "class": KMedoids,
             "link": "https://scikit-learn-extra.readthedocs.io/en/stable/generated/sklearn_extra.cluster.KMedoids.html"
-            "#sklearn_extra.cluster.KMedoids"
+            "#igel.extras.KMedoids"
+        },
+
+        "KMedians": {
+            "class": KMedians,
+            "link": "Local Implementation"
+            "#igel.extras.KMedians"
         },
 
         "AffinityPropagation": {

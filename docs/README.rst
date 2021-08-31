@@ -157,7 +157,7 @@ Igel's supported models:
         | TheilSenRegression |            NearestNeighbor |      SpectralClustering |
         |    GammaRegression |              NeuralNetwork |               MeanShift |
         |   RANSACRegression | PassiveAgressiveClassifier |                  OPTICS |
-        |       DecisionTree |                 Perceptron |                    ---- |
+        |       DecisionTree |                 Perceptron |                KMedoids |
         |          ExtraTree |               BernoulliRBM |                    ---- |
         |       RandomForest |           BoltzmannMachine |                    ---- |
         |         ExtraTrees |       CalibratedClassifier |                    ---- |

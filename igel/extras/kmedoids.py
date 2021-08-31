@@ -38,7 +38,6 @@ class KMedoids(BaseEstimator, ClusterMixin):
             Specify the maximum number of iterations when fitting. It can be zero in
             which case only the initialization is computed which may be suitable for
             large datasets when the initialization is sufficiently efficient
-            (i.e. for 'build' init).
 
         random_state : int, RandomState instance or None, optional
             Specify random state for the random number generator. Used to
@@ -268,7 +267,7 @@ class KMedoids(BaseEstimator, ClusterMixin):
             raise ValueError('Number of clusters %s cannot be greater than number of samples %s' % (self.n_clusters, n_samples))
 
         distances = pairwise_distances(X, Y, metric = self.metric)
-        print("Distances:", distances.shape)
+        #print("Distances:", distances.shape)
         medoids = self._initialize_medoids(distances, self.n_clusters, random_state_object)  #Initialized medoids.
         d_closest_medoid, d_second_closest_medoid = np.sort(distances[medoids], axis=0)[[0, 1]]
          #Step 1.
