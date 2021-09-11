@@ -1,2 +1,3 @@
 class Defaults:
-    pass
+    dataset_props = {}
+    model_props = {}
