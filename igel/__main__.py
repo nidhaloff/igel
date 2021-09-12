@@ -4,16 +4,18 @@ import os
 import subprocess
 from pathlib import Path
 
-import igel
 import click
+import igel
 import pandas as pd
 from igel import Igel, metrics_dict
+from igel.cnn import IgelCNN
 from igel.constants import Constants
 from igel.servers import fastapi_server
 from igel.utils import print_models_overview, show_model_info, tableize
 
 logger = logging.getLogger(__name__)
 CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
+
 
 @click.group()
 def cli():
@@ -73,6 +75,23 @@ def fit(data_path: str, yaml_path: str) -> None:
 
 @cli.command(context_settings=CONTEXT_SETTINGS)
 @click.option(
+    "--data_path", "-dp", required=True, help="Path to your training dataset"
+)
+@click.option(
+    "--yaml_path",
+    "-yml",
+    required=True,
+    help="Path to your igel configuration file (yaml or json file)",
+)
+def auto_train(data_path: str, yaml_path: str) -> None:
+    """
+    Automatically search for and train a suitable deep neural network for a task
+    """
+    IgelCNN(cmd="train", data_path=data_path, yaml_path=yaml_path)
+
+
+@cli.command(context_settings=CONTEXT_SETTINGS)
+@click.option(
     "--data_path", "-dp", required=True, help="Path to your evaluation dataset"
 )
 def evaluate(data_path: str) -> None:
@@ -83,6 +102,17 @@ def evaluate(data_path: str) -> None:
 
 
 @cli.command(context_settings=CONTEXT_SETTINGS)
+@click.option(
+    "--data_path", "-dp", required=True, help="Path to your evaluation dataset"
+)
+def auto_evaluate(data_path: str) -> None:
+    """
+    Evaluate the performance of an existing machine learning model
+    """
+    IgelCNN(cmd="evaluate", data_path=data_path)
+
+
+@cli.command(context_settings=CONTEXT_SETTINGS)
 @click.option("--data_path", "-dp", required=True, help="Path to your dataset")
 def predict(data_path: str) -> None:
     """
@@ -90,7 +120,16 @@ def predict(data_path: str) -> None:
     """
     Igel(cmd="predict", data_path=data_path)
 
-    
+
+@cli.command(context_settings=CONTEXT_SETTINGS)
+@click.option("--data_path", "-dp", required=True, help="Path to your dataset")
+def auto_predict(data_path: str) -> None:
+    """
+    Use an existing machine learning model to generate predictions
+    """
+    IgelCNN(cmd="predict", data_path=data_path)
+
+
 @cli.command(context_settings=CONTEXT_SETTINGS)
 @click.option(
     "--data_paths",
@@ -115,7 +154,32 @@ def experiment(data_paths: str, yaml_path: str) -> None:
     Igel(cmd="evaluate", data_path=eval_data_path)
     Igel(cmd="predict", data_path=pred_data_path)
 
-   
+
+@cli.command(context_settings=CONTEXT_SETTINGS)
+@click.option(
+    "--data_paths",
+    "-DP",
+    required=True,
+    help="Path to your datasets as string separated by space",
+)
+@click.option(
+    "--yaml_path",
+    "-yml",
+    required=True,
+    help="Path to your igel configuration file (yaml or json file)",
+)
+def auto_experiment(data_paths: str, yaml_path: str) -> None:
+    """
+    train, evaluate and use pre-trained model for predictions in one command
+    """
+    train_data_path, eval_data_path, pred_data_path = data_paths.strip().split(
+        " "
+    )
+    IgelCNN(cmd="train", data_path=train_data_path, yaml_path=yaml_path)
+    IgelCNN(cmd="evaluate", data_path=eval_data_path)
+    IgelCNN(cmd="predict", data_path=pred_data_path)
+
+
 @cli.command(context_settings=CONTEXT_SETTINGS)
 @click.option(
     "--model_results_dir",
@@ -212,20 +276,20 @@ def gui():
     logger.info("running igel UI...")
     subprocess.check_call("npm start", shell=True)
 
-    
+
 @cli.command(context_settings=CONTEXT_SETTINGS)
 def help():
     """get help about how to use igel"""
     with click.Context(cli) as ctx:
         click.echo(cli.get_help(ctx))
 
-        
+
 @cli.command(context_settings=CONTEXT_SETTINGS)
 def version():
     """get the version of igel installed on your machine"""
     print(f"igel version: {igel.__version__}")
 
-    
+
 @cli.command(context_settings=CONTEXT_SETTINGS)
 def info():
     """get info & metadata about igel"""
@@ -247,4 +311,3 @@ def info():
         operating system:       independent
     """
     )
-
