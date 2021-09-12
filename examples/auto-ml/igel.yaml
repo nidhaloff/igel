@@ -1,0 +1,8 @@
+
+
+model:
+    type: classification
+    algorithm: TextClassification
+
+target:
+    - label

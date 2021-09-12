@@ -1,17 +1,24 @@
 import json
 import logging
+import os
 
-import autokeras as ak
-from defaults import Defaults
+import numpy as np
+import pandas as pd
+import PIL
+from igel.cnn.defaults import Defaults
+from igel.cnn.models import Models
 from igel.constants import Constants
 from igel.utils import read_json, read_yaml
-from models import Models
 
 logger = logging.getLogger(__name__)
 
 
 class IgelCNN:
     defaults = Defaults()
+    x = None
+    y = None
+    model = None
+    results_path = Constants.model_results_path
 
     def __init__(self, **cli_args):
         self.cmd: str = cli_args.get("cmd")
@@ -21,7 +28,7 @@ class IgelCNN:
         if self.cmd == "train":
             self.file_ext: str = self.config_path.split(".")[1]
 
-            if self.file_ext != "yaml" or self.file_ext != "json":
+            if self.file_ext != "yaml" and self.file_ext != "json":
                 raise Exception(
                     "Configuration file can be a yaml or a json file!"
                 )
@@ -73,5 +80,64 @@ class IgelCNN:
         )
         return model
 
+    def _convert_img_to_np_array(self, paths):
+
+        images = []
+        logger.info(f"paths shape: {paths.shape}")
+        # exit()
+        for path in paths:
+            img = PIL.Image.open(path)
+            img_arr = np.asarray(img)
+            images.append(img_arr)
+        return np.array(images)
+
     def _read_dataset(self):
-        pass
+        read_data_options = self.dataset_props.get("read_data_options", {})
+        dataset = pd.read_csv(self.data_path, **read_data_options)
+        logger.info(f"dataset shape: {dataset.shape}")
+        attributes = list(dataset.columns)
+        logger.info(f"dataset attributes: {attributes}")
+        y = pd.concat([dataset.pop(x) for x in self.target], axis=1)
+        logger.info(f"x shape: {dataset.shape} | y shape: {y.shape}")
+        x = dataset.to_numpy()
+        num_images = x.shape[0]
+        x = x.reshape((num_images,))
+        logger.info(f"x shape after reshape: {x.shape}")
+
+        self.x = self._convert_img_to_np_array(x)
+        self.y = y.to_numpy()
+        return self.x, self.y
+
+    def save_model(self, model):
+        exp_model = model.export_model()
+        try:
+            if not os.path.exists(self.results_path):
+                logger.info(
+                    f"creating model_results folder to save results...\n"
+                    f"path of the results folder: {self.results_path}"
+                )
+                os.mkdir(self.results_path)
+            else:
+                logger.info(
+                    f"Successfully created the directory in {self.results_path} "
+                )
+                exp_model.save(f"model", save_format="tf")
+                return True
+
+        except OSError:
+            logger.exception(
+                f"Creating the directory {self.results_path} failed "
+            )
+        except Exception:
+            exp_model.save(f"model.h5")
+
+    def train(self):
+        self.x, self.y = self._read_dataset()
+        self.model = self._create_model()
+        logger.info(f"executing a {self.model.__class__.__name__} algorithm...")
+        self.model.fit(self.x, self.y)
+        saved = self.save_model(self.model)
+        if saved:
+            logger.info(
+                f"model saved successfully and can be found in the {self.results_path} folder"
+            )
