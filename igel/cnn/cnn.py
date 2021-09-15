@@ -4,11 +4,11 @@ import os
 
 import numpy as np
 import pandas as pd
-import PIL
 from igel.cnn.defaults import Defaults
 from igel.cnn.models import Models
 from igel.constants import Constants
 from igel.utils import read_json, read_yaml
+from tensorflow.keras.preprocessing import image
 
 logger = logging.getLogger(__name__)
 
@@ -24,6 +24,9 @@ class IgelCNN:
         self.cmd: str = cli_args.get("cmd")
         self.data_path: str = cli_args.get("data_path")
         self.config_path: str = cli_args.get("yaml_path")
+        logger.info(f"Executing command: {self.cmd}")
+        logger.info(f"Reading data from: {self.data_path}")
+        logger.info(f"Reading yaml configs from: {self.config_path}")
 
         if self.cmd == "train":
             self.file_ext: str = self.config_path.split(".")[1]
@@ -83,10 +86,9 @@ class IgelCNN:
     def _convert_img_to_np_array(self, paths):
 
         images = []
-        logger.info(f"paths shape: {paths.shape}")
-        # exit()
+        logger.info(f"Reading images and converting them to arrays...")
         for path in paths:
-            img = PIL.Image.open(path)
+            img = image.load_img(path, grayscale=True)
             img_arr = np.asarray(img)
             images.append(img_arr)
         return np.array(images)
@@ -102,10 +104,11 @@ class IgelCNN:
         x = dataset.to_numpy()
         num_images = x.shape[0]
         x = x.reshape((num_images,))
-        logger.info(f"x shape after reshape: {x.shape}")
-
         self.x = self._convert_img_to_np_array(x)
         self.y = y.to_numpy()
+        logger.info(
+            f"After reading images: x shape {self.x.shape} | y shape: {self.y.shape}"
+        )
         return self.x, self.y
 
     def save_model(self, model):
@@ -121,8 +124,8 @@ class IgelCNN:
                 logger.info(
                     f"Successfully created the directory in {self.results_path} "
                 )
-                exp_model.save(f"model", save_format="tf")
-                return True
+            exp_model.save(f"model", save_format="tf")
+            return True
 
         except OSError:
             logger.exception(
@@ -135,7 +138,9 @@ class IgelCNN:
         self.x, self.y = self._read_dataset()
         self.model = self._create_model()
         logger.info(f"executing a {self.model.__class__.__name__} algorithm...")
-        self.model.fit(self.x, self.y)
+        logger.info(f"Setting model arguments: {self.model_args}")
+
+        self.model.fit(self.x, self.y, epochs=1)
         saved = self.save_model(self.model)
         if saved:
             logger.info(

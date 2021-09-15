@@ -1,8 +1,9 @@
 
 
 model:
-    type: classification
-    algorithm: TextClassification
-
+    type: ImageClassification
+    arguments:
+        overwrite: true
+        max_trials: 1
 target:
     - label
