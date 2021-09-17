@@ -2,6 +2,7 @@ import json
 import logging
 import os
 
+import autokeras as ak
 import numpy as np
 import pandas as pd
 from igel.cnn.defaults import Defaults
@@ -18,7 +19,7 @@ class IgelCNN:
     x = None
     y = None
     model = None
-    results_path = Constants.model_results_path
+    results_path = Constants.results_dir
 
     def __init__(self, **cli_args):
         self.cmd: str = cli_args.get("cmd")
@@ -94,55 +95,41 @@ class IgelCNN:
         return np.array(images)
 
     def _read_dataset(self):
-        read_data_options = self.dataset_props.get("read_data_options", {})
-        dataset = pd.read_csv(self.data_path, **read_data_options)
-        logger.info(f"dataset shape: {dataset.shape}")
-        attributes = list(dataset.columns)
-        logger.info(f"dataset attributes: {attributes}")
-        y = pd.concat([dataset.pop(x) for x in self.target], axis=1)
-        logger.info(f"x shape: {dataset.shape} | y shape: {y.shape}")
-        x = dataset.to_numpy()
-        num_images = x.shape[0]
-        x = x.reshape((num_images,))
-        self.x = self._convert_img_to_np_array(x)
-        self.y = y.to_numpy()
-        logger.info(
-            f"After reading images: x shape {self.x.shape} | y shape: {self.y.shape}"
+        # read_data_options = self.dataset_props.get("read_data_options", {})
+        # dataset = pd.read_csv(self.data_path, **read_data_options)
+        # logger.info(f"dataset shape: {dataset.shape}")
+        # attributes = list(dataset.columns)
+        # logger.info(f"dataset attributes: {attributes}")
+        # y = pd.concat([dataset.pop(x) for x in self.target], axis=1)
+        # logger.info(f"x shape: {dataset.shape} | y shape: {y.shape}")
+        # x = dataset.to_numpy()
+        # num_images = x.shape[0]
+        # x = x.reshape((num_images,))
+        # self.x = self._convert_img_to_np_array(x)
+        # self.y = y.to_numpy()
+        # logger.info(
+        #     f"After reading images: x shape {self.x.shape} | y shape: {self.y.shape}"
+        # )
+        train_data = ak.image_dataset_from_directory(
+            self.data_path, subset="training", validation_split=0.2, seed=42
         )
-        return self.x, self.y
+        return train_data  # self.x, self.y
 
     def save_model(self, model):
         exp_model = model.export_model()
+        logger.info(f"model type: {type(exp_model)}")
         try:
-            if not os.path.exists(self.results_path):
-                logger.info(
-                    f"creating model_results folder to save results...\n"
-                    f"path of the results folder: {self.results_path}"
-                )
-                os.mkdir(self.results_path)
-            else:
-                logger.info(
-                    f"Successfully created the directory in {self.results_path} "
-                )
-            exp_model.save(f"model", save_format="tf")
+            exp_model.save("model", save_format="tf")
             return True
-
-        except OSError:
-            logger.exception(
-                f"Creating the directory {self.results_path} failed "
-            )
         except Exception:
             exp_model.save(f"model.h5")
 
     def train(self):
-        self.x, self.y = self._read_dataset()
+        train_data = self._read_dataset()
         self.model = self._create_model()
         logger.info(f"executing a {self.model.__class__.__name__} algorithm...")
-        logger.info(f"Setting model arguments: {self.model_args}")
-
-        self.model.fit(self.x, self.y, epochs=1)
+        logger.info(f"Training started...")
+        self.model.fit(train_data)
         saved = self.save_model(self.model)
         if saved:
-            logger.info(
-                f"model saved successfully and can be found in the {self.results_path} folder"
-            )
+            logger.info(f"model saved successfully")
