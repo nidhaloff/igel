@@ -1,0 +1,8 @@
+
+
+model:
+    type: ImageClassification
+    arguments:
+        max_trials: 1
+target:
+    - label

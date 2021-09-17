@@ -24,6 +24,7 @@ joblib = "~=0.16.0"
 fastapi = "^0.65.2"
 uvicorn = "^0.14.0"
 click = "^8.0.1"
+Pillow = "^8.3.2"
 
 [tool.poetry.dev-dependencies]
 pip="20.2.2"
