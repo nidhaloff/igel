@@ -73,6 +73,11 @@ from sklearn.metrics import (mean_squared_error,
                              precision_score,
                              recall_score)
 from sklearn.utils.multiclass import type_of_target
+
+from igel.extras.kmedoids import KMedoids
+from igel.extras.kmedians import KMedians
+
+
 import logging
 
 logging.basicConfig(format='%(levelname)s - %(message)s', level=logging.INFO)
@@ -409,6 +414,18 @@ models_dict = {
                     "#sklearn.cluster.KMeans"
         },
 
+        "KMedoids": {
+            "class": KMedoids,
+            "link": "https://scikit-learn-extra.readthedocs.io/en/stable/generated/sklearn_extra.cluster.KMedoids.html"
+            "#igel.extras.KMedoids"
+        },
+
+        "KMedians": {
+            "class": KMedians,
+            "link": "Local Implementation"
+            "#igel.extras.KMedians"
+        },
+
         "AffinityPropagation": {
             "class": AffinityPropagation,
             "link": "https://scikit-learn.org/stable/modules/generated/sklearn.cluster.AffinityPropagation.html"
@@ -417,7 +434,7 @@ models_dict = {
 
         "Birch": {
             "class": Birch,
-            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.cluster.Birch.html#sklearn.cluster.Birch"
+            "link": "https://scikit-learn.org/stable/modules/generated/sklearn.cluster.Birch.html#sklearn.cluster.Birch" 
         },
 
         "AgglomerativeClustering": {

@@ -29,7 +29,7 @@ try:
         read_yaml,
     )
 except ImportError:
-    from utils import (
+    from igel.utils import (
         read_yaml,
         create_yaml,
         extract_params,
