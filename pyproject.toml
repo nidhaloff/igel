@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "igel"
-version = "0.5.0"
+version = "0.7.0"
 readme = "docs/README.rst"
 description = "a delightful machine learning tool that allows you to train, test and use models without writing code"
 authors = ["nidhal baccouri <nidhalbacc@gmail.com>"]
