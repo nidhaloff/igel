@@ -4,5 +4,6 @@ model:
     type: ImageClassification
     arguments:
         max_trials: 1
-target:
-    - label
+
+training:
+    epochs: 10

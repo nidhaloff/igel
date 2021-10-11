@@ -4,6 +4,7 @@ from igel.configs import configs
 class Defaults:
     dataset_props = {}
     model_props = {}
+    training_args = {}
     available_commands = ("fit", "evaluate", "predict", "experiment")
     supported_types = ("regression", "classification", "clustering")
     results_path = configs.get("results_path")  # path to the results folder
