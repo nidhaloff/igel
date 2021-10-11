@@ -184,8 +184,10 @@ process the dataset (converting to matrices, rescale, split, etc...) and start t
 a model that works good on your data. As you can see it's pretty easy, you just have to provide the path
 to your data and the task you want to perform.
 
-> **_NOTE:_** This feature is computationally expensive as igel would try many
-different models and compare their performance in order to find the 'best' one.
+.. note::
+
+    This feature is computationally expensive as igel would try many
+    different models and compare their performance in order to find the 'best' one.
 
 
 
