@@ -8,7 +8,7 @@ import click
 import igel
 import pandas as pd
 from igel import Igel, metrics_dict
-from igel.cnn import IgelCNN
+from igel.auto import IgelCNN
 from igel.constants import Constants
 from igel.servers import fastapi_server
 from igel.utils import print_models_overview, show_model_info, tableize
@@ -78,16 +78,22 @@ def fit(data_path: str, yaml_path: str) -> None:
     "--data_path", "-dp", required=True, help="Path to your training dataset"
 )
 @click.option(
+    "--task",
+    "-t",
+    required=False,
+    help="task you want to run. This refers to the goal you want to achieve (e.g ImageClassification)",
+)
+@click.option(
     "--yaml_path",
     "-yml",
-    required=True,
+    required=False,
     help="Path to your igel configuration file (yaml or json file)",
 )
-def auto_train(data_path: str, yaml_path: str) -> None:
+def auto_train(data_path: str, task: str, yaml_path: str) -> None:
     """
     Automatically search for and train a suitable deep neural network for a task
     """
-    IgelCNN(cmd="train", data_path=data_path, yaml_path=yaml_path)
+    IgelCNN(cmd="train", data_path=data_path, task=task, yaml_path=yaml_path)
 
 
 @cli.command(context_settings=CONTEXT_SETTINGS)
