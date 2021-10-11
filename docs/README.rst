@@ -35,7 +35,7 @@ A delightful machine learning tool that allows you to train/fit, test and use mo
 
 .. note::
     I'm also working on a GUI desktop app for igel based on people's requests. You can find it under
-    `Igel-UI <https://github.com/nidhaloff/igel-ui/>`_. Please consider supporting the project!
+    `Igel-UI <https://github.com/nidhaloff/igel-ui/>`_.
 
 * Free software: MIT license
 * Documentation: https://igel.readthedocs.io.
@@ -46,51 +46,45 @@ A delightful machine learning tool that allows you to train/fit, test and use mo
 |
 |
 
-Motivation & Goal
+Introduction
 ------------------
 
 The goal of the project is to provide machine learning for **everyone**, both technical and non-technical
 users.
 
 I needed a tool sometimes, which I can use to fast create a machine learning prototype. Whether to build
-some proof of concept or create a fast draft model to prove a point. I find myself often stuck at writing
-boilerplate code and/or thinking too much of how to start this.
+some proof of concept, create a fast draft model to prove a point or use auto ML. I find myself often stuck at writing
+boilerplate code and thinking too much where to start. Therefore, I decided to create this tool.
 
-Therefore, I decided to create **igel**. Hopefully, it will make it easier for technical and non-technical
-users to build machine learning models.
+igel is built on top of other ML frameworks. It provides a simple way to use machine learning without writing
+a **single line of code**. Igel is **highly customizable**, but only if you want to. Igel does not force you to
+customize anything. Besides default values, igel can use auto-ml features to figure out a model that can work great with your data.
+
+All you need is a **yaml** (or **json**) file, where you need to describe what you are trying to do. That's it!
+
+Igel supports regression, classification and clustering.
+Igel's supports auto-ml features like ImageClassification and TextClassification
+
+Igel supports most used dataset types in the data science field. For instance, your input dataset can be
+a csv, txt, excel sheet, json or even html file that you want to fetch. If you are using auto-ml features, then you can even
+feed raw data to igel and it will figure out how to deal with it. More on this later in the examples.
+
 
 Features
 ---------
-- Usage from GUI
-- Supports most dataset types (csv, txt, excel, json, html)
+
+- Supports most dataset types (csv, txt, excel, json, html) even just raw data stored in folders
 - Supports all state of the art machine learning models (even preview models)
 - Supports different data preprocessing methods
 - Provides flexibility and data control while writing configurations
 - Supports cross validation
 - Supports both hyperparameter search (version >= 0.2.8)
 - Supports yaml and json format
+- Usage from GUI
 - Supports different sklearn metrics for regression, classification and clustering
 - Supports multi-output/multi-target regression and classification
 - Supports multi-processing for parallel model construction
-
-Intro
---------
-
-igel is built on top of scikit-learn. It provides a simple way to use machine learning without writing
-a **single line of code**.
-
-All you need is a **yaml** (or **json**) file, where you need to describe what you are trying to do. That's it!
-
-Igel supports all sklearn's machine learning functionality, whether regression, classification or clustering.
-Precisely, you can use **63** different machine learning models in igel.
-
-Igel supports most used dataset types in the data science field. For instance, your input dataset can be
-a csv, txt, excel sheet, json or even html file that you want to fetch. All these types are supported by igel.
-In the background, igel uses pandas to read and convert your input dataset to a dataframe.
-
- Unlike other ML tools, igel is lightweight in the sense that it has minimal dependencies.
- Precisely, igel uses pandas in the background for data manipulation/preprocessing and sklearn for the machine
- learning part. Hence, it depends only on these two famous packages.
+- Support for **auto machine learning**
 
 Installation
 -------------
@@ -100,40 +94,6 @@ Installation
 .. code-block:: console
 
     $ pip install -U igel
-
-- Check the docs for other ways to install igel from source
-
-Running with Docker
---------------------
-
-- Use the official image (recommended):
-
-You can pull the image first from docker hub
-
-.. code-block:: console
-
-    $ docker pull nidhaloff/igel
-
-Then use it:
-
-.. code-block:: console
-
-    $ docker run -it --rm -v $(pwd):/data nidhaloff/igel fit -yml 'your_file.yaml' -dp 'your_dataset.csv'
-
-
-- Alternatively, you can create your own image locally if you want:
-
-You can run igel inside of docker by first building the image:
-
-.. code-block:: console
-
-    $ docker build -t igel .
-
-And then running it and attaching your current directory (does not need to be the igel directory) as /data (the workdir) inside of the container:
-
-.. code-block:: console
-
-    $ docker run -it --rm -v $(pwd):/data igel fit -yml 'your_file.yaml' -dp 'your_dataset.csv'
 
 Models
 -------
@@ -174,35 +134,75 @@ Igel's supported models:
         |   GradientBoosting |                       ---- |                    ---- |
         +--------------------+----------------------------+-------------------------+
 
+For auto ML:
+
+- ImageClassifier
+- TextClassifier
+- ImageRegressor
+- TextRegressor
+- StructeredDataClassifier
+- StructeredDataRegressor
+- AutoModel
+
 Quick Start
 ------------
 
-
-Run :code:`igel version` to check the version.
-
-Run :code:`igel info` to get meta data about the project.
-
-You can run the help command to get instructions:
+The help command is very useful to check supported commands and corresponding args/options
 
 .. code-block:: console
 
     $ igel --help
 
-    # or just
+You can also run help on sub-commands, for example:
 
-    $ igel -h
-    """
-    Take some time and read the output of help command. You ll save time later if you understand how to use igel.
-    """
+.. code-block:: console
 
-- Demo:
+    $ igel fit --help
 
-.. image:: ../assets/igel-help.gif
+
+Igel is highly customizable. If you know what you want and want to configure your model manually,
+then check the next sections, which will guide you on how to write a yaml or a json config file.
+After that, you just have to tell igel, what to do and where to find your data and config file.
+Here is an example:
+
+.. code-block:: console
+
+    $ igel fit --data_path 'path_to_your_csv_dataset.csv' --yaml_path 'path_to_your_yaml_file.yaml'
+
+However, you can also use the auto-ml features and let igel do everything for you.
+A great example for this would be image classification. Let's imagine you already have a dataset
+of raw images stored in a folder called **images**
+
+All you have to do is run:
+
+.. code-block:: console
+
+    $ igel auto-train --data_path 'path_to_your_images_folder' --task ImageClassification
+
+That's it! Igel will read the images from the directory,
+process the dataset (converting to matrices, rescale, split, etc...) and start training/optimizing
+a model that works good on your data. As you can see it's pretty easy, you just have to provide the path
+to your data and the task you want to perform.
+
+> **_NOTE:_** This feature is computationally expensive as igel would try many
+different models and compare their performance in order to find the 'best' one.
+
+
+
+Usage
+------
+
+You can run the help command to get instructions. You can also run help on sub-commands!
+
+.. code-block:: console
+
+    $ igel --help
+
 
 ---------------------------------------------------------------------------------------------------------
 
-Configuration
-##############
+Configuration Step
+####################
 
 First step is to provide a yaml file (you can also use json if you want)
 
@@ -217,16 +217,13 @@ which will create a basic config file for you on the fly.
 .. code-block:: console
 
     """
-    igel init <args>
-    possible optional args are: (notice that these args are optional, so you can also just run igel init if you want)
-    -type: regression, classification or clustering
-    -model: model you want to use
-    -target: target you want to predict
+    igel init --help
 
 
     Example:
     If I want to use neural networks to classify whether someone is sick or not using the indian-diabetes dataset,
     then I would use this command to initialize a yaml file n.b. you may need to rename outcome column in .csv to sick:
+
     $ igel init -type "classification" -model "NeuralNetwork" -target "sick"
     """
     $ igel init
@@ -269,8 +266,8 @@ get you to interactive mode, where you will be prompted to enter the model you w
 you want to solve. Igel will then show you information about the model and a link that you can follow to see
 a list of available arguments and how to use these.
 
-Train a model
-##############
+Training
+#########
 
 - The expected way to use igel is from terminal (igel CLI):
 
@@ -296,7 +293,7 @@ Run this command in terminal to fit/train a model, where you provide the **path 
 
 --------------------------------------------------------------------------------------------------------
 
-Evaluate the model
+Evaluation
 ###################
 
 You can then evaluate the trained/pre-fitted model:
@@ -314,7 +311,7 @@ You can then evaluate the trained/pre-fitted model:
 
 ------------------------------------------------------------------------------------------------------
 
-Use model for prediction
+Prediction
 #########################
 
 Finally, you can use the trained/pre-fitted model to make predictions if you are happy with the evaluation results:
@@ -334,7 +331,7 @@ Finally, you can use the trained/pre-fitted model to make predictions if you are
 
 ----------------------------------------------------------------------------------------------------------
 
-Start an Experiment
+Experiment
 ####################
 
 You can combine the train, evaluate and predict phases using one single command called experiment:
@@ -413,39 +410,6 @@ Use igel from python (instead of terminal)
 
 ----------------------------------------------------------------------------------------------------------
 
-
-Interactive Mode
-------------------
-
-Interactive mode is new in >= v0.2.6
-
-This mode basically offers you the freedom to write arguments on your way.
-You are not restricted to write the arguments directly when using the command.
-
-This means practically that you can use the commands (fit, evaluate, predict, experiment etc.)
-without specifying any additional arguments. For example:
-
-..  code-block:: python
-
-    igel fit
-
-if you just write this and click enter, you will be prompted to provide the additional mandatory arguments.
-Any version <= 0.2.5 will throw an error in this case, which why you need to make sure that you have
-a >= 0.2.6 version.
-
-- Demo (init command):
-
-.. image:: ../assets/igel-init-interactive.gif
-
-- Demo (fit command):
-
-.. image:: ../assets/igel-fit-interactive.gif
-
-As you can see, you don't need to memorize the arguments, you can just let igel ask you to enter them.
-Igel will provide you with a nice message explaining which argument you need to enter.
-
-The value between brackets represents the default value. This means if you provide no value and hit return,
-then the value between brackets will be taken as the default value.
 
 Overview
 ----------
@@ -818,6 +782,48 @@ You can also find a cross validation and a hyperparameter search examples in the
 I suggest you play around with the examples and igel cli. However,
 you can also directly execute the fit.py, evaluate.py and predict.py if you want to.
 
+Auto ML Examples
+------------------
+
+ImageClassification
+####################
+
+First, create or modify a dataset of images that are categorized into sub-folders based on the image label/class
+For example, if you are have dogs and cats images, then you will need 2 sub-folders:
+
+- folder 0, which contains cats images (here the label 0 indicates a cat)
+- folder 1, which contains dogs images (here the label 1 indicates a dog)
+
+Assuming these two sub-folder are contained in one parent folder called images, just feed data to igel:
+
+.. code-block:: console
+
+    $ igel auto-train -dp ./images --task ImageClassification
+
+Igel will handle everything from pre-processing the data to optimizing hyperparameters. At the end,
+the best model will be stored in the current working dir.
+
+
+
+TextClassification
+####################
+
+First, create or modify a text dataset that are categorized into sub-folders based on the text label/class
+For example, if you are have a text dataset of positive and negative feedbacks, then you will need 2 sub-folders:
+
+- folder 0, which contains negative feedbacks (here the label 0 indicates a negative one)
+- folder 1, which contains positive feedbacks (here the label 1 indicates a positive one)
+
+Assuming these two sub-folder are contained in one parent folder called texts, just feed data to igel:
+
+.. code-block:: console
+
+    $ igel auto-train -dp ./texts --task TextClassification
+
+Igel will handle everything from pre-processing the data to optimizing hyperparameters. At the end,
+the best model will be stored in the current working dir.
+
+
 GUI
 ----
 
@@ -831,6 +837,38 @@ as mentioned above. Then run this single command in your terminal
 This will open up the gui, which is very simple to use. Check examples of how the gui looks like and how to use it
 here: https://github.com/nidhaloff/igel-ui
 
+
+Running with Docker
+--------------------
+
+- Use the official image (recommended):
+
+You can pull the image first from docker hub
+
+.. code-block:: console
+
+    $ docker pull nidhaloff/igel
+
+Then use it:
+
+.. code-block:: console
+
+    $ docker run -it --rm -v $(pwd):/data nidhaloff/igel fit -yml 'your_file.yaml' -dp 'your_dataset.csv'
+
+
+- Alternatively, you can create your own image locally if you want:
+
+You can run igel inside of docker by first building the image:
+
+.. code-block:: console
+
+    $ docker build -t igel .
+
+And then running it and attaching your current directory (does not need to be the igel directory) as /data (the workdir) inside of the container:
+
+.. code-block:: console
+
+    $ docker run -it --rm -v $(pwd):/data igel fit -yml 'your_file.yaml' -dp 'your_dataset.csv'
 
 Links
 ------
