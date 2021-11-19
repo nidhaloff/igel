@@ -1,13 +1,13 @@
+
+
 dataset:
     type: csv
-    random_numbers:
-        generate_reproducible: true
-        seed: 101
+
 # model definition
 model:
     type: classification
     algorithm: NeuralNetwork
 
-# target you want to predict
+# target(s) you want to predict
 target:
     - sick

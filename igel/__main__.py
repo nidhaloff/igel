@@ -8,7 +8,6 @@ import click
 import igel
 import pandas as pd
 from igel import Igel, metrics_dict
-from igel.auto import IgelCNN
 from igel.constants import Constants
 from igel.servers import fastapi_server
 from igel.utils import print_models_overview, show_model_info, tableize
@@ -75,29 +74,6 @@ def fit(data_path: str, yaml_path: str) -> None:
 
 @cli.command(context_settings=CONTEXT_SETTINGS)
 @click.option(
-    "--data_path", "-dp", required=True, help="Path to your training dataset"
-)
-@click.option(
-    "--task",
-    "-t",
-    required=False,
-    help="task you want to run. This refers to the goal you want to achieve (e.g ImageClassification)",
-)
-@click.option(
-    "--yaml_path",
-    "-yml",
-    required=False,
-    help="Path to your igel configuration file (yaml or json file)",
-)
-def auto_train(data_path: str, task: str, yaml_path: str) -> None:
-    """
-    Automatically search for and train a suitable deep neural network for a task
-    """
-    IgelCNN(cmd="train", data_path=data_path, task=task, yaml_path=yaml_path)
-
-
-@cli.command(context_settings=CONTEXT_SETTINGS)
-@click.option(
     "--data_path", "-dp", required=True, help="Path to your evaluation dataset"
 )
 def evaluate(data_path: str) -> None:
@@ -108,32 +84,12 @@ def evaluate(data_path: str) -> None:
 
 
 @cli.command(context_settings=CONTEXT_SETTINGS)
-@click.option(
-    "--data_path", "-dp", required=True, help="Path to your evaluation dataset"
-)
-def auto_evaluate(data_path: str) -> None:
-    """
-    Evaluate the performance of an existing machine learning model
-    """
-    IgelCNN(cmd="evaluate", data_path=data_path)
-
-
-@cli.command(context_settings=CONTEXT_SETTINGS)
 @click.option("--data_path", "-dp", required=True, help="Path to your dataset")
 def predict(data_path: str) -> None:
     """
     Use an existing machine learning model to generate predictions
     """
     Igel(cmd="predict", data_path=data_path)
-
-
-@cli.command(context_settings=CONTEXT_SETTINGS)
-@click.option("--data_path", "-dp", required=True, help="Path to your dataset")
-def auto_predict(data_path: str) -> None:
-    """
-    Use an existing machine learning model to generate predictions
-    """
-    IgelCNN(cmd="predict", data_path=data_path)
 
 
 @cli.command(context_settings=CONTEXT_SETTINGS)
@@ -159,31 +115,6 @@ def experiment(data_paths: str, yaml_path: str) -> None:
     Igel(cmd="fit", data_path=train_data_path, yaml_path=yaml_path)
     Igel(cmd="evaluate", data_path=eval_data_path)
     Igel(cmd="predict", data_path=pred_data_path)
-
-
-@cli.command(context_settings=CONTEXT_SETTINGS)
-@click.option(
-    "--data_paths",
-    "-DP",
-    required=True,
-    help="Path to your datasets as string separated by space",
-)
-@click.option(
-    "--yaml_path",
-    "-yml",
-    required=True,
-    help="Path to your igel configuration file (yaml or json file)",
-)
-def auto_experiment(data_paths: str, yaml_path: str) -> None:
-    """
-    train, evaluate and use pre-trained model for predictions in one command
-    """
-    train_data_path, eval_data_path, pred_data_path = data_paths.strip().split(
-        " "
-    )
-    IgelCNN(cmd="train", data_path=train_data_path, yaml_path=yaml_path)
-    IgelCNN(cmd="evaluate", data_path=eval_data_path)
-    IgelCNN(cmd="predict", data_path=pred_data_path)
 
 
 @cli.command(context_settings=CONTEXT_SETTINGS)

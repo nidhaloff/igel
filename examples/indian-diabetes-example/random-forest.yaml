@@ -1,33 +1,34 @@
 
 
-# dataset operations
 dataset:
     type: csv
     random_numbers:
         generate_reproducible: true
         seed: 42
-    split:  # split options
-        test_size: 0.2  # 0.2 means 20% for the test data, so 80% are automatically for training
-        shuffle: True   # whether to shuffle the data before/while splitting
+    split:
+        test_size: 0.2
+        shuffle: True
 
-    preprocess: # preprocessing options
-        missing_values: mean    # other possible values: [drop, median, most_frequent, constant] check the docs for more
+    preprocess:
+        missing_values: mean
         encoding:
-            type: oneHotEncoding  # other possible values: [labelEncoding]
-        scale:  # scaling options
-            method: standard    # standardization will scale values to have a 0 mean and 1 standard deviation  | you can also try minmax
-            target: inputs  # scale inputs. | other possible values: [outputs, all] # if you choose all then all values in the dataset will be scaled
+            type: oneHotEncoding
+        scale:
+            method: standard
+            target: inputs
 
-
-# model definition
 model:
     type: classification
     algorithm: RandomForest
     arguments:
         n_estimators: 100
         max_depth: 30
+    hyperparameter_search:
+    method: random_search
+    parameter_grid:
+        max_depth: [6, 10]
+        n_estimators: [100, 300]
+        max_features: [auto, sqrt]
 
-
-# target you want to predict
 target:
     - sick
