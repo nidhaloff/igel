@@ -6,7 +6,7 @@ class Constants:
     train_data_file = "train_data.csv"
     eval_data_file = "eval_data.csv"
     test_data_file = "new_data.csv"
-    igel_yaml_file = "igel.yaml"
+    igel_yaml_file = "igel_cnn.yaml"
     model_results_file = "model_results"
     cwd = Path(os.path.dirname(__file__))
     model_results_dir = cwd / model_results_file
