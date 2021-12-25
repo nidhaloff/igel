@@ -110,6 +110,16 @@ You can combine the train, evaluate and predict phases using one single command 
     This will run fit using train_data, evaluate using eval_data and further generate predictions using the test_data
     """
 
+You can export the trained/pre-fitted sklearn model into ONNX:
+
+.. code-block:: console
+
+    $ igel export -dp "path_to_trained_model"
+
+    """
+    This will convert the sklearn model into ONNX
+    """
+
 - Alternatively, you can also write code if you want to:
 
 ..  code-block:: python

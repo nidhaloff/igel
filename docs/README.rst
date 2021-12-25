@@ -350,6 +350,22 @@ You can combine the train, evaluate and predict phases using one single command 
 
 .. image:: ../assets/igel-experiment.gif
 
+----------------------------------------------------------------------------------------------------------
+
+Export
+####################
+
+You can export the trained/pre-fitted sklearn model into ONNX:
+
+.. code-block:: console
+
+    $ igel export -dp "path_to_pre-fitted_sklearn_model"
+
+    """
+    This will convert the sklearn model into ONNX
+    """
+
+
 Use igel from python (instead of terminal)
 ###########################################
 

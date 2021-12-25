@@ -50,6 +50,9 @@ except ImportError:
 from sklearn.model_selection import cross_validate, train_test_split
 from sklearn.multioutput import MultiOutputClassifier, MultiOutputRegressor
 
+from skl2onnx import convert_sklearn
+from skl2onnx.common.data_types import FloatTensorType
+
 warnings.filterwarnings("ignore")
 logging.basicConfig(format="%(levelname)s - %(message)s", level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -60,12 +63,15 @@ class Igel:
     Igel is the base model to use the fit, evaluate and predict functions of the sklearn library
     """
 
-    available_commands = ("fit", "evaluate", "predict", "experiment")
+    available_commands = ("fit", "evaluate", "predict", "experiment","export")
     supported_types = ("regression", "classification", "clustering")
     results_path = configs.get("results_path")  # path to the results folder
     default_model_path = configs.get(
         "default_model_path"
     )  # path to the pre-fitted model
+    default_onnx_model_path = configs.get(
+        "default_onnx_model_path"
+    )  # path to the onnx-model
     description_file = configs.get(
         "description_file"
     )  # path to the description.json file
@@ -145,6 +151,13 @@ class Igel:
                         f"Setting a seed = {seed} to generate same random numbers on each experiment.."
                     )
 
+        # if entered command is export, then the pre-fitted model needs to be loaded and converted to onnx
+        elif self.command == "export":
+            self.model_path = cli_args.get(
+                "model_path", self.default_model_path
+            )
+            logger.info(f"path of the pre-fitted model => {self.model_path}")
+        
         # if entered command is evaluate or predict, then the pre-fitted model needs to be loaded and used
         else:
             self.model_path = cli_args.get(
@@ -655,6 +668,42 @@ class Igel:
         self.predictions = df_pred
         logger.info(f"saving the predictions to {self.prediction_file}")
         df_pred.to_csv(self.prediction_file, index=False)
+
+    def export(self):
+        """
+        export a sklearn model to ONNX. This is used as a command from cli
+        @return: None
+        """
+        try:
+
+            logger.info(
+                f"Trying to load sklearn model from directory - {self.model_path} "
+            )
+            model = self._load_model(f=self.model_path)
+            initial_type = [('float_input', FloatTensorType([None, 4]))]
+            onx = convert_sklearn(model, initial_types=initial_type)
+            
+            # check if model_results folder is present and create if absent
+            if not os.path.exists(self.results_path):
+                logger.info(
+                    f"creating model_results folder to save results...\n"
+                    f"path of the results folder: {self.results_path}"
+                )
+                os.mkdir(self.results_path)
+            else:
+                logger.info(f"Folder {self.results_path} already exists")
+                logger.warning(
+                    f"data in the {self.results_path} folder will be overridden. If you don't "
+                    f"want this, then move the current {self.results_path} to another path"
+                )
+            
+            with open(self.default_onnx_model_path, "wb") as f:
+                f.write(onx.SerializeToString())
+            logger.info(
+                f"Successfully saved exported onnx model at - {self.default_onnx_model_path} "
+            )
+        except Exception as e:
+            logger.exception(f"Error while exporting model: {e}")
 
     @staticmethod
     def create_init_mock_file(

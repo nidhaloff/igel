@@ -12,6 +12,7 @@ configs = {
     "model_file": Constants.model_file,
     "results_path": res_path,
     "default_model_path": res_path / Constants.model_file,
+    "default_onnx_model_path": res_path / Constants.onnx_model_file,
     "description_file": res_path / Constants.description_file,
     "evaluation_file": res_path / Constants.evaluation_file,
     "prediction_file": res_path / Constants.prediction_file,

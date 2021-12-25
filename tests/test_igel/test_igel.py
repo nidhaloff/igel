@@ -30,3 +30,12 @@ def test_fit(mock_args):
     assert Constants.model_results_dir.exists() == True
     assert Constants.description_file.exists() == True
     assert Constants.evaluation_file.exists() == False
+
+def test_export(mock_args):
+    """
+    test the export model functionality
+    """
+    assert mock_args is not None  
+    Igel(**mock_args.fit)  
+    Igel(**mock_args.export)
+    assert Constants.onnx_model_file.exists() == True
