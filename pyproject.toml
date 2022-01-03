@@ -26,6 +26,7 @@ uvicorn = "^0.14.0"
 click = "^8.0.1"
 Pillow = "^8.3.2"
 autokeras = "^1.0.16"
+skl2onnx = "^1.10.3"
 
 [tool.poetry.dev-dependencies]
 pip="20.2.2"
