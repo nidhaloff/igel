@@ -116,6 +116,13 @@ def experiment(data_paths: str, yaml_path: str) -> None:
     Igel(cmd="evaluate", data_path=eval_data_path)
     Igel(cmd="predict", data_path=pred_data_path)
 
+@cli.command(context_settings=CONTEXT_SETTINGS)
+@click.option("--model_path", "-dp", required=True, help="Path to your sklearn model")
+def export(model_path: str) -> None:
+    """
+    Export an existing machine learning model to ONNX
+    """
+    Igel(cmd="export", model_path=model_path)
 
 @cli.command(context_settings=CONTEXT_SETTINGS)
 @click.option(

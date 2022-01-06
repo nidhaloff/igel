@@ -18,3 +18,7 @@ class MockCliArgs:
         "cmd": "experiment",
         "data_paths": f"{Constants.train_data} {Constants.eval_data} {Constants.test_data}",
     }
+    export = {
+        "cmd" : "export",
+        "model_path": Constants.model_file
+    }

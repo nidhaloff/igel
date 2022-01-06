@@ -13,7 +13,9 @@ class Constants:
     description_file = model_results_dir / "description.json"
     evaluation_file = model_results_dir / "evaluation.json"
     prediction_file = model_results_dir / "prediction.csv"
-
+    model_file = model_results_dir / "model.joblib"
+    onnx_model_file = model_results_dir / "model.onnx"
+    
     data_dir = cwd / "data"
     igel_files = cwd / "igel_files"
     train_data = data_dir / train_data_file

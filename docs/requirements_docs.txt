@@ -16,3 +16,4 @@ scikit-learn==0.23.2
 sphinx-copybutton==0.3.1
 sphinx_glpi_theme==0.3
 importlib-metadata==1.6.0
+skl2onnx==1.10.3
