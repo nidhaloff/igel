@@ -77,6 +77,8 @@ from sklearn.utils.multiclass import type_of_target
 from igel.extras.kmedoids import KMedoids
 from igel.extras.kmedians import KMedians
 
+from catboost import CatBoostClassifier, CatBoostRegressor
+
 
 import logging
 
@@ -251,6 +253,11 @@ models_dict = {
             "class": GradientBoostingRegressor,
             "link": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.GradientBoostingRegressor.html"
                     "#sklearn.ensemble.GradientBoostingRegressor"
+        },
+
+        "CatBoostRegressor": {
+            "class": CatBoostRegressor,
+            "link": "https://catboost.ai/en/docs/concepts/python-reference_catboostregressor"
         }
     },
 
@@ -402,6 +409,11 @@ models_dict = {
             "class": MultinomialNB,
             "link": "https://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.MultinomialNB.html"
                     "#sklearn.naive_bayes.MultinomialNB"
+        },
+
+        "CatBoostClassifier":{
+            "class": CatBoostClassifier,
+            "link": "https://catboost.ai/en/docs/concepts/python-reference_catboostclassifier"
         }
 
 
