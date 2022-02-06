@@ -1,6 +1,8 @@
-import requests
 import json
+import requests
+
 from igel.preprocessing import handle_missing_values, read_data_to_df
+
 
 class IgelClient:
     """ A mini client example that reads some data file and formats
