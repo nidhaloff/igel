@@ -411,20 +411,51 @@ and `uvicorn <https://www.uvicorn.org/>`_ to run it under the hood.
 
 ----------------------------------------------------------------------------------------------------------
 
+Using the API with the served model
+###################################
 
-Use igel from python (instead of terminal)
-###########################################
+This example was done using a pre-trained model (created by running igel init --target sick -type classification) and the Indian Diabetes dataset under examples/data. The headers of the columns in the original CSV are ‘preg’, ‘plas’, ‘pres’, ‘skin’, ‘test’, ‘mass’, ‘pedi’ and ‘age’.
 
-- Alternatively, you can also write code if you want to:
+**CURL:**
 
-..  code-block:: python
 
-    from igel import Igel
+- Post with single entry for each predictor
 
-    Igel(cmd="fit", data_path="path_to_your_dataset", yaml_path="path_to_your_yaml_file")
-    """
-    check the examples folder for more
-    """
+.. code-block:: console
+
+    $ curl -X POST localhost:8080/predict --header "Content-Type:application/json" -d '{"preg": 1, "plas": 180, "pres": 50, "skin": 12, "test": 1, "mass": 456, "pedi": 0.442, "age": 50}'
+
+    Outputs: {"prediction":[[0.0]]}
+
+- Post with multiple options for each predictor
+
+.. code-block:: console
+
+    $ curl -X POST localhost:8080/predict --header "Content-Type:application/json" -d '{"preg": [1, 6, 10], "plas":[192, 52, 180], "pres": [40, 30, 50], "skin": [25, 35, 12], "test": [0, 1, 1], "mass": [456, 123, 155], "pedi": [0.442, 0.22, 0.19], "age": [50, 40, 29]}'
+
+    Outputs: {"prediction":[[1.0],[0.0],[0.0]]}
+
+**Caveats/Limitations:**
+
+- each predictor used to train the model must make an appearance in your data (i.e. don’t leave any columns out)
+- each list must have the same number of elements or you’ll get an Internal Server Error 
+- as an extension of this, you cannot mix single elements and lists (i.e. {“plas”: 0, “pres”: [1, 2]} isn't allowed)
+- the predict function takes a data path arg and reads in the data for you but with serving and calling your served model, you’ll have to parse the data into JSON yourself however, the python client provided in `examples/python_client.py` will do that for you
+
+**Example usage of the Python Client:**
+
+.. code-block:: python
+
+  from python_client import IgelClient
+
+  # the client allows additional args with defaults: 
+  # scheme="http", endpoint="predict", missing_values="mean"
+  client = IgelClient(host='localhost', port=8080)
+
+  # you can post other types of files compatible with what Igel data reading allows
+  client.post("my_batch_file_for_predicting.csv")
+
+  Outputs: <Response 200>: {"prediction":[[1.0],[0.0],[0.0]]}
 
 ----------------------------------------------------------------------------------------------------------
 
