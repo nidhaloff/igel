@@ -414,7 +414,7 @@ and `uvicorn <https://www.uvicorn.org/>`_ to run it under the hood.
 Using the API with the served model
 ###################################
 
-This example was done using a pre-trained model (created by running igel init --target sick -type classification) and the Indian Diabetes dataset downloaded from Kaggle (here). The headers of the columns in the original CSV are ‘preg’, ‘plas’, ‘pres’, ‘skin’, ‘test’, ‘mass’, ‘pedi’ and ‘age’.
+This example was done using a pre-trained model (created by running igel init --target sick -type classification) and the Indian Diabetes dataset under examples/data. The headers of the columns in the original CSV are ‘preg’, ‘plas’, ‘pres’, ‘skin’, ‘test’, ‘mass’, ‘pedi’ and ‘age’.
 
 **CURL:**
 
@@ -433,7 +433,7 @@ This example was done using a pre-trained model (created by running igel init --
 
     $ curl -X POST localhost:8080/predict --header "Content-Type:application/json" -d '{"preg": [1, 6, 10], "plas":[192, 52, 180], "pres": [40, 30, 50], "skin": [25, 35, 12], "test": [0, 1, 1], "mass": [456, 123, 155], "pedi": [0.442, 0.22, 0.19], "age": [50, 40, 29]}'
 
-    Outputs: ``{"prediction":[[1.0],[0.0],[0.0]]}``
+    Outputs: {"prediction":[[1.0],[0.0],[0.0]]}
 
 **Caveats/Limitations:**
 
@@ -455,7 +455,7 @@ This example was done using a pre-trained model (created by running igel init --
   # you can post other types of files compatible with what Igel data reading allows
   client.post("my_batch_file_for_predicting.csv")
 
-  Outputs: ``<Response 200>: {"prediction":[[1.0],[0.0],[0.0]]}``
+  Outputs: <Response 200>: {"prediction":[[1.0],[0.0],[0.0]]}
 
 ----------------------------------------------------------------------------------------------------------
 
