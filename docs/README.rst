@@ -129,9 +129,10 @@ Igel's supported models:
         |         ElasticNet |       ComplementNaiveBayes |                    ---- |
         |       BernoulliRBM |         GaussianNaiveBayes |                    ---- |
         |   BoltzmannMachine |      MultinomialNaiveBayes |                    ---- |
-        |           Adaboost |                       ---- |                    ---- |
+        |           Adaboost |                   CatBoost |                    ---- |
         |            Bagging |                       ---- |                    ---- |
         |   GradientBoosting |                       ---- |                    ---- |
+        |           CatBoost |                       ---- |                    ---- |
         +--------------------+----------------------------+-------------------------+
 
 For auto ML:
