@@ -46,6 +46,16 @@ def read_data_to_df(data_path: str, **read_data_options):
 
 
 def update_dataset_props(dataset_props: dict, default_dataset_props: dict):
+    """
+    Update the default dataset properties with values from dataset_props where provided.
+
+    Args:
+        dataset_props (dict): Dictionary containing user-specified dataset properties.
+        default_dataset_props (dict): Dictionary containing default dataset properties.
+
+    Returns:
+        dict: Updated dataset properties dictionary.
+    """
     for key1 in default_dataset_props.keys():
         if key1 in dataset_props.keys():
             for key2 in default_dataset_props[key1].keys():
@@ -58,6 +68,17 @@ def update_dataset_props(dataset_props: dict, default_dataset_props: dict):
 
 
 def handle_missing_values(df, fill_value=np.nan, strategy="mean"):
+    """
+    Handle missing values in a DataFrame using the specified strategy.
+
+    Args:
+        df (pd.DataFrame): Input DataFrame with possible missing values.
+        fill_value (Any, optional): Value to use for imputation. Defaults to np.nan.
+        strategy (str, optional): Strategy to use ('mean', 'median', 'most_frequent', 'constant', or 'drop'). Defaults to 'mean'.
+
+    Returns:
+        pd.DataFrame: DataFrame with missing values handled.
+    """
     logger.info(
         f"Check for missing values in the dataset ...  \n"
         f"{df.isna().sum()}  \n "
@@ -74,6 +95,17 @@ def handle_missing_values(df, fill_value=np.nan, strategy="mean"):
 
 
 def encode(df, encoding_type="onehotencoding", column=None):
+    """
+    Encode categorical features in a DataFrame using one-hot or label encoding.
+
+    Args:
+        df (pd.DataFrame): Input DataFrame.
+        encoding_type (str, optional): Encoding type ('onehotencoding' or 'labelencoding'). Defaults to 'onehotencoding'.
+        column (str, optional): Column to label encode (required if encoding_type is 'labelencoding').
+
+    Returns:
+        Tuple[pd.DataFrame, dict or None]: Encoded DataFrame and classes map (if label encoding).
+    """
     if not encoding_type:
         raise Exception(
             f"encoding type should be -> oneHotEncoding or labelEncoding"
@@ -110,6 +142,17 @@ def encode(df, encoding_type="onehotencoding", column=None):
 
 
 def normalize(x, y=None, method="standard"):
+    """
+    Normalize features using the specified scaling method.
+
+    Args:
+        x (array-like): Features to scale.
+        y (array-like, optional): Target values for supervised scaling. Defaults to None.
+        method (str, optional): Scaling method ('minmax' or 'standard'). Defaults to 'standard'.
+
+    Returns:
+        np.ndarray: Scaled features.
+    """
     methods = ("minmax", "standard")
 
     if method not in methods:
