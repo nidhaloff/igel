@@ -52,9 +52,9 @@ Introduction
 The goal of the project is to provide machine learning for **everyone**, both technical and non-technical
 users.
 
-I needed a tool sometimes, which I can use to fast create a machine learning prototype. Whether to build
-some proof of concept, create a fast draft model to prove a point or use auto ML. I find myself often stuck at writing
-boilerplate code and thinking too much where to start. Therefore, I decided to create this tool.
+I sometimes needed a tool to quickly create a machine learning prototype. Whether to build
+some proof of concept, create a fast draft model to prove a point or use auto ML. I often found myself stuck writing
+boilerplate code and overthinking where to start. Therefore, I decided to create this tool.
 
 igel is built on top of other ML frameworks. It provides a simple way to use machine learning without writing
 a **single line of code**. Igel is **highly customizable**, but only if you want to. Igel does not force you to
@@ -94,6 +94,17 @@ Installation
 .. code-block:: console
 
     $ pip install -U igel
+
+Troubleshooting
+---------------
+
+If you encounter installation errors related to `importlib_metadata` or `markdown`, make sure you are using a supported Python version and try upgrading pip:
+
+.. code-block:: console
+
+    $ pip install --upgrade pip
+
+For Python 3.10 and above, you should not need to install `importlib_metadata` manually.
 
 Models
 -------
@@ -140,8 +151,8 @@ For auto ML:
 - TextClassifier
 - ImageRegressor
 - TextRegressor
-- StructeredDataClassifier
-- StructeredDataRegressor
+- StructuredDataClassifier
+- StructuredDataRegressor
 - AutoModel
 
 Quick Start
@@ -414,7 +425,7 @@ and `uvicorn <https://www.uvicorn.org/>`_ to run it under the hood.
 Using the API with the served model
 ###################################
 
-This example was done using a pre-trained model (created by running igel init --target sick -type classification) and the Indian Diabetes dataset under examples/data. The headers of the columns in the original CSV are ‘preg’, ‘plas’, ‘pres’, ‘skin’, ‘test’, ‘mass’, ‘pedi’ and ‘age’.
+This example was done using a pre-trained model (created by running igel init --target sick -type classification) and the Indian Diabetes dataset under examples/data. The headers of the columns in the original CSV are 'preg', 'plas', 'pres', 'skin', 'test', 'mass', 'pedi' and 'age'.
 
 **CURL:**
 
@@ -437,10 +448,10 @@ This example was done using a pre-trained model (created by running igel init --
 
 **Caveats/Limitations:**
 
-- each predictor used to train the model must make an appearance in your data (i.e. don’t leave any columns out)
-- each list must have the same number of elements or you’ll get an Internal Server Error 
-- as an extension of this, you cannot mix single elements and lists (i.e. {“plas”: 0, “pres”: [1, 2]} isn't allowed)
-- the predict function takes a data path arg and reads in the data for you but with serving and calling your served model, you’ll have to parse the data into JSON yourself however, the python client provided in `examples/python_client.py` will do that for you
+- each predictor used to train the model must make an appearance in your data (i.e. don't leave any columns out)
+- each list must have the same number of elements or you'll get an Internal Server Error 
+- as an extension of this, you cannot mix single elements and lists (i.e. {"plas": 0, "pres": [1, 2]} isn't allowed)
+- the predict function takes a data path arg and reads in the data for you but with serving and calling your served model, you'll have to parse the data into JSON yourself however, the python client provided in `examples/python_client.py` will do that for you
 
 **Example usage of the Python Client:**
 
@@ -481,8 +492,8 @@ Here is an overview of all supported configurations (for now):
             index_col: # [int, str, list of int, list of str, False] -> Column(s) to use as the row labels of the DataFrame,
             usecols:    # [list, callable] -> Return a subset of the columns
             squeeze:    # [bool] -> If the parsed data only contains one column then return a Series.
-            prefix:     # [str] -> Prefix to add to column numbers when no header, e.g. ‘X’ for X0, X1, …
-            mangle_dupe_cols:   # [bool] -> Duplicate columns will be specified as ‘X’, ‘X.1’, …’X.N’, rather than ‘X’…’X’. Passing in False will cause data to be overwritten if there are duplicate names in the columns.
+            prefix:     # [str] -> Prefix to add to column numbers when no header, e.g. 'X' for X0, X1, ...
+            mangle_dupe_cols:   # [bool] -> Duplicate columns will be specified as 'X', 'X.1', ...'X.N', rather than 'X'...'X'. Passing in False will cause data to be overwritten if there are duplicate names in the columns.
             dtype:  # [Type name, dict maping column name to type] -> Data type for data or columns
             engine:     # [str] -> Parser engine to use. The C engine is faster while the python engine is currently more feature-complete.
             converters: # [dict] -> Dict of functions for converting values in certain columns. Keys can either be integers or column labels.
@@ -503,11 +514,11 @@ Here is an overview of all supported configurations (for now):
             dayfirst: # [bool] -> DD/MM format dates, international and European format.
             cache_dates: # [bool] -> If True, use a cache of unique, converted dates to apply the datetime conversion.
             thousands: # [str] -> the thousands operator
-            decimal: # [str] -> Character to recognize as decimal point (e.g. use ‘,’ for European data).
+            decimal: # [str] -> Character to recognize as decimal point (e.g. use ',' for European data).
             lineterminator: # [str] -> Character to break file into lines.
             escapechar: # [str] ->  One-character string used to escape other characters.
             comment: # [str] -> Indicates remainder of line should not be parsed. If found at the beginning of a line, the line will be ignored altogether. This parameter must be a single character.
-            encoding: # [str] -> Encoding to use for UTF when reading/writing (ex. ‘utf-8’).
+            encoding: # [str] -> Encoding to use for UTF when reading/writing (ex. 'utf-8').
             dialect: # [str, csv.Dialect] -> If provided, this parameter will override values (default or not) for the following parameters: delimiter, doublequote, escapechar, skipinitialspace, quotechar, and quoting
             delim_whitespace: # [bool] -> Specifies whether or not whitespace (e.g. ' ' or '    ') will be used as the sep
             low_memory: # [bool] -> Internally process the file in chunks, resulting in lower memory use while parsing, but possibly mixed type inference.
@@ -585,13 +596,13 @@ Hence, you can provide this in the read_data_options. Just add the :code:`sep: "
      - Type
      - Explanation
    * - sep
-     - str, default ‘,’
-     - Delimiter to use. If sep is None, the C engine cannot automatically detect the separator, but the Python parsing engine can, meaning the latter will be used and automatically detect the separator by Python’s builtin sniffer tool, csv.Sniffer. In addition, separators longer than 1 character and different from '\s+' will be interpreted as regular expressions and will also force the use of the Python parsing engine. Note that regex delimiters are prone to ignoring quoted data. Regex example: '\r\t'.
+     - str, default ','
+     - Delimiter to use. If sep is None, the C engine cannot automatically detect the separator, but the Python parsing engine can, meaning the latter will be used and automatically detect the separator by Python's builtin sniffer tool, csv.Sniffer. In addition, separators longer than 1 character and different from '\s+' will be interpreted as regular expressions and will also force the use of the Python parsing engine. Note that regex delimiters are prone to ignoring quoted data. Regex example: '\r\t'.
    * - delimiter
      - default None
      - Alias for sep.
    * - header
-     - int, list of int, default ‘infer’
+     - int, list of int, default 'infer'
      - Row number(s) to use as the column names, and the start of the data. Default behavior is to infer the column names: if no names are passed the behavior is identical to header=0 and column names are inferred from the first line of the file, if column names are passed explicitly then the behavior is identical to header=None. Explicitly pass header=0 to be able to replace existing names. The header can be a list of integers that specify row locations for a multi-index on the columns e.g. [0,1,3]. Intervening rows that are not specified will be skipped (e.g. 2 in this example is skipped). Note that this parameter ignores commented lines and empty lines if skip_blank_lines=True, so header=0 denotes the first line of data rather than the first line of the file.
    * - names
      - array-like, optional
@@ -608,12 +619,12 @@ Hence, you can provide this in the read_data_options. Just add the :code:`sep: "
 
    * - prefix
      - str, optional
-     - Prefix to add to column numbers when no header, e.g. ‘X’ for X0, X1, …
+     - Prefix to add to column numbers when no header, e.g. 'X' for X0, X1, ...
    * - mangle_dupe_cols
      - bool, default True
-     - Duplicate columns will be specified as ‘X’, ‘X.1’, …’X.N’, rather than ‘X’…’X’. Passing in False will cause data to be overwritten if there are duplicate names in the columns.
+     - Duplicate columns will be specified as 'X', 'X.1', ...'X.N', rather than 'X'...'X'. Passing in False will cause data to be overwritten if there are duplicate names in the columns.
    * - dtype
-     - {‘c’, ‘python’}, optional
+     - {'c', 'python'}, optional
      - Parser engine to use. The C engine is faster while the python engine is currently more feature-complete.
    * - converters
      - dict, optional
@@ -633,13 +644,13 @@ Hence, you can provide this in the read_data_options. Just add the :code:`sep: "
      - Line numbers to skip (0-indexed) or number of lines to skip (int) at the start of the file. If callable, the callable function will be evaluated against the row indices, returning True if the row should be skipped and False otherwise. An example of a valid callable argument would be lambda x: x in [0, 2].
    * - skipfooter
      - int, default 0
-     - Number of lines at bottom of file to skip (Unsupported with engine=’c’).
+     - Number of lines at bottom of file to skip (Unsupported with engine='c').
    * - nrows
      - int, optional
      - Number of rows of file to read. Useful for reading pieces of large files.
    * - na_values
      - scalar, str, list-like, or dict, optional
-     - Additional strings to recognize as NA/NaN. If dict passed, specific per-column NA values. By default the following values are interpreted as NaN: ‘’, ‘#N/A’, ‘#N/A N/A’, ‘#NA’, ‘-1.#IND’, ‘-1.#QNAN’, ‘-NaN’, ‘-nan’, ‘1.#IND’, ‘1.#QNAN’, ‘<NA>’, ‘N/A’, ‘NA’, ‘NULL’, ‘NaN’, ‘n/a’, ‘nan’, ‘null’.
+     - Additional strings to recognize as NA/NaN. If dict passed, specific per-column NA values. By default the following values are interpreted as NaN: '', '#N/A', '#N/A N/A', '#NA', '-1.#IND', '-1.#QNAN', '-NaN', '-nan', '1.#IND', '1.#QNAN', '<NA>', 'N/A', 'NA', 'NULL', 'NaN', 'n/a', 'nan', 'null'.
    * - keep_default_na
      - bool, default True
      - Whether or not to include the default NaN values when parsing the data. Depending on whether na_values is passed in, the behavior is as follows: If keep_default_na is True, and na_values are specified, na_values is appended to the default NaN values used for parsing. If keep_default_na is True, and na_values are not specified, only the default NaN values are used for parsing. If keep_default_na is False, and na_values are specified, only the NaN values specified na_values are used for parsing. If keep_default_na is False, and na_values are not specified, no strings will be parsed as NaN. Note that if na_filter is passed in as False, the keep_default_na and na_values parameters will be ignored.
@@ -654,7 +665,7 @@ Hence, you can provide this in the read_data_options. Just add the :code:`sep: "
      - If True, skip over blank lines rather than interpreting as NaN values.
    * - parse_dates
      - bool or list of int or names or list of lists or dict, default False
-     - The behavior is as follows: boolean. If True -> try parsing the index. list of int or names. e.g. If [1, 2, 3] -> try parsing columns 1, 2, 3 each as a separate date column. list of lists. e.g. If [[1, 3]] -> combine columns 1 and 3 and parse as a single date column. dict, e.g. {‘foo’ : [1, 3]} -> parse columns 1, 3 as date and call result ‘foo’ If a column or index cannot be represented as an array of datetimes, say because of an unparseable value or a mixture of timezones, the column or index will be returned unaltered as an object data type.
+     - The behavior is as follows: boolean. If True -> try parsing the index. list of int or names. e.g. If [1, 2, 3] -> try parsing columns 1, 2, 3 each as a separate date column. list of lists. e.g. If [[1, 3]] -> combine columns 1 and 3 and parse as a single date column. dict, e.g. {'foo' : [1, 3]} -> parse columns 1, 3 as date and call result 'foo' If a column or index cannot be represented as an array of datetimes, say because of an unparseable value or a mixture of timezones, the column or index will be returned unaltered as an object data type.
    * - infer_datetime_format
      - bool, default False
      - If True and parse_dates is enabled, pandas will attempt to infer the format of the datetime strings in the columns, and if it can be inferred, switch to a faster method of parsing them. In some cases this can increase the parsing speed by 5-10x.
@@ -675,8 +686,8 @@ Hence, you can provide this in the read_data_options. Just add the :code:`sep: "
      - str, optional
      - Thousands separator.
    * - decimal
-     - str, default ‘.’
-     - Character to recognize as decimal point (e.g. use ‘,’ for European data).
+     - str, default '.'
+     - Character to recognize as decimal point (e.g. use ',' for European data).
    * - lineterminator
      - str (length 1), optional
      - Character to break file into lines. Only valid with C parser.
@@ -688,7 +699,7 @@ Hence, you can provide this in the read_data_options. Just add the :code:`sep: "
      - Indicates remainder of line should not be parsed. If found at the beginning of a line, the line will be ignored altogether.
    * - encoding
      - str, optional
-     - Encoding to use for UTF when reading/writing (ex. ‘utf-8’).
+     - Encoding to use for UTF when reading/writing (ex. 'utf-8').
    * - dialect
      - str or csv.Dialect, optional
      - If provided, this parameter will override values (default or not) for the following parameters: delimiter, doublequote, escapechar, skipinitialspace, quotechar, and quoting
