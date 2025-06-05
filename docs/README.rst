@@ -968,3 +968,17 @@ License
 MIT license
 
 Copyright (c) 2020-present, Nidhal Baccouri
+
+Usage Example
+-------------
+
+Suppose you have a dataset `data.csv` and a configuration file `config.yaml` describing your model and task.  
+You can train a model using the following command:
+
+.. code-block:: console
+
+    $ igel fit --data_path data.csv --yaml_path config.yaml
+
+This will train the model as specified in your YAML configuration file.
+
+For more details on the YAML config format, see the documentation: https://igel.readthedocs.io/en/latest/yaml_config.html
