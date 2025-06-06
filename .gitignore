@@ -112,3 +112,12 @@ ENV/
 
 # IDE settings
 .vscode/
+
+# macOS system files
+.DS_Store
+
+# Windows system files
+Thumbs.db
+
+# Python egg-info
+*.egg-info/
