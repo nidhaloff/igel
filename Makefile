@@ -3,6 +3,19 @@ SHELL := /usr/bin/env bash
 IMAGE := igel
 VERSION := latest
 
+# -----------------------------------------------------------------------------
+# The following section sets command flags for various tools (poetry, pip, safety, etc.)
+# based on whether "strict" mode is enabled. This is done by setting each flag variable
+# to either "-" (non-strict) or "" (strict).
+#
+# Why this is done this way:
+# Make does not support creating variables in a loop or dynamically generating variable
+# names in a portable way. While GNU Make has some advanced features, this Makefile aims
+# to be as portable and readable as possible. Therefore, each flag variable is set
+# individually, even though this results in repetitive code.
+#
+# If you know a more concise, portable way to achieve this, contributions are welcome!
+# -----------------------------------------------------------------------------
 #! An ugly hack to create individual flags
 ifeq ($(STRICT), 1)
 	POETRY_COMMAND_FLAG =
