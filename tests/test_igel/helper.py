@@ -3,7 +3,13 @@ import os
 import shutil
 
 
-def remove_file(f):
+def remove_file(f: str) -> None:
+    """
+    Remove a file at the given path if it exists.
+
+    Args:
+        f (str): The path to the file to be removed.
+    """
     try:
         if os.path.exists(f):
             os.remove(f)
