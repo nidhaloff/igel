@@ -17,11 +17,18 @@ CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
 
 
 @click.group()
-def cli():
+@click.option('--verbose', is_flag=True, help='Enable verbose output for debugging.')
+def cli(verbose):
     """
     The igel command line interface
     """
-    pass
+    if verbose:
+        logging.basicConfig(level=logging.DEBUG)
+        logger.setLevel(logging.DEBUG)
+        click.echo('Verbose mode is on.')
+    else:
+        logging.basicConfig(level=logging.WARNING)
+        logger.setLevel(logging.WARNING)
 
 
 @cli.command(context_settings=CONTEXT_SETTINGS)
@@ -49,6 +56,9 @@ def cli():
 def init(model_type: str, model_name: str, target: str) -> None:
     """
     Initialize a new igel project.
+
+    Example:
+        igel init --model_type=classification --model_name=RandomForest --target=label
     """
     Igel.create_init_mock_file(
         model_type=model_type, model_name=model_name, target=target
@@ -67,7 +77,10 @@ def init(model_type: str, model_name: str, target: str) -> None:
 )
 def fit(data_path: str, yaml_path: str) -> None:
     """
-    fit/train a machine learning model
+    Fit/train a machine learning model.
+
+    Example:
+        igel fit --data_path=data/train.csv --yaml_path=config.yaml
     """
     Igel(cmd="fit", data_path=data_path, yaml_path=yaml_path)
 
