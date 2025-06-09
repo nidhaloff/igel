@@ -30,17 +30,28 @@ jobs:
         poetry config virtualenvs.in-project true
         poetry install
 
-#    - name: Run safety checks
-#      run: |
-#        source "$HOME/.poetry/env"
-#        STRICT=1 make check-safety
+    - name: Run safety checks
+      run: |
+        source "$HOME/.poetry/env"
+        STRICT=1 make check-safety
 
-#    - name: Run style checks
-#      run: |
-#        source "$HOME/.poetry/env"
-#        STRICT=1 make check-style
+    - name: Run style checks
+      run: |
+        source "$HOME/.poetry/env"
+        STRICT=1 make check-style
 
     - name: Run tests
       run: |
         source "$HOME/.poetry/env"
         make test
+
+    - name: Run coverage
+      run: |
+        source "$HOME/.poetry/env"
+        poetry run coverage run -m pytest
+        poetry run coverage xml
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        files: ./coverage.xml
