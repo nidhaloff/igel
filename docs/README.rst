@@ -31,10 +31,10 @@ igel
 
 |
 
-A delightful machine learning tool that allows you to train/fit, test and use machine learning (ML) models **without writing code**
+A delightful machine learning tool that allows you to train/fit, test, and use machine learning (ML) models **without writing code**
 
 .. note::
-    I'm also working on a GUI desktop app for igel based on people's requests. You can find it under
+    I'm also working on a GUI desktop app for *igel* based on people's requests. You can find it under
     `Igel-UI <https://github.com/nidhaloff/igel-ui/>`_.
 
 * Free software: MIT license
@@ -70,14 +70,12 @@ a **single line of code**.
 - *Igel* is **highly customizable**, but only if you want to.
 - *Igel* does not force you to customize *anything*.
 - Besides default values, *igel* can use auto-ml features to figure out which model(s) work great with your data.
-
-All you need is a **yaml** (or **json**) file, where you describe what you are trying to do. *That's it!*
-
+- If you want to customize your configuration, all you need is a **yaml** or **json** file, where you describe what you are trying to do. *That's it!*
 - *Igel* supports regression, classification and clustering.
 - *Igel* supports auto-ml features like ``ImageClassification`` and ``TextClassification``
 - *Igel* supports most dataset types used in the data science field. For instance, your input dataset can be
 a ``csv``, ``txt``, excel sheet, ``json`` or even ``html`` file that you want to fetch. If using auto-ml features, you can even
-feed raw data to *igel* and it will figure out how to deal with it. See the :ref:`examples<Examples>` for how this works.
+feed raw data and *igel* will figure out how to deal with it. See the :ref:`examples<Examples>` for how this works.
 
 
 Features
@@ -202,7 +200,7 @@ As you can see it's pretty easy: All you need to do is provide the path to your 
 
 ---------------------------------------------------------------------------------------------------------
 
-Configuration Step
+Configuration Steps
 ####################
 
 First step is to provide a ``yaml`` file (you can also use ``json`` if you want)
@@ -249,21 +247,21 @@ check it out and modify it if you want to, otherwise you can also create everyth
                 max_depth: 30       # set the max_depth of the tree
 
         # target you want to predict
-        # Here, as an example, I'm using the famous indians-diabetes dataset, where I want to predict whether someone have diabetes or not.
+        # Here, as an example, I'm using the famous indians-diabetes dataset, where I want to predict whether or not someone has diabetes.
         # Depending on your data, you need to provide the target(s) you want to predict here
         target:
             - sick
 
-In the example above, I'm using random forest to classify whether someone has
-diabetes or not depending on significant features in the dataset
-I used the famous `indian-diabetes dataset <https://www.kaggle.com/uciml/pima-indians-diabetes-database>` in this example
+In the example above, I'm using random forest to classify whether or not someone has
+diabetes depending on significant features in the dataset
+I used the famous `indian-diabetes dataset <https://www.kaggle.com/uciml/pima-indians-diabetes-database>` in this example.
 
 Notice that I passed ``n_estimators`` and ``max_depth`` as additional arguments to the model.
-If you don't provide arguments then the default will be used.
-You don't have to memorize the arguments for each model. You can always run ``igel models`` in your terminal, which will
-start an interactive mode. You will then be prompted to enter the model you want to use and type of the problem
+If you don't provide arguments the default will be used.
+You don't have to memorize the arguments for each model. You can always run ``igel models`` in your terminal, which
+starts an interactive mode. You will then be prompted to enter which model you want to use and type of the problem
 you want to solve. *Igel* will then show you information about the model and a link that you can follow to see
-a list of available arguments and how to use these.
+a list of available arguments and how to use them.
 
 Training
 #########
@@ -363,10 +361,12 @@ You can export the trained/pre-fitted *sklearn* model into *ONNX*:
     """
 
 
-Use *igel* from within python (instead of terminal)
+Use *igel* from within Python (instead of terminal)
 ###########################################
 
-- Alternatively, you can also invoke *igel* using code if you want to:
+- Alternatively, you can also invoke *igel* in a Python codebase by importing it as a library.
+  You can then use the ``Igel`` class within your code.
+  This is useful if you want to use *igel* in a Python script or Conda/Jupyter notebook.
 
 ..  code-block:: python
 
@@ -383,7 +383,7 @@ Use *igel* from within python (instead of terminal)
 Serve the model
 #################
 
-The next step is to use your model in production. *Igel* helps you with this task too by providing the ``serve`` command.
+The next step is to use your model in production. *Igel* helps you with this task by providing the ``serve`` command.
 Running the ``serve`` command will tell *igel* to serve your model. Precisely, *igel* will automatically build
 a ``REST`` server and serve your model on a specific host and port, which you can configure by passing these as
 command line arguments.
@@ -411,11 +411,11 @@ Using the API with the served model
 ###################################
 
 A **RESTful** implementation:
-This example was done using a pre-trained model (created by running ``igel init --target sick -type classification``) on the `Indian Diabetes dataset <https://www.kaggle.com/uciml/pima-indians-diabetes-database>` under examples/data. The headers of the columns in the original CSV dataset are ‘preg’, ‘plas’, ‘pres’, ‘skin’, ‘test’, ‘mass’, ‘pedi’ and ‘age’.
+This example uses a pre-trained model (created by running ``igel init --target sick -type classification``) on the `Indian Diabetes dataset <https://www.kaggle.com/uciml/pima-indians-diabetes-database>` under examples/data. The headers of the columns in the original CSV dataset are ‘preg’, ‘plas’, ‘pres’, ‘skin’, ‘test’, ‘mass’, ‘pedi’ and ‘age’.
 
 **CURL:**
 
-- Post with single entry for each predictor
+- POST with single entry for each predictor
 
 .. code-block:: console
 
@@ -423,7 +423,7 @@ This example was done using a pre-trained model (created by running ``igel init 
 
     Outputs: {"prediction":[[0.0]]}
 
-- Post with multiple options for each predictor
+- POST with multiple options for each predictor
 
 .. code-block:: console
 
@@ -461,7 +461,7 @@ Overview
 The main goal of *igel* is to provide you with a way to train/fit, evaluate and use models without writing code.
 All you need is to provide/describe what you want to do in a simple ``yaml`` file.
 
-Basically, you provide a description (configurations) in the ``yaml`` file as key value pairs.
+Basically, you provide a description (configuration) in the ``yaml`` file as key value pairs.
 Here is an overview of all supported configurations (for now):
 
 .. code-block:: yaml
