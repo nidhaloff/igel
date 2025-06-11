@@ -434,9 +434,9 @@ This example was done using a pre-trained model (created by running ``igel init 
 **Caveats/Limitations:**
 
 - each predictor used to train the model must make an appearance in your data (i.e. don’t leave any columns out)
-- each list must have the same number of elements or you’ll get an Internal Server Error
+- each list must have the same number of elements or you’ll get an ``Error 500: Internal Server Error``
 - as an extension of this, you cannot mix single elements and lists (i.e. {“plas”: 0, “pres”: [1, 2]} isn't allowed)
-- the predict function takes a data path argument and reads in the data for you. While serving and calling your served model, you’ll have to parse the data into JSON yourself. To make this easier, the python client provided in `examples/python_client.py` can do that for you
+- the predict function takes a data path argument and reads in the data for you. While serving and calling your served model, you’ll have to parse the data into JSON yourself. To make this easier, the python client provided in ``examples/python_client.py`` can do that for you
 
 **Example usage of the Python Client:**
 
@@ -922,7 +922,7 @@ First build the image:
 
     $ docker build -t igel .
 
-And then running it and attach your current directory (does not need to be the *igel* directory) as ``/data`` (the workdir) inside of the container:
+And then run it and attach your current directory (does not need to be the *igel* directory) as ``/data`` (the workdir) inside of the container:
 
 .. code-block:: console
 
