@@ -73,10 +73,9 @@ a **single line of code**.
 
 All you need is a **yaml** (or **json**) file, where you describe what you are trying to do. *That's it!*
 
-*Igel* supports regression, classification and clustering.
-*Igel* supports auto-ml features like ``ImageClassification`` and ``TextClassification``
-
-*Igel* supports most dataset types used in the data science field. For instance, your input dataset can be
+- *Igel* supports regression, classification and clustering.
+- *Igel* supports auto-ml features like ``ImageClassification`` and ``TextClassification``
+- *Igel* supports most dataset types used in the data science field. For instance, your input dataset can be
 a ``csv``, ``txt``, excel sheet, ``json`` or even ``html`` file that you want to fetch. If using auto-ml features, you can even
 feed raw data to *igel* and it will figure out how to deal with it. See the :ref:`examples<Examples>` for how this works.
 
@@ -100,7 +99,7 @@ Features
 Installation
 -------------
 
-- The easiest way is to install *igel* using `pip <https://packaging.python.org/guides/tool-recommendations/>`_
+- The easiest way to install *igel* is by using `pip <https://packaging.python.org/guides/tool-recommendations/>`_
 
 .. code-block:: console
 
@@ -255,21 +254,21 @@ check it out and modify it if you want to, otherwise you can also create everyth
         target:
             - sick
 
-In the example above, I'm using random forest to classify whether someone have
-diabetes or not depending on some features in the dataset
-I used the famous indian diabetes in this example `indian-diabetes dataset <https://www.kaggle.com/uciml/pima-indians-diabetes-database>`_)
+In the example above, I'm using random forest to classify whether someone has
+diabetes or not depending on significant features in the dataset
+I used the famous `indian-diabetes dataset <https://www.kaggle.com/uciml/pima-indians-diabetes-database>` in this example
 
-Notice that I passed :code:`n_estimators` and :code:`max_depth` as additional arguments to the model.
+Notice that I passed ``n_estimators`` and ``max_depth`` as additional arguments to the model.
 If you don't provide arguments then the default will be used.
-You don't have to memorize the arguments for each model. You can always run :code:`igel models` in your terminal, which will
-get you to interactive mode, where you will be prompted to enter the model you want to use and type of the problem
-you want to solve. Igel will then show you information about the model and a link that you can follow to see
+You don't have to memorize the arguments for each model. You can always run ``igel models`` in your terminal, which will
+start an interactive mode. You will then be prompted to enter the model you want to use and type of the problem
+you want to solve. *Igel* will then show you information about the model and a link that you can follow to see
 a list of available arguments and how to use these.
 
 Training
 #########
 
-- The expected way to use igel is from terminal (igel CLI):
+- The expected way to use *igel* is from terminal (*igel* CLI):
 
 Run this command in terminal to fit/train a model, where you provide the **path to your dataset** and the **path to the yaml file**
 
@@ -284,7 +283,7 @@ Run this command in terminal to fit/train a model, where you provide the **path 
     """
     That's it. Your "trained" model can be now found in the model_results folder
     (automatically created for you in your current working directory).
-    Furthermore, a description can be found in the description.json file inside the model_results folder.
+    Furthermore, a description can be found in the description.json file also created inside the model_results folder.
     """
 
 - Demo:
@@ -320,7 +319,7 @@ Finally, you can use the trained/pre-fitted model to make predictions if you are
 
     $ igel predict -dp 'path_to_your_test_dataset.csv'
     """
-    This will generate a predictions.csv file in your current directory, where all predictions are stored in a csv file
+    This generates a predictions.csv file in your current directory, where all predictions are stored in a csv file
     """
 
 - Demo:
@@ -334,7 +333,7 @@ Finally, you can use the trained/pre-fitted model to make predictions if you are
 Experiment
 ####################
 
-You can combine the train, evaluate and predict phases using one single command called experiment:
+You can combine the training, evaluation, and prediction phases using one single argument called ``experiment``:
 
 .. code-block:: console
 
@@ -353,21 +352,21 @@ You can combine the train, evaluate and predict phases using one single command 
 Export
 ####################
 
-You can export the trained/pre-fitted sklearn model into ONNX:
+You can export the trained/pre-fitted *sklearn* model into *ONNX*:
 
 .. code-block:: console
 
     $ igel export -dp "path_to_pre-fitted_sklearn_model"
 
     """
-    This will convert the sklearn model into ONNX
+    Converts the sklearn model into ONNX
     """
 
 
-Use igel from python (instead of terminal)
+Use *igel* from within python (instead of terminal)
 ###########################################
 
-- Alternatively, you can also write code if you want to:
+- Alternatively, you can also invoke *igel* using code if you want to:
 
 ..  code-block:: python
 
@@ -384,10 +383,10 @@ Use igel from python (instead of terminal)
 Serve the model
 #################
 
-The next step is to use your model in production. Igel helps you with this task too by providing the serve command.
-Running the serve command will tell igel to serve your model. Precisely, igel will automatically build
-a REST server and serve your model on a specific host and port, which you can configure by passing these as
-cli options.
+The next step is to use your model in production. *Igel* helps you with this task too by providing the serve command.
+Running the serve command will tell *igel* to serve your model. Precisely, *igel* will automatically build
+a ``REST`` server and serve your model on a specific host and port, which you can configure by passing these as
+command line arguments.
 
 The easiest way is to run:
 
@@ -395,27 +394,26 @@ The easiest way is to run:
 
     $ igel serve --model_results_dir "path_to_model_results_directory"
 
-Notice that igel needs the **--model_results_dir** or shortly -res_dir cli option in order to load the model and start the server.
-By default, igel will serve your model on **localhost:8000**, however, you can easily override this by providing a host
-and a port cli options.
+Notice that *igel* needs the ``--model_results_dir`` or shortly ``-res_dir`` cli option in order to load the model and start the server.
+By default, *igel* serves your model on ``localhost:8000``, however, you can easily override this by providing host
+and port cli options.
 
 .. code-block:: console
 
     $ igel serve --model_results_dir "path_to_model_results_directory" --host "127.0.0.1" --port 8000
 
-Igel uses `FastAPI <https://fastapi.tiangolo.com/>`_ for creating the REST server, which is a modern high performance
-framework
-and `uvicorn <https://www.uvicorn.org/>`_ to run it under the hood.
+*Igel* uses `FastAPI <https://fastapi.tiangolo.com/>`_ for creating the ``REST`` server, which is a modern high performance
+framework and `uvicorn <https://www.uvicorn.org/>`_ to run it under the hood.
 
 ----------------------------------------------------------------------------------------------------------
 
 Using the API with the served model
 ###################################
 
-This example was done using a pre-trained model (created by running igel init --target sick -type classification) and the Indian Diabetes dataset under examples/data. The headers of the columns in the original CSV are ‘preg’, ‘plas’, ‘pres’, ‘skin’, ‘test’, ‘mass’, ‘pedi’ and ‘age’.
+A **RESTful** implementation:
+This example was done using a pre-trained model (created by running ``igel init --target sick -type classification``) on the `Indian Diabetes dataset <https://www.kaggle.com/uciml/pima-indians-diabetes-database>` under examples/data. The headers of the columns in the original CSV dataset are ‘preg’, ‘plas’, ‘pres’, ‘skin’, ‘test’, ‘mass’, ‘pedi’ and ‘age’.
 
 **CURL:**
-
 
 - Post with single entry for each predictor
 
@@ -438,7 +436,7 @@ This example was done using a pre-trained model (created by running igel init --
 - each predictor used to train the model must make an appearance in your data (i.e. don’t leave any columns out)
 - each list must have the same number of elements or you’ll get an Internal Server Error
 - as an extension of this, you cannot mix single elements and lists (i.e. {“plas”: 0, “pres”: [1, 2]} isn't allowed)
-- the predict function takes a data path arg and reads in the data for you but with serving and calling your served model, you’ll have to parse the data into JSON yourself however, the python client provided in `examples/python_client.py` will do that for you
+- the predict function takes a data path argument and reads in the data for you. While serving and calling your served model, you’ll have to parse the data into JSON yourself. To make this easier, the python client provided in `examples/python_client.py` can do that for you
 
 **Example usage of the Python Client:**
 
@@ -460,10 +458,10 @@ This example was done using a pre-trained model (created by running igel init --
 
 Overview
 ----------
-The main goal of igel is to provide you with a way to train/fit, evaluate and use models without writing code.
-Instead, all you need is to provide/describe what you want to do in a simple yaml file.
+The main goal of *igel* is to provide you with a way to train/fit, evaluate and use models without writing code.
+All you need is to provide/describe what you want to do in a simple ``yaml`` file.
 
-Basically, you provide description or rather configurations in the yaml file as key value pairs.
+Basically, you provide a description (configurations) in the ``yaml`` file as key value pairs.
 Here is an overview of all supported configurations (for now):
 
 .. code-block:: yaml
@@ -559,19 +557,18 @@ Read Data Options
 ------------------
 
 .. note::
-    igel uses pandas under the hood to read & parse the data. Hence, you can
-    find this data optional parameters also in the pandas official documentation.
+    *igel* uses ``pandas`` under the hood to read & parse the data. Hence, you can
+    find optional read parameters within ``pandas`` `official documentation<https://pandas.pydata.org/docs/user_guide/io.html>`.
 
-A detailed overview of the configurations you can provide in the yaml (or json) file is given below.
+A detailed overview of the configurations you can provide in the ``yaml`` (or ``json``) file is given below.
 Notice that you will certainly not need all the configuration values for the dataset. They are optional.
-Generally, igel will figure out how to read your dataset.
+Generally, *igel* will figure out how to read your dataset.
 
-However, you can help it by providing extra fields using this read_data_options section.
-For example, one of the helpful values in my opinion is the "sep", which defines how your columns
-in the csv dataset are separated. Generally, csv datasets are separated by commas, which is also the default value
-here. However, it may be separated by a semicolon in your case.
+You can help it run more efficiently by providing extra fields using this ``read_data_options`` section.
+For example, one of the helpful values in my opinion is ``sep``, which defines how your columns
+in the ``csv`` dataset are separated. Generally, ``csv`` datasets are separated by commas (hence the file extension ``.csv`` = *Comma Separated Values*). However, they may be separated by a semicolon in your case.
 
-Hence, you can provide this in the read_data_options. Just add the :code:`sep: ";"` under read_data_options.
+You can provide this in the ``read_data_options``. Just add the ``sep: ";"`` under ``read_data_options``.
 
 
 
@@ -582,118 +579,118 @@ Hence, you can provide this in the read_data_options. Just add the :code:`sep: "
    * - Parameter
      - Type
      - Explanation
-   * - sep
+   * - ``sep``
      - str, default ‘,’
-     - Delimiter to use. If sep is None, the C engine cannot automatically detect the separator, but the Python parsing engine can, meaning the latter will be used and automatically detect the separator by Python’s builtin sniffer tool, csv.Sniffer. In addition, separators longer than 1 character and different from '\s+' will be interpreted as regular expressions and will also force the use of the Python parsing engine. Note that regex delimiters are prone to ignoring quoted data. Regex example: '\r\t'.
-   * - delimiter
+     - Delimiter to use. If ``sep`` is None, the C engine cannot automatically detect the separator, but the Python parsing engine can. This means Python will automatically detect the separator using its built-in sniffer tool, ``csv.Sniffer``. In addition, separators longer than 1 character and different from '\s+' will be interpreted as regular expressions and will also force the use of the Python parsing engine. Note that regex delimiters are prone to ignoring quoted data. Regex example: '\r\t'.
+   * - ``delimiter``
      - default None
      - Alias for sep.
-   * - header
+   * - ``header``
      - int, list of int, default ‘infer’
      - Row number(s) to use as the column names, and the start of the data. Default behavior is to infer the column names: if no names are passed the behavior is identical to header=0 and column names are inferred from the first line of the file, if column names are passed explicitly then the behavior is identical to header=None. Explicitly pass header=0 to be able to replace existing names. The header can be a list of integers that specify row locations for a multi-index on the columns e.g. [0,1,3]. Intervening rows that are not specified will be skipped (e.g. 2 in this example is skipped). Note that this parameter ignores commented lines and empty lines if skip_blank_lines=True, so header=0 denotes the first line of data rather than the first line of the file.
-   * - names
+   * - ``names``
      - array-like, optional
-     - List of column names to use. If the file contains a header row, then you should explicitly pass header=0 to override the column names. Duplicates in this list are not allowed.
-   * - index_col
+     - List of column names to use. If the file contains a title/header row, then you should explicitly pass header=0 to override the column names. Duplicates in this list are **not allowed**.
+   * - ``index_col``
      - int, str, sequence of int / str, or False, default None
-     - Column(s) to use as the row labels of the DataFrame, either given as string name or column index. If a sequence of int / str is given, a MultiIndex is used. Note: index_col=False can be used to force pandas to not use the first column as the index, e.g. when you have a malformed file with delimiters at the end of each line.
-   * - usecols
+     - Column(s) to use as the row labels of the DataFrame, either given as string name or column index. If a sequence of int / str is given, a MultiIndex is used. Note: ``index_col=False`` can be used to force pandas to not use the first column as the index, e.g. when you have a malformed file with delimiters at the end of each line.
+   * - ``usecols``
      - list-like or callable, optional
-     - Return a subset of the columns. If list-like, all elements must either be positional (i.e. integer indices into the document columns) or strings that correspond to column names provided either by the user in names or inferred from the document header row(s). For example, a valid list-like usecols parameter would be [0, 1, 2] or ['foo', 'bar', 'baz']. Element order is ignored, so usecols=[0, 1] is the same as [1, 0]. To instantiate a DataFrame from data with element order preserved use pd.read_csv(data, usecols=['foo', 'bar'])[['foo', 'bar']] for columns in ['foo', 'bar'] order or pd.read_csv(data, usecols=['foo', 'bar'])[['bar', 'foo']] for ['bar', 'foo'] order. If callable, the callable function will be evaluated against the column names, returning names where the callable function evaluates to True. An example of a valid callable argument would be lambda x: x.upper() in ['AAA', 'BBB', 'DDD']. Using this parameter results in much faster parsing time and lower memory usage.
-   * - squeeze
+     - Return a subset of the columns. If list-like, all elements must either be positional (i.e. integer indices into the document columns) or strings that correspond to column names provided either by the user in names or inferred from the document header row(s). For example, a valid list-like usecols parameter would be [0, 1, 2] or ['foo', 'bar', 'baz']. Element order is ignored, so usecols=[0, 1] is the same as [1, 0]. To instantiate a DataFrame from data with element order preserved use pd.read_csv(data, usecols=['foo', 'bar'])[['foo', 'bar']] for columns in ['foo', 'bar'] order or pd.read_csv(data, usecols=['foo', 'bar'])[['bar', 'foo']] for ['bar', 'foo'] order. If callable, the callable function will be evaluated against the column names, returning names where the callable function evaluates to True. An example of a valid callable argument would be ``lambda x: x.upper() in ['AAA', 'BBB', 'DDD']``. Using this parameter results in much faster parsing time and lower memory usage.
+   * - ``squeeze``
      - bool, default False
      - If the parsed data only contains one column then return a Series.
 
-   * - prefix
+   * - ``prefix``
      - str, optional
      - Prefix to add to column numbers when no header, e.g. ‘X’ for X0, X1, …
-   * - mangle_dupe_cols
+   * - ``mangle_dupe_cols``
      - bool, default True
      - Duplicate columns will be specified as ‘X’, ‘X.1’, …’X.N’, rather than ‘X’…’X’. Passing in False will cause data to be overwritten if there are duplicate names in the columns.
-   * - dtype
+   * - ``dtype``
      - {‘c’, ‘python’}, optional
      - Parser engine to use. The C engine is faster while the python engine is currently more feature-complete.
-   * - converters
+   * - ``converters``
      - dict, optional
-     - Dict of functions for converting values in certain columns. Keys can either be integers or column labels.
-   * - true_values
+     - Dictionary (Key:Value pairs) of functions for converting values in certain columns. Keys can either be integers or column labels.
+   * - ``true_values``
      - list, optional
      - Values to consider as True.
 
-   * - false_values
+   * - ``false_values``
      - list, optional
      - Values to consider as False.
-   * - skipinitialspace
+   * - ``skipinitialspace``
      - bool, default False
      - Skip spaces after delimiter.
-   * - skiprows
+   * - ``skiprows``
      - list-like, int or callable, optional
-     - Line numbers to skip (0-indexed) or number of lines to skip (int) at the start of the file. If callable, the callable function will be evaluated against the row indices, returning True if the row should be skipped and False otherwise. An example of a valid callable argument would be lambda x: x in [0, 2].
-   * - skipfooter
+     - Line numbers to skip (0-indexed) or number of lines to skip (``int``) at the start of the file. If callable, the callable function will be evaluated against the row indices, returning True if the row should be skipped and False otherwise. An example of a valid callable argument would be ``lambda x: x in [0, 2]``.
+   * - ``skipfooter``
      - int, default 0
      - Number of lines at bottom of file to skip (Unsupported with engine=’c’).
-   * - nrows
+   * - ``nrows``
      - int, optional
      - Number of rows of file to read. Useful for reading pieces of large files.
-   * - na_values
+   * - ``na_values``
      - scalar, str, list-like, or dict, optional
      - Additional strings to recognize as NA/NaN. If dict passed, specific per-column NA values. By default the following values are interpreted as NaN: ‘’, ‘#N/A’, ‘#N/A N/A’, ‘#NA’, ‘-1.#IND’, ‘-1.#QNAN’, ‘-NaN’, ‘-nan’, ‘1.#IND’, ‘1.#QNAN’, ‘<NA>’, ‘N/A’, ‘NA’, ‘NULL’, ‘NaN’, ‘n/a’, ‘nan’, ‘null’.
-   * - keep_default_na
+   * - ``keep_default_na``
      - bool, default True
      - Whether or not to include the default NaN values when parsing the data. Depending on whether na_values is passed in, the behavior is as follows: If keep_default_na is True, and na_values are specified, na_values is appended to the default NaN values used for parsing. If keep_default_na is True, and na_values are not specified, only the default NaN values are used for parsing. If keep_default_na is False, and na_values are specified, only the NaN values specified na_values are used for parsing. If keep_default_na is False, and na_values are not specified, no strings will be parsed as NaN. Note that if na_filter is passed in as False, the keep_default_na and na_values parameters will be ignored.
-   * - na_filter
+   * - ``na_filter``
      - bool, default True
      - Detect missing value markers (empty strings and the value of na_values). In data without any NAs, passing na_filter=False can improve the performance of reading a large file.
-   * - verbose
+   * - ``verbose``
      - bool, default False
      - Indicate number of NA values placed in non-numeric columns.
-   * - skip_blank_lines
+   * - ``skip_blank_lines``
      - bool, default True
      - If True, skip over blank lines rather than interpreting as NaN values.
-   * - parse_dates
+   * - ``parse_dates``
      - bool or list of int or names or list of lists or dict, default False
-     - The behavior is as follows: boolean. If True -> try parsing the index. list of int or names. e.g. If [1, 2, 3] -> try parsing columns 1, 2, 3 each as a separate date column. list of lists. e.g. If [[1, 3]] -> combine columns 1 and 3 and parse as a single date column. dict, e.g. {‘foo’ : [1, 3]} -> parse columns 1, 3 as date and call result ‘foo’ If a column or index cannot be represented as an array of datetimes, say because of an unparseable value or a mixture of timezones, the column or index will be returned unaltered as an object data type.
-   * - infer_datetime_format
+     - The behavior is as follows (boolean). ``If True -> try parsing the index list of int or names``. ex: If [1, 2, 3] -> try parsing columns 1, 2, 3 each as a separate date column. ex: List of lists. If [[1, 3]] -> combine columns 1 and 3 and parse as a single date column. ex: Dictionary (dict). {‘foo’ : [1, 3]} -> parse columns 1, 3 as date and call result ‘foo’ if a column or index cannot be represented as an array of datetimes. In the event of an unparseable value or a mixture of timezones, the column or index will be returned unaltered as an object data type.
+   * - ``infer_datetime_format``
      - bool, default False
-     - If True and parse_dates is enabled, pandas will attempt to infer the format of the datetime strings in the columns, and if it can be inferred, switch to a faster method of parsing them. In some cases this can increase the parsing speed by 5-10x.
-   * - keep_date_col
+     - If True and parse_dates is enabled, pandas will attempt to infer the format of the ``datetime`` strings in the columns, and if it can be inferred, switch to a faster method of parsing them. In some cases this can increase the parsing speed by 5-10x.
+   * - ``keep_date_col``
      - bool, default False
-     - If True and parse_dates specifies combining multiple columns then keep the original columns.
-   * - date_parser
+     - If ``True`` and ``parse_dates`` specifies combining multiple columns then keep the original columns.
+   * - ``date_parser``
      - function, optional
-     - Function to use for converting a sequence of string columns to an array of datetime instances. The default uses dateutil.parser.parser to do the conversion. Pandas will try to call date_parser in three different ways, advancing to the next if an exception occurs: 1) Pass one or more arrays (as defined by parse_dates) as arguments; 2) concatenate (row-wise) the string values from the columns defined by parse_dates into a single array and pass that; and 3) call date_parser once for each row using one or more strings (corresponding to the columns defined by parse_dates) as arguments.
-   * - dayfirst
+     - Function to use for converting a sequence of string columns to an array of ``datetime`` instances. The default uses ``dateutil.parser.parser`` to do the conversion. *Pandas* will try to call ``date_parser`` in three different ways, advancing to the next if an exception occurs: 1) Pass one or more arrays (as defined by ``parse_dates``) as arguments; 2) concatenate (row-wise) the string values from the columns defined by ``parse_dates`` into a single array and pass that; and 3) call ``date_parser`` once for each row using one or more strings (corresponding to the columns defined by ``parse_dates``) as arguments.
+   * - ``dayfirst``
      - bool, default False
      - DD/MM format dates, international and European format.
 
-   * - cache_dates
-     - bool, default True
-     - If True, use a cache of unique, converted dates to apply the datetime conversion. May produce significant speed-up when parsing duplicate date strings, especially ones with timezone offsets.
-   * - thousands
+   * - ``cache_dates``
+     - bool, default ``True``
+     - If ``True``, use a cache of unique, converted dates to apply the ``datetime`` conversion. May produce significant speed-up when parsing duplicate date strings, especially ones with timezone offsets.
+   * - ``thousands``
      - str, optional
      - Thousands separator.
-   * - decimal
+   * - ``decimal``
      - str, default ‘.’
      - Character to recognize as decimal point (e.g. use ‘,’ for European data).
-   * - lineterminator
+   * - ``lineterminator``
      - str (length 1), optional
      - Character to break file into lines. Only valid with C parser.
-   * - escapechar
+   * - ``escapechar``
      - str (length 1), optional
      - One-character string used to escape other characters.
-   * - comment
+   * - ``comment``
      - str, optional
      - Indicates remainder of line should not be parsed. If found at the beginning of a line, the line will be ignored altogether.
-   * - encoding
+   * - ``encoding``
      - str, optional
      - Encoding to use for UTF when reading/writing (ex. ‘utf-8’).
-   * - dialect
+   * - ``dialect``
      - str or csv.Dialect, optional
-     - If provided, this parameter will override values (default or not) for the following parameters: delimiter, doublequote, escapechar, skipinitialspace, quotechar, and quoting
-   * - low_memory
+     - If provided, this parameter will override values (default or not) for the following parameters: ``delimiter``, ``doublequote``, ``escapechar``, ``skipinitialspace``, ``quotechar``, and ``quoting``.
+   * - ``low_memory``
      - bool, default True
-     - Internally process the file in chunks, resulting in lower memory use while parsing, but possibly mixed type inference. To ensure no mixed types either set False, or specify the type with the dtype parameter. Note that the entire file is read into a single DataFrame regardless,
-   * - memory_map
+     - Internally process the file in chunks, resulting in lower memory use while parsing, but possibly mixed type inference. To ensure no mixed types either set ``False``, or specify the type with the ``dtype`` parameter. Note that the entire file is read into a single ``DataFrame`` regardless,
+   * - ``memory_map``
      - bool, default False
      - map the file object directly onto memory and access the data directly from there. Using this option can improve performance because there is no longer any I/O overhead.
 
@@ -701,8 +698,8 @@ Hence, you can provide this in the read_data_options. Just add the :code:`sep: "
 E2E Example
 -----------
 
-A complete end to end solution is provided in this section to prove the capabilities of **igel**.
-As explained previously, you need to create a yaml configuration file. Here is an end to end example for
+A complete end to end solution is provided in this section to prove the capabilities of *igel*.
+As explained previously, you need to create a ``yaml`` configuration file. Here is an end to end example for
 predicting whether someone have diabetes or not using the **decision tree** algorithm. The dataset can be found in the examples folder.
 
 -  **Fit/Train a model**:
@@ -720,39 +717,40 @@ predicting whether someone have diabetes or not using the **decision tree** algo
 
     $ igel fit -dp path_to_the_dataset -yml path_to_the_yaml_file
 
-That's it, igel will now fit the model for you and save it in a model_results folder in your current directory.
+That's it, *igel* will now fit the model for you and save it in a ``model_results`` folder in your current directory, creating this folder if necessary.
 
 
 - **Evaluate the model**:
 
-Evaluate the pre-fitted model. Igel will load the pre-fitted model from the model_results directory and evaluate it for you.
+Evaluate the pre-fitted model. *Igel* will load the pre-fitted model from the ``model_results`` directory and evaluate it for you.
 You just need to run the evaluate command and provide the path to your evaluation data.
 
 .. code-block:: console
 
     $ igel evaluate -dp path_to_the_evaluation_dataset
 
-That's it! Igel will evaluate the model and store statistics/results in an **evaluation.json** file inside the model_results folder
+That's it! *Igel* will evaluate the model and store statistics/results in an ``evaluation.json`` file inside the ``model_results`` folder
 
 - **Predict**:
 
-Use the pre-fitted model to predict on new data. This is done automatically by igel, you just need to provide the
+Use the pre-fitted model to predict on new data. This is done automatically by *igel*, you just need to provide the
 path to your data that you want to use prediction on.
 
 .. code-block:: console
 
     $ igel predict -dp path_to_the_new_dataset
 
-That's it! Igel will use the pre-fitted model to make predictions and save it in a **predictions.csv** file inside the model_results folder
+That's it! *Igel* will use the pre-fitted model to make predictions and save it in a ``predictions.csv`` file inside the ``model_results`` folder
 
 Advanced Usage
 ---------------
 
-You can also carry out some preprocessing methods or other operations by providing them in the yaml file.
+You can also carry out some preprocessing methods or other operations by providing them in the ``yaml`` file.
 Here is an example, where the data is split to 80% for training and 20% for validation/testing.
-Also, the data are shuffled while splitting.
+(A split of 0.2 means that 20% of the data will be used for testing and 80% for training).
+The data points are shuffled while splitting.
 
-Furthermore, the data are preprocessed by replacing missing values with the mean ( you can also use median, mode etc..).
+Furthermore, the data are preprocessed by interpolating missing values with the mean ( you can also use median, mode etc..).
 check `this link <https://www.kaggle.com/uciml/pima-indians-diabetes-database>`_ for more information
 
 
@@ -786,7 +784,7 @@ check `this link <https://www.kaggle.com/uciml/pima-indians-diabetes-database>`_
         target:
             - sick
 
-Then, you can fit the model by running the igel command as shown in the other examples
+Then, you can fit the model by running the ``igel`` command as shown in the other examples
 
 .. code-block:: console
 
@@ -807,27 +805,27 @@ For production
 Examples
 ----------
 
-In the examples folder in the repository, you will find a data folder,where the famous indian-diabetes, iris dataset
-and the linnerud (from sklearn) datasets are stored.
-Furthermore, there are end to end examples inside each folder, where there are scripts and yaml files that
-will help you get started.
+In the examples folder in the repository, you will find a ``data`` folder where the famous indian-diabetes, iris dataset,
+and the linnerud (from *sklearn*) datasets are stored.
+Furthermore, there are end to end examples inside each folder with scripts and ``yaml`` files to
+help you get started.
 
 
-The indian-diabetes-example folder contains two examples to help you get started:
+The ``indian-diabetes-example`` folder contains two examples to help you get started:
 
-- The first example is using a **neural network**, where the configurations are stored in the neural-network.yaml file
-- The second example is using a **random forest**, where the configurations are stored in the random-forest.yaml file
+- The first example uses a **neural network**, where the configurations are stored in the ``neural-network.yaml`` file
+- The second example uses **random forest classification** (RFC), where the configurations are stored in the ``random-forest.yaml`` file
 
-The iris-example folder contains a **logistic regression** example, where some preprocessing (one hot encoding)
-is conducted on the target column to show you more the capabilities of igel.
+The ``iris-example`` folder contains a **logistic regression** example, where some preprocessing (one hot encoding)
+is conducted on the target column to show you the capabilities of *igel*.
 
-Furthermore, the multioutput-example contains a **multioutput regression** example.
-Finally, the cv-example contains an example using the Ridge classifier using cross validation.
+Furthermore, the ``multioutput-example`` contains a **multioutput regression** example.
+Finally, the ``cv-example`` contains an example using a cross-validated Ridge classifier.
 
-You can also find a cross validation and a hyperparameter search examples in the folder.
+You can also find cross validation and hyperparameter search examples in the folder.
 
-I suggest you play around with the examples and igel cli. However,
-you can also directly execute the fit.py, evaluate.py and predict.py if you want to.
+Take a little time to play around with the examples and *igel* cli.
+You can also directly execute the ``fit.py``, ``evaluate.py`` and ``predict.py`` if you want to.
 
 Auto ML Examples
 ------------------
@@ -836,18 +834,31 @@ ImageClassification
 ####################
 
 First, create or modify a dataset of images that are categorized into sub-folders based on the image label/class
-For example, if you are have dogs and cats images, then you will need 2 sub-folders:
+For example, if you have dog and cat images, then you will need 2 sub-folders:
 
-- folder 0, which contains cats images (here the label 0 indicates a cat)
-- folder 1, which contains dogs images (here the label 1 indicates a dog)
+- folder ``0``, which contains cat images (here the label 0 indicates a cat)
+- folder ``1``, which contains dog images (here the label 1 indicates a dog)
 
-Assuming these two sub-folder are contained in one parent folder called images, just feed data to igel:
+| images/
+| ├── 0/
+| │   ├── catpicture00.jpg
+| │   ├── catpicture01.bmp
+| │   ├── [...]
+| │   └── catpicture99.png
+| └── 1/
+|     ├── dogpicture00.jpg
+|     ├── dogpicture01.bmp
+|     ├── [...]
+|     └── dogpicture99.png
+
+
+Assuming these two sub-folders are within a parent folder called ``images``, just feed data to *igel*:
 
 .. code-block:: console
 
     $ igel auto-train -dp ./images --task ImageClassification
 
-Igel will handle everything from pre-processing the data to optimizing hyperparameters. At the end,
+*Igel* will handle everything from pre-processing the data to optimizing hyperparameters. At the end,
 the best model will be stored in the current working dir.
 
 
@@ -856,33 +867,33 @@ TextClassification
 ####################
 
 First, create or modify a text dataset that are categorized into sub-folders based on the text label/class
-For example, if you are have a text dataset of positive and negative feedbacks, then you will need 2 sub-folders:
+For example, if you are have a text dataset of positive and negative feedbacks, then you will need 2 sub-folders, just like Image Classification above:
 
 - folder 0, which contains negative feedbacks (here the label 0 indicates a negative one)
 - folder 1, which contains positive feedbacks (here the label 1 indicates a positive one)
 
-Assuming these two sub-folder are contained in one parent folder called texts, just feed data to igel:
+Assuming these two sub-folder are contained in one parent folder called ``texts``, just feed data to *igel*:
 
 .. code-block:: console
 
     $ igel auto-train -dp ./texts --task TextClassification
 
-Igel will handle everything from pre-processing the data to optimizing hyperparameters. At the end,
+*Igel* will handle everything from pre-processing the data to optimizing hyperparameters. After processing
 the best model will be stored in the current working dir.
 
 
 GUI
 ----
 
-You can also run the igel UI if you are not familiar with the terminal. Just install igel on your machine
-as mentioned above. Then run this single command in your terminal
+You can also run the *igel* UI if you are not familiar with terminal commands. Just install *igel* on your machine
+as :ref:`mentioned above<Installation>`. Then run this simple, single command in your terminal:
 
 .. code-block:: console
 
     $ igel gui
 
-This will open up the gui, which is very simple to use. Check examples of how the gui looks like and how to use it
-here: https://github.com/nidhaloff/igel-ui
+This opens up the gui, which is very easy to use. Check examples of how the gui looks and how to use it
+here: `https://github.com/nidhaloff/igel-ui<https://github.com/nidhaloff/igel-ui>`_.
 
 
 Running with Docker
@@ -890,7 +901,7 @@ Running with Docker
 
 - Use the official image (recommended):
 
-You can pull the image first from docker hub
+You can pull the image first from docker hub:
 
 .. code-block:: console
 
@@ -903,15 +914,15 @@ Then use it:
     $ docker run -it --rm -v $(pwd):/data nidhaloff/igel fit -yml 'your_file.yaml' -dp 'your_dataset.csv'
 
 
-- Alternatively, you can create your own image locally if you want:
+- Alternatively, you can create your own image locally:
 
-You can run igel inside of docker by first building the image:
+First build the image:
 
 .. code-block:: console
 
     $ docker build -t igel .
 
-And then running it and attaching your current directory (does not need to be the igel directory) as /data (the workdir) inside of the container:
+And then running it and attach your current directory (does not need to be the *igel* directory) as ``/data`` (the workdir) inside of the container:
 
 .. code-block:: console
 
@@ -920,8 +931,7 @@ And then running it and attaching your current directory (does not need to be th
 Links
 ------
 
-- Article: https://medium.com/@nidhalbacc/machine-learning-without-writing-code-984b238dd890
-
+- Article: `https://medium.com/@nidhalbacc/machine-learning-without-writing-code-984b238dd890<https://medium.com/@nidhalbacc/machine-learning-without-writing-code-984b238dd890>`_
 
 
 Help/GetHelp
@@ -930,7 +940,7 @@ Help/GetHelp
 If you are facing any problems, please feel free to open an issue.
 Additionally, you can make contact with the author for further information/questions.
 
-Do you like igel?
+Do you like *igel*?
 You can always help the development of this project by:
 
 - Following on github and/or twitter
