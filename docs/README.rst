@@ -31,7 +31,7 @@ igel
 
 |
 
-A delightful machine learning tool that allows you to train/fit, test and use models **without writing code**
+A delightful machine learning tool that allows you to train/fit, test and use machine learning (ML) models **without writing code**
 
 .. note::
     I'm also working on a GUI desktop app for igel based on people's requests. You can find it under
@@ -52,36 +52,47 @@ Introduction
 The goal of the project is to provide machine learning for **everyone**, both technical and non-technical
 users.
 
-I needed a tool sometimes, which I can use to fast create a machine learning prototype. Whether to build
-some proof of concept, create a fast draft model to prove a point or use auto ML. I find myself often stuck at writing
-boilerplate code and thinking too much where to start. Therefore, I decided to create this tool.
+* **If you** are a non-technical person who wants to use machine learning, but you don't know how to code or you don't want to write code,
+then *igel* is for you.
 
-igel is built on top of other ML frameworks. It provides a simple way to use machine learning without writing
-a **single line of code**. Igel is **highly customizable**, but only if you want to. Igel does not force you to
-customize anything. Besides default values, igel can use auto-ml features to figure out a model that can work great with your data.
+* **If you** need a tool to quickly create machine learning prototypes. Whether you want to build
+a proof of concept, create a fast draft model to prove a point or use auto ML. If you find yourself often stuck writing
+boilerplate code and/or thinking too much where to start, *igel* is for you.
 
-All you need is a **yaml** (or **json**) file, where you need to describe what you are trying to do. That's it!
+* **If you**  are a data scientist, machine learning engineer or a software engineer who wants to quickly
+create machine learning models, then *igel* is for you too.
 
-Igel supports regression, classification and clustering.
-Igel's supports auto-ml features like ImageClassification and TextClassification
+I created *igel* for all of us.
 
-Igel supports most used dataset types in the data science field. For instance, your input dataset can be
-a csv, txt, excel sheet, json or even html file that you want to fetch. If you are using auto-ml features, then you can even
-feed raw data to igel and it will figure out how to deal with it. More on this later in the examples.
+Ease of use:
+- *Igel* is built on top of other ML frameworks. It provides an easy way to use machine learning without writing
+a **single line of code**.
+- *Igel* is **highly customizable**, but only if you want to.
+- *Igel* does not force you to customize *anything*.
+- Besides default values, *igel* can use auto-ml features to figure out which model(s) work great with your data.
+
+All you need is a **yaml** (or **json**) file, where you describe what you are trying to do. *That's it!*
+
+*Igel* supports regression, classification and clustering.
+*Igel* supports auto-ml features like ``ImageClassification`` and ``TextClassification``
+
+*Igel* supports most dataset types used in the data science field. For instance, your input dataset can be
+a ``csv``, ``txt``, excel sheet, ``json`` or even ``html`` file that you want to fetch. If using auto-ml features, you can even
+feed raw data to *igel* and it will figure out how to deal with it. See the :ref:`examples<Examples>` for how this works.
 
 
 Features
 ---------
 
-- Supports most dataset types (csv, txt, excel, json, html) even just raw data stored in folders
+- Supports most dataset types (``csv``, ``txt``, ``xls``, ``xlsx``, ``json``, ``html``) or raw data stored in folders
 - Supports all state of the art machine learning models (even preview models)
-- Supports different data preprocessing methods
+- Supports multiple data preprocessing methods
 - Provides flexibility and data control while writing configurations
 - Supports cross validation
-- Supports both hyperparameter search (version >= 0.2.8)
-- Supports yaml and json format
+- Supports hyperparameter search (version >= 0.2.8)
+- Supports ``yaml`` and ``json`` format
 - Usage from GUI
-- Supports different sklearn metrics for regression, classification and clustering
+- Supports different ``sklearn`` metrics for regression, classification and clustering
 - Supports multi-output/multi-target regression and classification
 - Supports multi-processing for parallel model construction
 - Support for **auto machine learning**
@@ -89,7 +100,7 @@ Features
 Installation
 -------------
 
-- The easiest way is to install igel using `pip <https://packaging.python.org/guides/tool-recommendations/>`_
+- The easiest way is to install *igel* using `pip <https://packaging.python.org/guides/tool-recommendations/>`_
 
 .. code-block:: console
 
@@ -98,7 +109,7 @@ Installation
 Models
 -------
 
-Igel's supported models:
+*Igel*'s supported models:
 
 .. code-block:: console
 
@@ -136,18 +147,18 @@ Igel's supported models:
 
 For auto ML:
 
-- ImageClassifier
-- TextClassifier
-- ImageRegressor
-- TextRegressor
-- StructeredDataClassifier
-- StructeredDataRegressor
-- AutoModel
+- ``ImageClassifier``
+- ``TextClassifier``
+- ``ImageRegressor``
+- ``TextRegressor``
+- ``StructeredDataClassifier``
+- ``StructeredDataRegressor``
+- ``AutoModel``
 
 Quick Start
 ------------
 
-The help command is very useful to check supported commands and corresponding args/options
+The ``--help`` command is very useful to check supported commands and corresponding arguments/options:
 
 .. code-block:: console
 
@@ -160,18 +171,18 @@ You can also run help on sub-commands, for example:
     $ igel fit --help
 
 
-Igel is highly customizable. If you know what you want and want to configure your model manually,
-then check the next sections, which will guide you on how to write a yaml or a json config file.
-After that, you just have to tell igel, what to do and where to find your data and config file.
+*Igel* is highly customizable. The next sections provide a comprehensive guide on how to write a
+``yaml`` or ``json`` configuration file if you know what you want and want to configure your model manually.
+All you need to do after this is tell *igel*, what to do and where to find your data and config file.
 Here is an example:
 
 .. code-block:: console
 
     $ igel fit --data_path 'path_to_your_csv_dataset.csv' --yaml_path 'path_to_your_yaml_file.yaml'
 
-However, you can also use the auto-ml features and let igel do everything for you.
+However, you can also use the auto-ml features and let *igel* do everything for you.
 A great example for this would be image classification. Let's imagine you already have a dataset
-of raw images stored in a folder called **images**
+of raw images stored in a folder called ``images``
 
 All you have to do is run:
 
@@ -179,26 +190,15 @@ All you have to do is run:
 
     $ igel auto-train --data_path 'path_to_your_images_folder' --task ImageClassification
 
-That's it! Igel will read the images from the directory,
-process the dataset (converting to matrices, rescale, split, etc...) and start training/optimizing
-a model that works good on your data. As you can see it's pretty easy, you just have to provide the path
-to your data and the task you want to perform.
+That's it! *Igel* will read the images from the directory,
+process the dataset (converting to matrices, rescale, split, etc...), and start training/optimizing
+a model that works great with your data.
+As you can see it's pretty easy: All you need to do is provide the path to your data and the task you want to perform.
 
 .. note::
 
-    This feature is computationally expensive as igel would try many
-    different models and compare their performance in order to find the 'best' one.
-
-
-
-Usage
-------
-
-You can run the help command to get instructions. You can also run help on sub-commands!
-
-.. code-block:: console
-
-    $ igel --help
+    This feature is computationally expensive as *igel* tries many
+    different models and compares their performance in order to find the 'best' one.
 
 
 ---------------------------------------------------------------------------------------------------------
@@ -206,15 +206,12 @@ You can run the help command to get instructions. You can also run help on sub-c
 Configuration Step
 ####################
 
-First step is to provide a yaml file (you can also use json if you want)
+First step is to provide a ``yaml`` file (you can also use ``json`` if you want)
 
-You can do this manually by creating a .yaml file (called igel.yaml by convention but you can name if whatever you want)
+You can do this manually by creating a ``.yaml`` file (name should be ``igel.yaml`` but you can name if whatever you want)
 and editing it yourself.
-However, if you are lazy (and you probably are, like me :D), you can use the igel init command to get started fast,
+However, if you are lazy (and you probably are, like me :D), you can use the *igel* init command to get started fast,
 which will create a basic config file for you on the fly.
-
-
-
 
 .. code-block:: console
 
@@ -224,13 +221,14 @@ which will create a basic config file for you on the fly.
 
     Example:
     If I want to use neural networks to classify whether someone is sick or not using the indian-diabetes dataset,
-    then I would use this command to initialize a yaml file n.b. you may need to rename outcome column in .csv to sick:
+    then I would use this command to initialize a yaml file
+    n.b. you may need to rename outcome column in .csv to sick:
 
     $ igel init -type "classification" -model "NeuralNetwork" -target "sick"
     """
     $ igel init
 
-After running the command, an igel.yaml file will be created for you in the current working directory. You can
+After running the command, an ``igel.yaml`` file will be created for you in the current working directory. You can
 check it out and modify it if you want to, otherwise you can also create everything from scratch.
 
 - Demo:
@@ -438,7 +436,7 @@ This example was done using a pre-trained model (created by running igel init --
 **Caveats/Limitations:**
 
 - each predictor used to train the model must make an appearance in your data (i.e. don’t leave any columns out)
-- each list must have the same number of elements or you’ll get an Internal Server Error 
+- each list must have the same number of elements or you’ll get an Internal Server Error
 - as an extension of this, you cannot mix single elements and lists (i.e. {“plas”: 0, “pres”: [1, 2]} isn't allowed)
 - the predict function takes a data path arg and reads in the data for you but with serving and calling your served model, you’ll have to parse the data into JSON yourself however, the python client provided in `examples/python_client.py` will do that for you
 
@@ -448,7 +446,7 @@ This example was done using a pre-trained model (created by running igel init --
 
   from python_client import IgelClient
 
-  # the client allows additional args with defaults: 
+  # the client allows additional args with defaults:
   # scheme="http", endpoint="predict", missing_values="mean"
   client = IgelClient(host='localhost', port=8080)
 
