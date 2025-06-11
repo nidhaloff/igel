@@ -109,3 +109,23 @@ To release a new version:
 2. Commit and push your changes.
 3. Create a new tag (e.g., `git tag v1.2.3 && git push origin v1.2.3`).
 4. The GitHub Actions workflow will automatically build and publish the package to PyPI.
+
+## 👋 For First-Time Contributors
+
+Welcome! We're excited to have you contribute to igel. Here are some tips to help you get started:
+
+- **Read the README and existing documentation** to understand the project's purpose and structure.
+- **Look for issues labeled [`good first issue`](https://github.com/nidhaloff/igel/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22)** — these are great entry points for new contributors.
+- **Ask questions!** If you're unsure about anything, open an issue or comment on an existing one.
+- **Fork the repository** and create a new branch for your changes.
+- **Follow the code style guidelines** (see below).
+- **Write clear commit messages** and link your pull request to the relevant issue (e.g., `Closes #143`).
+- **Be respectful and collaborative** — we value every contribution!
+
+### Useful Resources
+
+- [GitHub's guide to contributing to open source](https://opensource.guide/how-to-contribute/)
+- [How to create a Pull Request](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/about-pull-requests)
+- [Semantic commit messages](https://www.conventionalcommits.org/en/v1.0.0/)
+
+Thank you for helping make igel better!
