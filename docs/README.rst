@@ -973,3 +973,35 @@ License
 MIT license
 
 Copyright (c) 2020-present, Nidhal Baccouri
+
+# Frequently Asked Questions (FAQ)
+
+## What is igel?
+
+igel is a machine learning tool that allows you to train, test, and use models without writing code.
+
+## How do I install igel?
+
+```bash
+pip install igel
+```
+
+## What file formats does igel support for configuration?
+
+igel supports both YAML and JSON configuration files.
+
+## Where can I find example config files?
+
+See the `examples/` directory for sample YAML and JSON configs for different ML tasks.
+
+## How do I contribute to igel?
+
+Check out the [CONTRIBUTING.md](CONTRIBUTING.md) file for guidelines and tips for new contributors.
+
+## Where do I report bugs or request features?
+
+Please open an issue on the [GitHub Issues page](https://github.com/nidhaloff/igel/issues).
+
+## How do I get help?
+
+You can ask questions by opening an issue or joining the project discussions on GitHub.

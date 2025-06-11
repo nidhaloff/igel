@@ -12,6 +12,9 @@ examples/model_results
 examples/pre-release-example
 examples/serving_models
 
+!examples/*.yaml
+!examples/*.yml
+!examples/*.json
 
 # Distribution / packaging
 .Python
@@ -112,3 +115,4 @@ ENV/
 
 # IDE settings
 .vscode/
+
