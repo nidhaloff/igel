@@ -383,8 +383,8 @@ Use *igel* from within python (instead of terminal)
 Serve the model
 #################
 
-The next step is to use your model in production. *Igel* helps you with this task too by providing the serve command.
-Running the serve command will tell *igel* to serve your model. Precisely, *igel* will automatically build
+The next step is to use your model in production. *Igel* helps you with this task too by providing the ``serve`` command.
+Running the ``serve`` command will tell *igel* to serve your model. Precisely, *igel* will automatically build
 a ``REST`` server and serve your model on a specific host and port, which you can configure by passing these as
 command line arguments.
 
