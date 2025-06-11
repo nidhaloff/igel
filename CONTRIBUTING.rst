@@ -101,3 +101,11 @@ Before you submit a pull request, check that it meets these guidelines:
 2. If the pull request adds functionality, the docs should be updated. Put
    your new functionality into a function with a docstring, and add the
    feature to the list in README.rst.
+
+## Releasing to PyPI
+
+To release a new version:
+1. Bump the version in `pyproject.toml`.
+2. Commit and push your changes.
+3. Create a new tag (e.g., `git tag v1.2.3 && git push origin v1.2.3`).
+4. The GitHub Actions workflow will automatically build and publish the package to PyPI.
