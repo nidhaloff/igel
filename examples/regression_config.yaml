@@ -1,0 +1,8 @@
+input: data/regression_data.csv
+target: price
+model:
+  type: regression
+  algorithm: LinearRegression
+  params:
+    fit_intercept: true
+    normalize: false
