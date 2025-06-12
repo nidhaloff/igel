@@ -1,3 +1,6 @@
+.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
+   :alt: Code style: black
+
 ====
 igel
 ====

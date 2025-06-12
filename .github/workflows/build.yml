@@ -39,6 +39,7 @@ jobs:
       run: |
         source "$HOME/.poetry/env"
         STRICT=1 make check-style
+        poetry run black --check .
 
     - name: Run tests
       run: |
