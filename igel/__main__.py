@@ -243,8 +243,10 @@ def help():
 
 @cli.command(context_settings=CONTEXT_SETTINGS)
 def version():
-    """get the version of igel installed on your machine"""
-    print(f"igel version: {igel.__version__}")
+    """
+    Show the current igel version.
+    """
+    click.echo(f"igel version: {igel.__version__}")
 
 
 @cli.command(context_settings=CONTEXT_SETTINGS)
