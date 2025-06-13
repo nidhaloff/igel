@@ -49,6 +49,9 @@ except ImportError:
 
 from sklearn.model_selection import cross_validate, train_test_split
 from sklearn.multioutput import MultiOutputClassifier, MultiOutputRegressor
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.ensemble import RandomForestClassifier
 
 from skl2onnx import convert_sklearn
 from skl2onnx.common.data_types import FloatTensorType
@@ -761,3 +764,17 @@ def validate_data(df: pd.DataFrame, target: str = None) -> None:
     #         raise ValueError(f"Column '{col}' contains negative values, which are not allowed.")
 
     # Add more checks as needed
+
+def build_pipeline(config: dict):
+    steps = []
+    for step in config.get("pipeline", []):
+        if step["type"] == "scaler":
+            if step["algorithm"] == "StandardScaler":
+                steps.append(("scaler", StandardScaler()))
+            # Add more scalers as needed
+        elif step["type"] == "model":
+            if step["algorithm"] == "RandomForestClassifier":
+                params = step.get("params", {})
+                steps.append(("model", RandomForestClassifier(**params)))
+            # Add more models as needed
+    return Pipeline(steps)
