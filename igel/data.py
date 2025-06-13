@@ -77,6 +77,7 @@ from sklearn.utils.multiclass import type_of_target
 from igel.extras.kmedoids import KMedoids
 from igel.extras.kmedians import KMedians
 
+import pandas as pd
 
 import logging
 
@@ -538,4 +539,9 @@ def evaluate_model(model, model_type, x_test, y_pred, y_true, get_score_only, **
                 eval_res[metric.__name__] = metric(y_pred=y_pred, y_true=y_true, **kwargs)
 
     return eval_res
+
+
+def load_data(path: str) -> pd.DataFrame:
+    ...
+    return df
 
