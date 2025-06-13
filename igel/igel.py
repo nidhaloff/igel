@@ -740,3 +740,24 @@ class Igel:
             logger.warning(
                 f"something went wrong while initializing a default file"
             )
+
+def validate_data(df: pd.DataFrame, target: str = None) -> None:
+    """
+    Validates the input DataFrame for missing values, invalid types, and out-of-range values.
+    Raises ValueError with a clear message if validation fails.
+    """
+    # Check for missing values
+    if df.isnull().values.any():
+        raise ValueError("Input data contains missing values. Please clean your data before training.")
+
+    # Check for invalid types (non-numeric in features, if required)
+    for col in df.columns:
+        if col != target and not pd.api.types.is_numeric_dtype(df[col]):
+            raise ValueError(f"Column '{col}' contains non-numeric data. Please ensure all features are numeric.")
+
+    # (Optional) Check for out-of-range values (example: negative values in features that should be positive)
+    # for col in df.columns:
+    #     if (df[col] < 0).any():
+    #         raise ValueError(f"Column '{col}' contains negative values, which are not allowed.")
+
+    # Add more checks as needed
