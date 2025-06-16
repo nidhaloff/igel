@@ -9,6 +9,7 @@ from sklearn.preprocessing import (
     OneHotEncoder,
     StandardScaler,
 )
+from tqdm import tqdm
 
 logging.basicConfig(format="%(levelname)s - %(message)s", level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -20,11 +21,15 @@ def read_data_to_df(data_path: str, **read_data_options):
     """
     file_ext = data_path.split(".")[-1]
     if file_ext == "csv" or file_ext == "txt":
-        return (
-            pd.read_csv(data_path, **read_data_options)
-            if read_data_options
-            else pd.read_csv(data_path)
-        )
+        if "chunksize" in read_data_options:
+            return pd.concat([
+                chunk for chunk in tqdm(
+                    pd.read_csv(data_path, **read_data_options),
+                    desc="Loading data"
+                )
+            ])
+        else:
+            return pd.read_csv(data_path, **read_data_options)
     elif file_ext == "xlsx":
         return (
             pd.read_excel(data_path, **read_data_options)
