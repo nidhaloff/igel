@@ -4,6 +4,7 @@ import json
 import logging
 import os
 import warnings
+import datetime
 
 import joblib
 import numpy as np
@@ -27,6 +28,7 @@ try:
         read_json,
         read_yaml,
     )
+    from igel.model_registry import ModelRegistry
 except ImportError:
     from igel.utils import (
         read_yaml,
@@ -46,6 +48,7 @@ except ImportError:
         read_data_to_df,
     )
     from hyperparams import hyperparameter_search
+    from model_registry import ModelRegistry
 
 from sklearn.model_selection import cross_validate, train_test_split
 from sklearn.multioutput import MultiOutputClassifier, MultiOutputRegressor
@@ -246,34 +249,46 @@ class Igel:
 
     def _save_model(self, model):
         """
-        save the model to a binary file
-        @param model: model to save
-        @return: bool
+        save the fitted model to disk
+        @param model: fitted model to save
         """
-        try:
-            if not os.path.exists(self.results_path):
-                logger.info(
-                    f"creating model_results folder to save results...\n"
-                    f"path of the results folder: {self.results_path}"
-                )
-                os.mkdir(self.results_path)
-            else:
-                logger.info(f"Folder {self.results_path} already exists")
-                logger.warning(
-                    f"data in the {self.results_path} folder will be overridden. If you don't "
-                    f"want this, then move the current {self.results_path} to another path"
-                )
-
-        except OSError:
-            logger.exception(
-                f"Creating the directory {self.results_path} failed "
-            )
-        else:
-            logger.info(
-                f"Successfully created the directory in {self.results_path} "
-            )
-            joblib.dump(model, open(self.default_model_path, "wb"))
-            return True
+        # Save model to default location
+        joblib.dump(model, self.default_model_path)
+        
+        # Register model in the registry
+        registry = ModelRegistry()
+        
+        # Prepare metadata
+        metadata = {
+            "model_type": self.model_type,
+            "model_algorithm": self.model_props.get("algorithm"),
+            "target": self.target,
+            "dataset_props": self.dataset_props,
+            "model_props": self.model_props,
+            "timestamp": datetime.datetime.now().isoformat()
+        }
+        
+        # Register the model
+        model_id = registry.register_model(
+            model_path=self.default_model_path,
+            model_name=f"{self.model_type}_{self.model_props.get('algorithm')}",
+            version="1.0",  # This could be made configurable
+            metadata=metadata
+        )
+        
+        logger.info(f"Model saved and registered with ID: {model_id}")
+        
+        # Save model description
+        description = {
+            "type": self.model_type,
+            "target": self.target,
+            "dataset_props": self.dataset_props,
+            "model_props": self.model_props,
+            "model_id": model_id
+        }
+        
+        with open(self.description_file, "w") as f:
+            json.dump(description, f, indent=2)
 
     def _load_model(self, f: str = ""):
         """
@@ -743,6 +758,63 @@ class Igel:
             logger.warning(
                 f"something went wrong while initializing a default file"
             )
+
+    @staticmethod
+    def list_models(model_name: str = None):
+        """
+        List all registered models or filter by model name.
+        
+        Args:
+            model_name (str, optional): Filter models by name
+            
+        Returns:
+            List[Dict]: List of model metadata
+        """
+        registry = ModelRegistry()
+        return registry.list_models(model_name)
+    
+    @staticmethod
+    def get_model_info(model_id: str):
+        """
+        Get detailed information about a specific model.
+        
+        Args:
+            model_id (str): Model ID to retrieve
+            
+        Returns:
+            Dict: Model metadata
+        """
+        registry = ModelRegistry()
+        return registry.get_model(model_id)
+    
+    @staticmethod
+    def delete_model(model_id: str):
+        """
+        Delete a model from the registry.
+        
+        Args:
+            model_id (str): Model ID to delete
+            
+        Returns:
+            bool: True if successful, False otherwise
+        """
+        registry = ModelRegistry()
+        return registry.delete_model(model_id)
+    
+    @staticmethod
+    def update_model_metadata(model_id: str, metadata: dict):
+        """
+        Update metadata for a registered model.
+        
+        Args:
+            model_id (str): Model ID to update
+            metadata (dict): New metadata to add/update
+            
+        Returns:
+            bool: True if successful, False otherwise
+        """
+        registry = ModelRegistry()
+        return registry.update_metadata(model_id, metadata)
 
 def validate_data(df: pd.DataFrame, target: str = None) -> None:
     """

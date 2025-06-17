@@ -3,6 +3,7 @@ import logging
 import os
 import subprocess
 from pathlib import Path
+import json
 
 import click
 import igel
@@ -270,3 +271,108 @@ def info():
         operating system:       independent
     """
     )
+
+
+@cli.group()
+def registry():
+    """
+    Manage model registry operations
+    """
+    pass
+
+@registry.command(context_settings=CONTEXT_SETTINGS)
+@click.option(
+    "--model_name",
+    "-name",
+    help="Filter models by name",
+)
+def list_models(model_name: str) -> None:
+    """
+    List all registered models or filter by name
+    """
+    models = Igel.list_models(model_name)
+    if not models:
+        click.echo("No models found in registry.")
+        return
+    
+    # Create a table of models
+    table_data = []
+    for model in models:
+        table_data.append({
+            "ID": model["model_id"],
+            "Name": model["model_name"],
+            "Version": model["version"],
+            "Type": model["model_type"],
+            "Algorithm": model["model_algorithm"],
+            "Created": model["timestamp"]
+        })
+    
+    df = pd.DataFrame(table_data)
+    click.echo(tableize(df))
+
+@registry.command(context_settings=CONTEXT_SETTINGS)
+@click.option(
+    "--model_id",
+    "-id",
+    required=True,
+    help="Model ID to get information about",
+)
+def info(model_id: str) -> None:
+    """
+    Get detailed information about a specific model
+    """
+    model_info = Igel.get_model_info(model_id)
+    if not model_info:
+        click.echo(f"No model found with ID: {model_id}")
+        return
+    
+    click.echo("\nModel Information:")
+    for key, value in model_info.items():
+        if isinstance(value, dict):
+            click.echo(f"\n{key}:")
+            for k, v in value.items():
+                click.echo(f"  {k}: {v}")
+        else:
+            click.echo(f"{key}: {value}")
+
+@registry.command(context_settings=CONTEXT_SETTINGS)
+@click.option(
+    "--model_id",
+    "-id",
+    required=True,
+    help="Model ID to delete",
+)
+def delete(model_id: str) -> None:
+    """
+    Delete a model from the registry
+    """
+    if Igel.delete_model(model_id):
+        click.echo(f"Successfully deleted model: {model_id}")
+    else:
+        click.echo(f"Failed to delete model: {model_id}")
+
+@registry.command(context_settings=CONTEXT_SETTINGS)
+@click.option(
+    "--model_id",
+    "-id",
+    required=True,
+    help="Model ID to update",
+)
+@click.option(
+    "--metadata",
+    "-m",
+    required=True,
+    help="JSON string containing metadata to update",
+)
+def update(model_id: str, metadata: str) -> None:
+    """
+    Update metadata for a registered model
+    """
+    try:
+        metadata_dict = json.loads(metadata)
+        if Igel.update_model_metadata(model_id, metadata_dict):
+            click.echo(f"Successfully updated metadata for model: {model_id}")
+        else:
+            click.echo(f"Failed to update metadata for model: {model_id}")
+    except json.JSONDecodeError:
+        click.echo("Error: Invalid JSON format for metadata")
