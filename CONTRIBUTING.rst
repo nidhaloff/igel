@@ -129,3 +129,13 @@ Welcome! We're excited to have you contribute to igel. Here are some tips to hel
 - [Semantic commit messages](https://www.conventionalcommits.org/en/v1.0.0/)
 
 Thank you for helping make igel better!
+
+## Exporting a Trained Model to ONNX
+
+You can export a trained scikit-learn model to ONNX format using the CLI:
+
+```sh
+python -m igel export --model_path path/to/your/model.joblib
+```
+
+This will create an ONNX file (e.g., `model.onnx`) in your results directory for interoperability with other tools.
