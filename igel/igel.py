@@ -197,8 +197,18 @@ class Igel:
     def _create_model(self, **kwargs):
         """
         fetch a model depending on the provided type and algorithm by the user and return it
+        If a custom_model_class is provided (as a class or instance), use it instead.
         @return: class of the chosen model
         """
+        custom_model_class = kwargs.pop("custom_model_class", None)
+        if custom_model_class is not None:
+            # If it's a class, instantiate it; if it's already an instance, use as is
+            if isinstance(custom_model_class, type):
+                model = custom_model_class()
+            else:
+                model = custom_model_class
+            model_args = "custom_model"
+            return model, model_args
         model_type: str = self.model_props.get("type")
         model_algorithm: str = self.model_props.get("algorithm")
         use_cv = self.model_props.get("use_cv_estimator", None)
