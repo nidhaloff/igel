@@ -305,3 +305,56 @@ Finally, the multioutput-example contains a **multioutput regression** example.
 
 I suggest you play around with the examples and igel cli. However,
 you can also directly execute the fit.py, evaluate.py and predict.py if you want to.
+
+Model A/B Testing
+----------------
+
+The ``igel`` package includes functionality to compare two trained models using statistical tests.
+This is useful when you want to determine if there are significant differences between model versions.
+
+Command Line Usage
+~~~~~~~~~~~~~~~~
+
+To compare two trained models::
+
+    python -m igel compare-models \
+        --model_a_path path/to/model_a.joblib \
+        --model_b_path path/to/model_b.joblib \
+        --test_data path/to/test_data.csv \
+        --problem_type classification
+
+Options:
+    - ``--model_a_path``, ``-ma``: Path to first model
+    - ``--model_b_path``, ``-mb``: Path to second model
+    - ``--test_data``, ``-td``: Path to test dataset
+    - ``--problem_type``, ``-pt``: Type of problem (classification or regression)
+
+Python API Usage
+~~~~~~~~~~~~~~
+
+You can also use the A/B testing functionality directly in your Python code::
+
+    from igel.ab_testing import ModelComparison
+    
+    # Initialize comparison
+    comparison = ModelComparison(model_a, model_b, test_type="classification")
+    
+    # Compare models
+    results = comparison.compare_predictions(X_test, y_test)
+    
+    # Generate report
+    report = comparison.generate_report(results)
+    print(report)
+
+The comparison includes:
+    - Performance metrics (accuracy for classification, MSE/R² for regression)
+    - Statistical significance tests
+    - Detailed comparison report
+
+Statistical Tests
+~~~~~~~~~~~~~~~
+
+- For classification problems: McNemar's test
+- For regression problems: Wilcoxon signed-rank test
+
+The p-value indicates whether the difference between models is statistically significant (p < 0.05).

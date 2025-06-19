@@ -376,3 +376,64 @@ def update(model_id: str, metadata: str) -> None:
             click.echo(f"Failed to update metadata for model: {model_id}")
     except json.JSONDecodeError:
         click.echo("Error: Invalid JSON format for metadata")
+
+@cli.command(context_settings=CONTEXT_SETTINGS)
+@click.option(
+    "--model_a_path",
+    "-ma",
+    required=True,
+    help="Path to first model for comparison",
+)
+@click.option(
+    "--model_b_path",
+    "-mb",
+    required=True,
+    help="Path to second model for comparison",
+)
+@click.option(
+    "--test_data",
+    "-td",
+    required=True,
+    help="Path to test dataset for comparison",
+)
+@click.option(
+    "--problem_type",
+    "-pt",
+    type=click.Choice(["classification", "regression"]),
+    default="classification",
+    help="Type of problem (classification or regression)",
+)
+def compare_models(model_a_path: str, model_b_path: str, test_data: str, problem_type: str) -> None:
+    """
+    Compare two trained models using A/B testing framework.
+    
+    This command loads two trained models and compares their performance using
+    statistical tests to determine if there are significant differences.
+    """
+    try:
+        from igel.ab_testing import ModelComparison
+        import joblib
+        import pandas as pd
+        
+        # Load models
+        model_a = joblib.load(model_a_path)
+        model_b = joblib.load(model_b_path)
+        
+        # Load test data
+        test_df = pd.read_csv(test_data)
+        X_test = test_df.drop(columns=['target']).values  # Assuming 'target' is the label column
+        y_test = test_df['target'].values
+        
+        # Initialize comparison
+        comparison = ModelComparison(model_a, model_b, test_type=problem_type)
+        
+        # Run comparison
+        results = comparison.compare_predictions(X_test, y_test)
+        
+        # Generate and print report
+        report = comparison.generate_report(results)
+        print("\n" + report + "\n")
+        
+    except Exception as e:
+        logger.exception(f"Error during model comparison: {e}")
+        raise click.ClickException(str(e))
