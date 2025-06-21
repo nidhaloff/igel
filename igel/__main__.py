@@ -12,6 +12,7 @@ from igel import Igel, metrics_dict
 from igel.constants import Constants
 from igel.servers import fastapi_server
 from igel.utils import print_models_overview, show_model_info, tableize
+from igel.model_registry import models_dict
 
 logger = logging.getLogger(__name__)
 CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
@@ -36,31 +37,46 @@ def cli(verbose):
 @click.option(
     "--model_type",
     "-type",
-    default="regression",
-    show_default=True,
     type=click.Choice(Constants.supported_model_types, case_sensitive=False),
     help="type of the problem you want to solve",
 )
 @click.option(
     "--model_name",
     "-name",
-    default="NeuralNetwork",
-    show_default=True,
     help="algorithm you want to use",
 )
 @click.option(
     "--target",
     "-tg",
-    required=True,
     help="target you want to predict (this is usually the name of column you want to predict)",
 )
 def init(model_type: str, model_name: str, target: str) -> None:
     """
     Initialize a new igel project.
+    This command can be run interactively or by providing command line arguments.
 
     Example:
+        igel init
         igel init --model_type=classification --model_name=RandomForest --target=label
     """
+    if not model_type:
+        model_type = click.prompt(
+            "Please choose a model type",
+            type=click.Choice(Constants.supported_model_types, case_sensitive=False)
+        )
+
+    algorithms = models_dict.get(model_type, {})
+    available_algorithms = list(algorithms.keys())
+
+    if not model_name:
+        model_name = click.prompt(
+            "Please choose an algorithm",
+            type=click.Choice(available_algorithms, case_sensitive=False)
+        )
+
+    if not target:
+        target = click.prompt("Please enter the target column(s) you want to predict (comma-separated)")
+
     Igel.create_init_mock_file(
         model_type=model_type, model_name=model_name, target=target
     )
