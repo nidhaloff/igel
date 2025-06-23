@@ -9,58 +9,40 @@ from sklearn.preprocessing import (
     OneHotEncoder,
     StandardScaler,
 )
-from tqdm import tqdm
 
 logging.basicConfig(format="%(levelname)s - %(message)s", level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-def read_data_to_df(data_path: str, source_type: str = None, connection_string: str = None, sql_query: str = None, **read_data_options):
+def read_data_to_df(data_path: str, **read_data_options):
     """
-    Read data from various sources and convert it to a pandas dataframe.
-    Supports CSV, TXT, Excel, JSON, HTML, Parquet, and SQL.
+    read data depending on its extension and convert it to a pandas dataframe
     """
-    if not source_type:
-        file_ext = data_path.split(".")[-1]
-        if file_ext in ["csv", "txt"]:
-            source_type = "csv"
-        elif file_ext == "xlsx":
-            source_type = "excel"
-        elif file_ext == "json":
-            source_type = "json"
-        elif file_ext == "html":
-            source_type = "html"
-        elif file_ext == "parquet":
-            source_type = "parquet"
-        else:
-            raise ValueError(f"Unknown file extension: {file_ext}. Please specify source_type explicitly.")
-
-    if source_type == "csv":
-        if "chunksize" in read_data_options:
-            return pd.concat([
-                chunk for chunk in tqdm(
-                    pd.read_csv(data_path, **read_data_options),
-                    desc="Loading data"
-                )
-            ])
-        else:
-            return pd.read_csv(data_path, **read_data_options)
-    elif source_type == "excel":
-        return pd.read_excel(data_path, **read_data_options)
-    elif source_type == "json":
-        return pd.read_json(data_path, **read_data_options)
-    elif source_type == "html":
-        return pd.read_html(data_path, **read_data_options)
-    elif source_type == "parquet":
-        return pd.read_parquet(data_path, **read_data_options)
-    elif source_type == "sql":
-        if not connection_string or not sql_query:
-            raise ValueError("For SQL source, both connection_string and sql_query must be provided.")
-        import sqlalchemy
-        engine = sqlalchemy.create_engine(connection_string)
-        return pd.read_sql(sql_query, engine, **read_data_options)
-    else:
-        raise ValueError(f"Unsupported source_type: {source_type}")
+    file_ext = data_path.split(".")[-1]
+    if file_ext == "csv" or file_ext == "txt":
+        return (
+            pd.read_csv(data_path, **read_data_options)
+            if read_data_options
+            else pd.read_csv(data_path)
+        )
+    elif file_ext == "xlsx":
+        return (
+            pd.read_excel(data_path, **read_data_options)
+            if read_data_options
+            else pd.read_excel(data_path)
+        )
+    elif file_ext == "json":
+        return (
+            pd.read_json(data_path, **read_data_options)
+            if read_data_options
+            else pd.read_json(data_path)
+        )
+    elif file_ext == "html":
+        return (
+            pd.read_html(data_path, **read_data_options)
+            if read_data_options
+            else pd.read_html(data_path)
+        )
 
 
 def update_dataset_props(dataset_props: dict, default_dataset_props: dict):

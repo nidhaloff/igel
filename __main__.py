@@ -3,7 +3,6 @@ import logging
 import os
 import subprocess
 from pathlib import Path
-import json
 
 import click
 import igel
@@ -12,71 +11,45 @@ from igel import Igel, metrics_dict
 from igel.constants import Constants
 from igel.servers import fastapi_server
 from igel.utils import print_models_overview, show_model_info, tableize
-from igel.model_registry import models_dict
 
 logger = logging.getLogger(__name__)
 CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
 
 
 @click.group()
-@click.option('--verbose', is_flag=True, help='Enable verbose output for debugging.')
-def cli(verbose):
+def cli():
     """
     The igel command line interface
     """
-    if verbose:
-        logging.basicConfig(level=logging.DEBUG)
-        logger.setLevel(logging.DEBUG)
-        click.echo('Verbose mode is on.')
-    else:
-        logging.basicConfig(level=logging.WARNING)
-        logger.setLevel(logging.WARNING)
+    pass
 
 
 @cli.command(context_settings=CONTEXT_SETTINGS)
 @click.option(
     "--model_type",
     "-type",
+    default="regression",
+    show_default=True,
     type=click.Choice(Constants.supported_model_types, case_sensitive=False),
     help="type of the problem you want to solve",
 )
 @click.option(
     "--model_name",
     "-name",
+    default="NeuralNetwork",
+    show_default=True,
     help="algorithm you want to use",
 )
 @click.option(
     "--target",
     "-tg",
+    required=True,
     help="target you want to predict (this is usually the name of column you want to predict)",
 )
 def init(model_type: str, model_name: str, target: str) -> None:
     """
     Initialize a new igel project.
-    This command can be run interactively or by providing command line arguments.
-
-    Example:
-        igel init
-        igel init --model_type=classification --model_name=RandomForest --target=label
     """
-    if not model_type:
-        model_type = click.prompt(
-            "Please choose a model type",
-            type=click.Choice(Constants.supported_model_types, case_sensitive=False)
-        )
-
-    algorithms = models_dict.get(model_type, {})
-    available_algorithms = list(algorithms.keys())
-
-    if not model_name:
-        model_name = click.prompt(
-            "Please choose an algorithm",
-            type=click.Choice(available_algorithms, case_sensitive=False)
-        )
-
-    if not target:
-        target = click.prompt("Please enter the target column(s) you want to predict (comma-separated)")
-
     Igel.create_init_mock_file(
         model_type=model_type, model_name=model_name, target=target
     )
@@ -94,10 +67,7 @@ def init(model_type: str, model_name: str, target: str) -> None:
 )
 def fit(data_path: str, yaml_path: str) -> None:
     """
-    Fit/train a machine learning model.
-
-    Example:
-        igel fit --data_path=data/train.csv --yaml_path=config.yaml
+    fit/train a machine learning model
     """
     Igel(cmd="fit", data_path=data_path, yaml_path=yaml_path)
 
@@ -260,10 +230,8 @@ def help():
 
 @cli.command(context_settings=CONTEXT_SETTINGS)
 def version():
-    """
-    Show the current igel version.
-    """
-    click.echo(f"igel version: {igel.__version__}")
+    """get the version of igel installed on your machine"""
+    print(f"igel version: {igel.__version__}")
 
 
 @cli.command(context_settings=CONTEXT_SETTINGS)
@@ -287,186 +255,3 @@ def info():
         operating system:       independent
     """
     )
-
-
-@cli.group()
-def registry():
-    """
-    Manage model registry operations
-    """
-    pass
-
-@registry.command(context_settings=CONTEXT_SETTINGS)
-@click.option(
-    "--model_name",
-    "-name",
-    help="Filter models by name",
-)
-def list_models(model_name: str) -> None:
-    """
-    List all registered models or filter by name
-    """
-    models = Igel.list_models(model_name)
-    if not models:
-        click.echo("No models found in registry.")
-        return
-    
-    # Create a table of models
-    table_data = []
-    for model in models:
-        table_data.append({
-            "ID": model["model_id"],
-            "Name": model["model_name"],
-            "Version": model["version"],
-            "Type": model["model_type"],
-            "Algorithm": model["model_algorithm"],
-            "Created": model["timestamp"]
-        })
-    
-    df = pd.DataFrame(table_data)
-    click.echo(tableize(df))
-
-@registry.command(context_settings=CONTEXT_SETTINGS)
-@click.option(
-    "--model_id",
-    "-id",
-    required=True,
-    help="Model ID to get information about",
-)
-def info(model_id: str) -> None:
-    """
-    Get detailed information about a specific model
-    """
-    model_info = Igel.get_model_info(model_id)
-    if not model_info:
-        click.echo(f"No model found with ID: {model_id}")
-        return
-    
-    click.echo("\nModel Information:")
-    for key, value in model_info.items():
-        if isinstance(value, dict):
-            click.echo(f"\n{key}:")
-            for k, v in value.items():
-                click.echo(f"  {k}: {v}")
-        else:
-            click.echo(f"{key}: {value}")
-
-@registry.command(context_settings=CONTEXT_SETTINGS)
-@click.option(
-    "--model_id",
-    "-id",
-    required=True,
-    help="Model ID to delete",
-)
-def delete(model_id: str) -> None:
-    """
-    Delete a model from the registry
-    """
-    if Igel.delete_model(model_id):
-        click.echo(f"Successfully deleted model: {model_id}")
-    else:
-        click.echo(f"Failed to delete model: {model_id}")
-
-@registry.command(context_settings=CONTEXT_SETTINGS)
-@click.option(
-    "--model_id",
-    "-id",
-    required=True,
-    help="Model ID to update",
-)
-@click.option(
-    "--metadata",
-    "-m",
-    required=True,
-    help="JSON string containing metadata to update",
-)
-def update(model_id: str, metadata: str) -> None:
-    """
-    Update metadata for a registered model
-    """
-    try:
-        metadata_dict = json.loads(metadata)
-        if Igel.update_model_metadata(model_id, metadata_dict):
-            click.echo(f"Successfully updated metadata for model: {model_id}")
-        else:
-            click.echo(f"Failed to update metadata for model: {model_id}")
-    except json.JSONDecodeError:
-        click.echo("Error: Invalid JSON format for metadata")
-
-@cli.command(context_settings=CONTEXT_SETTINGS)
-@click.option(
-    "--model_a_path",
-    "-ma",
-    required=True,
-    help="Path to first model for comparison",
-)
-@click.option(
-    "--model_b_path",
-    "-mb",
-    required=True,
-    help="Path to second model for comparison",
-)
-@click.option(
-    "--test_data",
-    "-td",
-    required=True,
-    help="Path to test dataset for comparison",
-)
-@click.option(
-    "--problem_type",
-    "-pt",
-    type=click.Choice(["classification", "regression"]),
-    default="classification",
-    help="Type of problem (classification or regression)",
-)
-def compare_models(model_a_path: str, model_b_path: str, test_data: str, problem_type: str) -> None:
-    """
-    Compare two trained models using A/B testing framework.
-    
-    This command loads two trained models and compares their performance using
-    statistical tests to determine if there are significant differences.
-    """
-    try:
-        from igel.ab_testing import ModelComparison
-        import joblib
-        import pandas as pd
-        
-        # Load models
-        model_a = joblib.load(model_a_path)
-        model_b = joblib.load(model_b_path)
-        
-        # Load test data
-        test_df = pd.read_csv(test_data)
-        X_test = test_df.drop(columns=['target']).values  # Assuming 'target' is the label column
-        y_test = test_df['target'].values
-        
-        # Initialize comparison
-        comparison = ModelComparison(model_a, model_b, test_type=problem_type)
-        
-        # Run comparison
-        results = comparison.compare_predictions(X_test, y_test)
-        
-        # Generate and print report
-        report = comparison.generate_report(results)
-        print("\n" + report + "\n")
-        
-    except Exception as e:
-        logger.exception(f"Error during model comparison: {e}")
-        raise click.ClickException(str(e))
-
-@cli.command(context_settings=CONTEXT_SETTINGS)
-@click.option('--ref_data', required=True, help='Path to reference (e.g., training) data CSV')
-@click.option('--new_data', required=True, help='Path to new (e.g., production) data CSV')
-@click.option('--categorical', default='', help='Comma-separated list of categorical feature names')
-def detect_drift(ref_data, new_data, categorical):
-    """
-    Detect data drift between two datasets (reference and new).
-    Uses KS test for numerical and Chi-Squared for categorical features.
-    """
-    import pandas as pd
-    from igel.drift_detection import detect_drift
-    ref_df = pd.read_csv(ref_data)
-    new_df = pd.read_csv(new_data)
-    categorical_features = [c.strip() for c in categorical.split(',') if c.strip()] if categorical else None
-    report = detect_drift(ref_df, new_df, categorical_features)
-    print(report.to_string(index=False))
