@@ -470,3 +470,12 @@ def detect_drift(ref_data, new_data, categorical):
     categorical_features = [c.strip() for c in categorical.split(',') if c.strip()] if categorical else None
     report = detect_drift(ref_df, new_df, categorical_features)
     print(report.to_string(index=False))
+
+@cli.command(context_settings=CONTEXT_SETTINGS)
+def gpu_info():
+    """
+    Show GPU availability and utilization (PyTorch, TensorFlow, GPUtil).
+    """
+    from igel.gpu_utils import detect_gpu, report_gpu_utilization
+    print(detect_gpu())
+    report_gpu_utilization()
