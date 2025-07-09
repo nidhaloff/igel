@@ -1,0 +1,33 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Basic ML infrastructure with S3 and EC2
+Parameters:
+  S3BucketName:
+    Type: String
+    Description: Name for the S3 bucket
+  AmiId:
+    Type: AWS::EC2::Image::Id
+    Description: AMI ID for EC2 instance
+  InstanceType:
+    Type: String
+    Default: t2.micro
+    Description: EC2 instance type
+Resources:
+  MLDataBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref S3BucketName
+  MLServer:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !Ref AmiId
+      InstanceType: !Ref InstanceType
+      Tags:
+        - Key: Name
+          Value: ML-Server
+Outputs:
+  S3BucketArn:
+    Value: !GetAtt MLDataBucket.Arn
+    Description: ARN of the S3 bucket
+  EC2InstanceId:
+    Value: !Ref MLServer
+    Description: ID of the EC2 instance 
