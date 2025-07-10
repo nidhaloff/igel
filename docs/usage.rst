@@ -2,6 +2,33 @@
 Usage
 =====
 
+=======================
+Quick Start Examples 🚀
+=======================
+
+These are the most commonly used `igel` commands for quickly training and using machine learning models from the CLI.
+
+.. code-block:: console
+
+    # 1. Generate a starter config YAML
+    igel init -type "classification" -model "RandomForest" -target "sick"
+
+    # 2. Train the model using your dataset and YAML
+    igel fit -dp path/to/train.csv -yml path/to/igel.yaml
+
+    # 3. Evaluate the trained model
+    igel evaluate -dp path/to/eval.csv
+
+    # 4. Make predictions using the model
+    igel predict -dp path/to/test.csv
+
+    # 5. Run all 3 (fit, evaluate, predict) in one command
+    igel experiment -DP "train.csv eval.csv test.csv" -yml igel.yaml
+
+    # 6. Export model to ONNX
+    igel export -dp model_results/
+
+
 
 you can run this command to get instruction on how to use the model:
 
