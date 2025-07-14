@@ -1,0 +1,18 @@
+# dataset operations
+dataset:
+    split:
+        test_size: 0.2
+        shuffle: True
+        stratify: default
+#        scale:
+#            method: standard
+#            target: inputs
+
+model:
+    type: regression
+    algorithm: RandomForest
+
+target:
+    - y1
+    - y2
+    - y3

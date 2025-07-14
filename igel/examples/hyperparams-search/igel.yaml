@@ -1,0 +1,32 @@
+# dataset operations
+dataset:
+    type: csv
+    split:  # split options
+        test_size: 0.2  # 0.2 means 20% for the test data, so 80% are automatically for training
+        shuffle: True   # whether to shuffle the data before/while splitting
+
+    preprocess:
+        scale:  # scaling options
+            method: standard    # standardization will scale values to have a 0 mean and 1 standard deviation  | you can also try minmax
+            target: inputs  # scale inputs. | other possible values: [outputs, all] # if you choose all then all values in the dataset will be scaled
+
+
+# model definition
+model:
+    type: classification
+    algorithm: RandomForest
+    hyperparameter_search:
+        method: random_search
+        parameter_grid:
+            max_depth: [6, 10]
+            n_estimators: [100, 300]
+            max_features: [auto, sqrt]
+        arguments:
+            cv: 5
+            refit: true
+            return_train_score: false
+            verbose: 0
+
+# target you want to predict
+target:
+    - sick

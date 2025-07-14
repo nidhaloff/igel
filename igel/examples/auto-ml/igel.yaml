@@ -1,0 +1,9 @@
+
+
+model:
+    type: ImageClassification
+    arguments:
+        max_trials: 1
+
+training:
+    epochs: 10

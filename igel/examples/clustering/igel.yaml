@@ -1,0 +1,18 @@
+
+dataset:
+    type: csv
+
+# model definition
+model:
+    type: clustering
+    algorithm: KMeans
+    arguments:  # if you don't provide these arguments, then default will be used
+        n_clusters: 3
+        init: random
+        n_init: 10
+        max_iter: 300
+        tol: 0.0004
+        random_state: 0
+
+# target you want to predict
+target:     # you can keep this empty since you want to use clustering

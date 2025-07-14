@@ -453,3 +453,29 @@ def compare_models(model_a_path: str, model_b_path: str, test_data: str, problem
     except Exception as e:
         logger.exception(f"Error during model comparison: {e}")
         raise click.ClickException(str(e))
+
+@cli.command(context_settings=CONTEXT_SETTINGS)
+@click.option('--ref_data', required=True, help='Path to reference (e.g., training) data CSV')
+@click.option('--new_data', required=True, help='Path to new (e.g., production) data CSV')
+@click.option('--categorical', default='', help='Comma-separated list of categorical feature names')
+def detect_drift(ref_data, new_data, categorical):
+    """
+    Detect data drift between two datasets (reference and new).
+    Uses KS test for numerical and Chi-Squared for categorical features.
+    """
+    import pandas as pd
+    from igel.drift_detection import detect_drift
+    ref_df = pd.read_csv(ref_data)
+    new_df = pd.read_csv(new_data)
+    categorical_features = [c.strip() for c in categorical.split(',') if c.strip()] if categorical else None
+    report = detect_drift(ref_df, new_df, categorical_features)
+    print(report.to_string(index=False))
+
+@cli.command(context_settings=CONTEXT_SETTINGS)
+def gpu_info():
+    """
+    Show GPU availability and utilization (PyTorch, TensorFlow, GPUtil).
+    """
+    from igel.gpu_utils import detect_gpu, report_gpu_utilization
+    print(detect_gpu())
+    report_gpu_utilization()

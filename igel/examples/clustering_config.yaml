@@ -1,0 +1,8 @@
+input: data/clustering_data.csv
+# No target for clustering
+model:
+  type: clustering
+  algorithm: KMeans
+  params:
+    n_clusters: 3
+    random_state: 42

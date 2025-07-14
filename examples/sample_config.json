@@ -1,0 +1,13 @@
+
+{
+  "input":  "data/dataset.csv",
+  "target":  "label",
+  "model": {
+    "type": "classification",
+    "algorithm": "RandomForestClassifier",
+    "params": {
+      "n_estimators": 100,
+      "max_depth": 5
+    }
+  }
+} 

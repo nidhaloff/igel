@@ -1,5 +1,3 @@
-
-
 model:
     type: ImageClassification
     arguments:
@@ -7,3 +5,8 @@ model:
 
 training:
     epochs: 10
+
+dataset:
+  source_type: sql
+  connection_string: "sqlite:///mydb.sqlite"
+  sql_query: "SELECT * FROM my_table"

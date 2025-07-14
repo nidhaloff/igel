@@ -1,0 +1,13 @@
+
+
+dataset:
+    type: csv
+
+# model definition
+model:
+    type: classification
+    algorithm: NeuralNetwork
+
+# target(s) you want to predict
+target:
+    - sick

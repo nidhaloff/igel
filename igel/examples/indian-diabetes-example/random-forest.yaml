@@ -1,0 +1,34 @@
+
+
+dataset:
+    type: csv
+    random_numbers:
+        generate_reproducible: true
+        seed: 42
+    split:
+        test_size: 0.2
+        shuffle: True
+
+    preprocess:
+        missing_values: mean
+        encoding:
+            type: oneHotEncoding
+        scale:
+            method: standard
+            target: inputs
+
+model:
+    type: classification
+    algorithm: RandomForest
+    arguments:
+        n_estimators: 100
+        max_depth: 30
+    hyperparameter_search:
+    method: random_search
+    parameter_grid:
+        max_depth: [6, 10]
+        n_estimators: [100, 300]
+        max_features: [auto, sqrt]
+
+target:
+    - sick
