@@ -479,3 +479,10 @@ def gpu_info():
     from igel.gpu_utils import detect_gpu, report_gpu_utilization
     print(detect_gpu())
     report_gpu_utilization()
+
+@cli.command()
+@click.option('--results_dir', default='results', help='Directory with model result files')
+def leaderboard(results_dir):
+    """Generate a leaderboard comparing all trained models."""
+    from igel.leaderboard import generate_leaderboard
+    generate_leaderboard(results_dir)
