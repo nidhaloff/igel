@@ -479,3 +479,51 @@ def gpu_info():
     from igel.gpu_utils import detect_gpu, report_gpu_utilization
     print(detect_gpu())
     report_gpu_utilization()
+
+@cli.command()
+@click.option('--results_dir', default='results', help='Directory with model result files')
+def leaderboard(results_dir):
+    """Generate a leaderboard comparing all trained models."""
+    from igel.leaderboard import generate_leaderboard
+    generate_leaderboard(results_dir)
+
+@cli.command(context_settings=CONTEXT_SETTINGS)
+@click.option('--action', required=True, 
+              type=click.Choice(['optimize', 'allocate', 'simulate']),
+              help='Action to perform: optimize trajectory, allocate resources, or simulate mission')
+@click.option('--config_path', required=True, help='Path to mission configuration JSON file')
+@click.option('--output_path', default='mission_results.json', help='Output file path')
+def space_mission(action, config_path, output_path):
+    """
+    Perform space mission planning operations.
+    """
+    import json
+    from igel.space_mission import optimize_trajectory, allocate_resources, simulate_mission
+    
+    # Load mission configuration
+    with open(config_path, 'r') as f:
+        config = json.load(f)
+    
+    # Perform requested action
+    if action == 'optimize':
+        start_point = config.get('start_point', [0, 0, 0])
+        end_point = config.get('end_point', [1000, 0, 0])
+        constraints = config.get('constraints', {})
+        results = optimize_trajectory(start_point, end_point, constraints)
+    
+    elif action == 'allocate':
+        mission_goals = config.get('mission_goals', [])
+        available_resources = config.get('available_resources', {})
+        results = allocate_resources(mission_goals, available_resources)
+    
+    else:  # simulate
+        mission_plan = config.get('mission_plan', {})
+        environment_params = config.get('environment_params', {})
+        results = simulate_mission(mission_plan, environment_params)
+    
+    # Save results
+    with open(output_path, 'w') as f:
+        json.dump(results, f, indent=2)
+    
+    print(f"Space mission {action} completed. Results saved to {output_path}")
+    print(f"Results: {results}")
