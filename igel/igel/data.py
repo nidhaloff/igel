@@ -76,6 +76,7 @@ from sklearn.utils.multiclass import type_of_target
 
 from igel.extras.kmedoids import KMedoids
 from igel.extras.kmedians import KMedians
+from igel.few_shot_learning import MAMLClassifier, PrototypicalNetwork
 
 import pandas as pd
 
@@ -489,6 +490,17 @@ models_dict = {
                     "#sklearn.cluster.OPTICS"
         },
 
+    },
+
+    "few_shot_learning": {
+        "MAML": {
+            "class": MAMLClassifier,
+            "link": "https://arxiv.org/abs/1703.03400",
+        },
+        "PrototypicalNetwork": {
+            "class": PrototypicalNetwork,
+            "link": "https://arxiv.org/abs/1703.05175",
+        },
     }
 
 }
@@ -498,6 +510,9 @@ metrics_dict = {
         mean_squared_error, mean_absolute_error, mean_squared_log_error, median_absolute_error, r2_score
     ),
     "classification": (
+        accuracy_score, f1_score, precision_score, recall_score
+    ),
+    "few_shot_learning": (
         accuracy_score, f1_score, precision_score, recall_score
     )
 }

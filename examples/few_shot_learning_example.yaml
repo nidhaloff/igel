@@ -1,0 +1,40 @@
+# Few-shot Learning Configuration Example
+# This example shows how to configure igel for few-shot learning tasks
+
+# Dataset configuration
+dataset:
+  # Data preprocessing options
+  missing_values: "drop"  # or "fill"
+  categorical_encoding: "label"  # or "onehot"
+  scaling: "standard"  # or "minmax", "robust"
+  
+  # Few-shot learning specific options
+  random_numbers:
+    generate_reproducible: true
+    seed: 42
+
+# Model configuration for few-shot learning
+model:
+  type: "few_shot_learning"  # New model type for few-shot learning
+  algorithm: "MAML"  # Options: "MAML", "PrototypicalNetwork"
+  
+  # MAML-specific arguments
+  arguments:
+    # Learning rates
+    inner_lr: 0.01      # Learning rate for inner loop adaptation
+    outer_lr: 0.001     # Learning rate for outer loop meta-update
+    
+    # Task configuration
+    num_tasks: 10       # Number of tasks to sample per meta-epoch
+    shots_per_task: 5   # Number of examples per class (k-shot learning)
+    inner_steps: 5      # Number of gradient steps for inner loop
+    meta_epochs: 100    # Number of meta-training epochs
+    
+    # For Prototypical Networks, you can also use:
+    # embedding_dim: 64  # Dimension of the embedding space
+
+# Target column(s) to predict
+target: ["target"]
+
+# Example usage:
+# igel few-shot-learn --data_path=data/train.csv --yaml_path=examples/few_shot_learning_example.yaml 

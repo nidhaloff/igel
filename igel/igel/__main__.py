@@ -527,3 +527,174 @@ def space_mission(action, config_path, output_path):
     
     print(f"Space mission {action} completed. Results saved to {output_path}")
     print(f"Results: {results}")
+
+@cli.command(context_settings=CONTEXT_SETTINGS)
+@click.option('--data_path', '-dp', required=True, help='Path to your dataset')
+@click.option('--yaml_path', '-yml', required=True, help='Path to your igel configuration file')
+@click.option('--n_way', default=2, help='Number of classes per task (default: 2)')
+@click.option('--k_shot', default=5, help='Number of examples per class for support set (default: 5)')
+@click.option('--n_query', default=5, help='Number of examples per class for query set (default: 5)')
+@click.option('--num_tasks', default=10, help='Number of tasks to create (default: 10)')
+def few_shot_learn(data_path, yaml_path, n_way, k_shot, n_query, num_tasks):
+    """
+    Train a few-shot learning model using MAML or Prototypical Networks.
+    
+    Example:
+        igel few-shot-learn --data_path=data/train.csv --yaml_path=config.yaml --n_way=3 --k_shot=5
+    """
+    try:
+        from igel.few_shot_learning import create_few_shot_dataset, evaluate_few_shot_model
+        import pandas as pd
+        
+        # Load data
+        df = pd.read_csv(data_path)
+        target_col = 'target'  # This should be configurable from yaml
+        X = df.drop(columns=[target_col]).values
+        y = df[target_col].values
+        
+        # Create few-shot tasks
+        tasks = create_few_shot_dataset(X, y, n_way=n_way, k_shot=k_shot, n_query=n_query)
+        
+        # Load configuration
+        file_ext = yaml_path.split(".")[-1]
+        if file_ext == "yaml":
+            from igel.utils import read_yaml
+            config = read_yaml(yaml_path)
+        else:
+            from igel.utils import read_json
+            config = read_json(yaml_path)
+        
+        # Get model configuration
+        model_props = config.get("model", {})
+        model_type = model_props.get("type")
+        model_algorithm = model_props.get("algorithm")
+        
+        if model_type != "few_shot_learning":
+            raise ValueError("Model type must be 'few_shot_learning' for few-shot learning")
+        
+        # Create model
+        if model_algorithm == "MAML":
+            from igel.few_shot_learning import MAMLClassifier
+            model = MAMLClassifier(
+                inner_lr=model_props.get("arguments", {}).get("inner_lr", 0.01),
+                outer_lr=model_props.get("arguments", {}).get("outer_lr", 0.001),
+                num_tasks=model_props.get("arguments", {}).get("num_tasks", 10),
+                shots_per_task=model_props.get("arguments", {}).get("shots_per_task", 5),
+                inner_steps=model_props.get("arguments", {}).get("inner_steps", 5),
+                meta_epochs=model_props.get("arguments", {}).get("meta_epochs", 100)
+            )
+        elif model_algorithm == "PrototypicalNetwork":
+            from igel.few_shot_learning import PrototypicalNetwork
+            model = PrototypicalNetwork(
+                embedding_dim=model_props.get("arguments", {}).get("embedding_dim", 64),
+                num_tasks=model_props.get("arguments", {}).get("num_tasks", 10),
+                shots_per_task=model_props.get("arguments", {}).get("shots_per_task", 5),
+                meta_epochs=model_props.get("arguments", {}).get("meta_epochs", 100)
+            )
+        else:
+            raise ValueError(f"Unsupported few-shot learning algorithm: {model_algorithm}")
+        
+        # Train model
+        print(f"Training {model_algorithm} model...")
+        model.fit(X, y)
+        
+        # Evaluate on few-shot tasks
+        print("Evaluating model on few-shot tasks...")
+        results = evaluate_few_shot_model(model, tasks)
+        
+        print(f"\nFew-shot learning results:")
+        print(f"Mean accuracy: {results['mean_accuracy']:.4f}")
+        print(f"Std accuracy: {results['std_accuracy']:.4f}")
+        
+        # Save model
+        import joblib
+        joblib.dump(model, "few_shot_model.joblib")
+        print("Model saved as 'few_shot_model.joblib'")
+        
+    except Exception as e:
+        logger.exception(f"Error during few-shot learning: {e}")
+        raise click.ClickException(str(e))
+
+@cli.command(context_settings=CONTEXT_SETTINGS)
+@click.option('--source_data', required=True, help='Path to source domain data')
+@click.option('--target_data', required=True, help='Path to target domain data')
+@click.option('--method', default='fine_tune', 
+              type=click.Choice(['fine_tune', 'domain_adversarial', 'maml']),
+              help='Domain adaptation method')
+@click.option('--output_model', default='adapted_model.joblib', help='Output model path')
+def domain_adapt(source_data, target_data, method, output_model):
+    """
+    Perform domain adaptation from source to target domain.
+    
+    Example:
+        igel domain-adapt --source_data=source.csv --target_data=target.csv --method=fine_tune
+    """
+    try:
+        from igel.few_shot_learning import DomainAdaptation
+        import pandas as pd
+        import joblib
+        
+        # Load data
+        source_df = pd.read_csv(source_data)
+        target_df = pd.read_csv(target_data)
+        
+        # Assume target column is 'target'
+        source_X = source_df.drop(columns=['target']).values
+        source_y = source_df['target'].values
+        target_X = target_df.drop(columns=['target']).values
+        target_y = target_df['target'].values if 'target' in target_df.columns else None
+        
+        # Create a base model (you could load a pre-trained model here)
+        from sklearn.ensemble import RandomForestClassifier
+        base_model = RandomForestClassifier(random_state=42)
+        
+        # Perform domain adaptation
+        adapter = DomainAdaptation(base_model)
+        adapted_model = adapter.adapt_model(source_X, source_y, target_X, target_y, method)
+        
+        # Save adapted model
+        joblib.dump(adapted_model, output_model)
+        print(f"Domain adapted model saved to {output_model}")
+        
+    except Exception as e:
+        logger.exception(f"Error during domain adaptation: {e}")
+        raise click.ClickException(str(e))
+
+@cli.command(context_settings=CONTEXT_SETTINGS)
+@click.option('--source_model', required=True, help='Path to pre-trained source model')
+@click.option('--target_data', required=True, help='Path to target data')
+@click.option('--method', default='feature_extraction',
+              type=click.Choice(['feature_extraction', 'fine_tuning']),
+              help='Transfer learning method')
+@click.option('--output_model', default='transfer_model.joblib', help='Output model path')
+def transfer_learn(source_model, target_data, method, output_model):
+    """
+    Perform transfer learning using a pre-trained model.
+    
+    Example:
+        igel transfer-learn --source_model=pretrained.joblib --target_data=new_data.csv
+    """
+    try:
+        from igel.few_shot_learning import TransferLearning
+        import pandas as pd
+        import joblib
+        
+        # Load pre-trained model
+        source_model = joblib.load(source_model)
+        
+        # Load target data
+        target_df = pd.read_csv(target_data)
+        target_X = target_df.drop(columns=['target']).values
+        target_y = target_df['target'].values
+        
+        # Perform transfer learning
+        transfer = TransferLearning(source_model)
+        transfer_model = transfer.create_transfer_model(source_model, target_X, target_y, method)
+        
+        # Save transfer model
+        joblib.dump(transfer_model, output_model)
+        print(f"Transfer learning model saved to {output_model}")
+        
+    except Exception as e:
+        logger.exception(f"Error during transfer learning: {e}")
+        raise click.ClickException(str(e))

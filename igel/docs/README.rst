@@ -81,7 +81,7 @@ customize anything. Besides default values, igel can use auto-ml features to fig
 
 All you need is a **yaml** (or **json**) file, where you need to describe what you are trying to do. That's it!
 
-Igel supports regression, classification and clustering.
+Igel supports regression, classification, clustering, and few-shot learning.
 Igel's supports auto-ml features like ImageClassification and TextClassification
 
 Igel supports most used dataset types in the data science field. For instance, your input dataset can be
@@ -104,6 +104,8 @@ Features
 - Supports multi-output/multi-target regression and classification
 - Supports multi-processing for parallel model construction
 - Support for **auto machine learning**
+- **Few-shot learning** with MAML and Prototypical Networks
+- **Domain adaptation** and transfer learning utilities
 
 Installation
 -------------
@@ -121,9 +123,9 @@ Igel's supported models:
 
 .. code-block:: console
 
-        +--------------------+----------------------------+-------------------------+
-        |      regression    |        classification      |        clustering       |
-        +--------------------+----------------------------+-------------------------+
+        +--------------------+----------------------------+-------------------------+-------------------------+
+        |      regression    |        classification      |        clustering       |   few_shot_learning     |
+        +--------------------+----------------------------+-------------------------+-------------------------+
         |   LinearRegression |         LogisticRegression |                  KMeans |
         |              Lasso |                      Ridge |     AffinityPropagation |
         |          LassoLars |               DecisionTree |                   Birch |
@@ -150,8 +152,10 @@ Igel's supported models:
         |   BoltzmannMachine |      MultinomialNaiveBayes |                    ---- |
         |           Adaboost |                       ---- |                    ---- |
         |            Bagging |                       ---- |                    ---- |
-        |   GradientBoosting |                       ---- |                    ---- |
-        +--------------------+----------------------------+-------------------------+
+        |   GradientBoosting |                       ---- |                    ---- |                    ---- |
+        |                ---- |                       ---- |                    ---- |                    MAML |
+        |                ---- |                       ---- |                    ---- |        PrototypicalNetwork |
+        +--------------------+----------------------------+-------------------------+-------------------------+
 
 For auto ML:
 
