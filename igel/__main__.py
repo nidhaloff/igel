@@ -15,12 +15,20 @@ from igel.utils import print_models_overview, show_model_info, tableize
 logger = logging.getLogger(__name__)
 CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
 
-
-@click.group()
-def cli():
+@click.group(context_settings=CONTEXT_SETTINGS)
+@click.option(
+    "--log-level",
+    default="INFO",
+    show_default=True,
+    type=click.Choice(["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"], case_sensitive=False),
+    help="Set the logging level.",
+)
+def cli(log_level):
     """
     The igel command line interface
     """
+    logging.basicConfig(level=getattr(logging, log_level.upper()))
+    logger.setLevel(getattr(logging, log_level.upper()))
     pass
 
 
@@ -231,7 +239,7 @@ def help():
 @cli.command(context_settings=CONTEXT_SETTINGS)
 def version():
     """get the version of igel installed on your machine"""
-    print(f"igel version: {igel.__version__}")
+    logger.info(f"igel version: {igel.__version__}")
 
 
 @cli.command(context_settings=CONTEXT_SETTINGS)
