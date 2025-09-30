@@ -1,0 +1,48 @@
+﻿# Model Fairness and Bias Detection Example Configuration
+# GitHub Issue #342 - Create Model Fairness and Bias Detection Framework
+
+# Dataset configuration
+dataset:
+  name: "fairness_test_data"
+  path: "data/fairness_test.csv"
+  target: "outcome"
+  protected_attributes: ["gender", "race", "age_group"]
+
+# Model configuration
+model:
+  type: "classification"
+  algorithm: "random_forest"
+  hyperparameters:
+    n_estimators: 100
+    random_state: 42
+
+# Fairness detection configuration
+fairness:
+  # Protected attributes to analyze
+  protected_attributes:
+    - "gender"
+    - "race" 
+    - "age_group"
+  
+  # Bias detection methods
+  bias_detection:
+    demographic_parity: true
+    equalized_odds: true
+    disparate_impact: true
+    threshold: 0.8
+  
+  # Mitigation methods
+  mitigation:
+    reweight_samples: true
+    apply_constraints: true
+    constraint_type: "demographic_parity"
+  
+  # Reporting
+  generate_report: true
+  visualize_metrics: true
+  save_plots: "output/fairness_plots.png"
+
+# Output configuration
+output:
+  report_path: "output/fairness_report.json"
+  metrics_path: "output/bias_metrics.csv"
