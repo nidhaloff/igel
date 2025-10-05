@@ -718,6 +718,243 @@ def domain_adapt(source_data, target_data, method, output_model):
         raise click.ClickException(str(e))
 
 @cli.command(context_settings=CONTEXT_SETTINGS)
+@click.option('--data_path', '-dp', required=True, help='Path to your dataset')
+@click.option('--yaml_path', '-yml', required=True, help='Path to your igel configuration file')
+@click.option('--ensemble_type', default='voting',
+              type=click.Choice(['voting', 'stacking', 'blending', 'bagging', 'boosting']),
+              help='Type of ensemble to create')
+@click.option('--output_path', default='ensemble_model', help='Output path for ensemble model')
+@click.option('--auto_ensemble', is_flag=True, help='Automatically select best ensemble type')
+def create_ensemble(data_path, yaml_path, ensemble_type, output_path, auto_ensemble):
+    """
+    Create an advanced ensemble model using multiple base models.
+    
+    Example:
+        igel create-ensemble --data_path=data/train.csv --yaml_path=config.yaml --ensemble_type=stacking
+    """
+    try:
+        from igel.ensemble_framework import AdvancedEnsemble, EnsembleBuilder
+        import pandas as pd
+        import numpy as np
+        
+        # Load data
+        df = pd.read_csv(data_path)
+        target_col = 'target'  # This should be configurable from yaml
+        X = df.drop(columns=[target_col]).values
+        y = df[target_col].values
+        
+        # Determine problem type from yaml
+        file_ext = yaml_path.split(".")[-1]
+        if file_ext == "yaml":
+            from igel.utils import read_yaml
+            config = read_yaml(yaml_path)
+        else:
+            from igel.utils import read_json
+            config = read_json(yaml_path)
+        
+        model_props = config.get("model", {})
+        problem_type = model_props.get("type", "classification")
+        
+        if auto_ensemble:
+            # Automatically select best ensemble
+            ensemble = EnsembleBuilder.create_auto_ensemble(X, y, problem_type)
+            print(f"Auto-selected ensemble type: {ensemble.ensemble_type}")
+        else:
+            # Create ensemble with specified type
+            if problem_type == "classification":
+                ensemble = EnsembleBuilder.create_classification_ensemble(ensemble_type)
+            else:
+                ensemble = EnsembleBuilder.create_regression_ensemble(ensemble_type)
+        
+        # Create the ensemble
+        ensemble.create_ensemble()
+        
+        # Train the ensemble
+        print(f"Training {ensemble_type} ensemble...")
+        ensemble.fit(X, y)
+        
+        # Generate and print report
+        report = ensemble.generate_report()
+        print("\n" + report + "\n")
+        
+        # Save ensemble
+        ensemble.save_ensemble(output_path)
+        print(f"Ensemble saved to {output_path}")
+        
+    except Exception as e:
+        logger.exception(f"Error creating ensemble: {e}")
+        raise click.ClickException(str(e))
+
+@cli.command(context_settings=CONTEXT_SETTINGS)
+@click.option('--ensemble_path', required=True, help='Path to saved ensemble model')
+@click.option('--test_data', required=True, help='Path to test dataset')
+@click.option('--output_predictions', help='Path to save predictions')
+def predict_ensemble(ensemble_path, test_data, output_predictions):
+    """
+    Make predictions using a saved ensemble model.
+    
+    Example:
+        igel predict-ensemble --ensemble_path=ensemble_model --test_data=test.csv
+    """
+    try:
+        from igel.ensemble_framework import AdvancedEnsemble
+        import pandas as pd
+        import numpy as np
+        
+        # Load ensemble
+        ensemble = AdvancedEnsemble.load_ensemble(ensemble_path)
+        
+        # Load test data
+        test_df = pd.read_csv(test_data)
+        if 'target' in test_df.columns:
+            X_test = test_df.drop(columns=['target']).values
+            y_true = test_df['target'].values
+        else:
+            X_test = test_df.values
+            y_true = None
+        
+        # Make predictions
+        predictions = ensemble.predict(X_test)
+        
+        print(f"Ensemble predictions completed. Shape: {predictions.shape}")
+        
+        # Calculate metrics if true labels available
+        if y_true is not None:
+            if ensemble.problem_type == "classification":
+                accuracy = accuracy_score(y_true, predictions)
+                print(f"Accuracy: {accuracy:.4f}")
+            else:
+                mse = mean_squared_error(y_true, predictions)
+                r2 = r2_score(y_true, predictions)
+                print(f"MSE: {mse:.4f}, R²: {r2:.4f}")
+        
+        # Save predictions if requested
+        if output_predictions:
+            pred_df = pd.DataFrame({'predictions': predictions})
+            pred_df.to_csv(output_predictions, index=False)
+            print(f"Predictions saved to {output_predictions}")
+        
+    except Exception as e:
+        logger.exception(f"Error making ensemble predictions: {e}")
+        raise click.ClickException(str(e))
+
+@cli.command(context_settings=CONTEXT_SETTINGS)
+@click.option('--model_path', required=True, help='Path to the model to compress')
+@click.option('--data_path', required=True, help='Path to training data')
+@click.option('--compression_method', default='pruning',
+              type=click.Choice(['pruning', 'quantization', 'knowledge_distillation', 'feature_selection']),
+              help='Compression method to use')
+@click.option('--compression_ratio', default=0.5, type=float, help='Target compression ratio (0.0 to 1.0)')
+@click.option('--output_path', default='compressed_model', help='Output path for compressed model')
+@click.option('--validation_data', help='Path to validation data for performance comparison')
+def compress_model(model_path, data_path, compression_method, compression_ratio, output_path, validation_data):
+    """
+    Compress a machine learning model to reduce size while maintaining performance.
+    
+    Example:
+        igel compress-model --model_path=model.joblib --data_path=train.csv --compression_method=pruning
+    """
+    try:
+        from igel.model_compression import ModelCompressor
+        import pandas as pd
+        import joblib
+        
+        # Load model
+        model = joblib.load(model_path)
+        
+        # Load data
+        df = pd.read_csv(data_path)
+        target_col = 'target'
+        X = df.drop(columns=[target_col]).values
+        y = df[target_col].values
+        
+        # Load validation data if provided
+        val_data = None
+        if validation_data:
+            val_df = pd.read_csv(validation_data)
+            X_val = val_df.drop(columns=[target_col]).values
+            y_val = val_df[target_col].values
+            val_data = (X_val, y_val)
+        
+        # Create compressor
+        compressor = ModelCompressor(
+            compression_method=compression_method,
+            target_compression_ratio=compression_ratio
+        )
+        
+        # Compress model
+        print(f"Compressing model using {compression_method}...")
+        compressed_model = compressor.compress_model(model, X, y, validation_data=val_data)
+        
+        # Generate and print report
+        report = compressor.get_compression_report()
+        print("\n" + report + "\n")
+        
+        # Save compressed model
+        compressor.save_compressed_model(output_path)
+        print(f"Compressed model saved to {output_path}")
+        
+    except Exception as e:
+        logger.exception(f"Error compressing model: {e}")
+        raise click.ClickException(str(e))
+
+@cli.command(context_settings=CONTEXT_SETTINGS)
+@click.option('--model_path', required=True, help='Path to the model to optimize')
+@click.option('--data_path', required=True, help='Path to training data')
+@click.option('--optimization_goal', default='accuracy',
+              type=click.Choice(['accuracy', 'speed', 'memory', 'balanced']),
+              help='Optimization goal')
+@click.option('--output_path', default='optimized_model.joblib', help='Output path for optimized model')
+@click.option('--validation_data', help='Path to validation data for optimization')
+def optimize_model(model_path, data_path, optimization_goal, output_path, validation_data):
+    """
+    Optimize a machine learning model for specific performance goals.
+    
+    Example:
+        igel optimize-model --model_path=model.joblib --data_path=train.csv --optimization_goal=speed
+    """
+    try:
+        from igel.model_compression import ModelOptimizer
+        import pandas as pd
+        import joblib
+        
+        # Load model
+        model = joblib.load(model_path)
+        
+        # Load data
+        df = pd.read_csv(data_path)
+        target_col = 'target'
+        X = df.drop(columns=[target_col]).values
+        y = df[target_col].values
+        
+        # Load validation data if provided
+        val_data = None
+        if validation_data:
+            val_df = pd.read_csv(validation_data)
+            X_val = val_df.drop(columns=[target_col]).values
+            y_val = val_df[target_col].values
+            val_data = (X_val, y_val)
+        
+        # Create optimizer
+        optimizer = ModelOptimizer(optimization_goal=optimization_goal)
+        
+        # Optimize model
+        print(f"Optimizing model for {optimization_goal}...")
+        optimized_model = optimizer.optimize_model(model, X, y, validation_data=val_data)
+        
+        # Generate and print report
+        report = optimizer.get_optimization_report()
+        print("\n" + report + "\n")
+        
+        # Save optimized model
+        joblib.dump(optimized_model, output_path)
+        print(f"Optimized model saved to {output_path}")
+        
+    except Exception as e:
+        logger.exception(f"Error optimizing model: {e}")
+        raise click.ClickException(str(e))
+
+@cli.command(context_settings=CONTEXT_SETTINGS)
 @click.option('--source_model', required=True, help='Path to pre-trained source model')
 @click.option('--target_data', required=True, help='Path to target data')
 @click.option('--method', default='feature_extraction',
