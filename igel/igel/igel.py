@@ -10,7 +10,15 @@ import joblib
 import numpy as np
 import pandas as pd
 
+# Import compatibility manager
+from igel.compatibility import get_compatibility_manager
+
+# Get compatibility manager
+compat_manager = get_compatibility_manager()
+
+# Backward compatibility imports with proper fallback
 try:
+    # Try absolute imports first (preferred for newer versions)
     from igel.configs import configs
     from igel.data import evaluate_model, metrics_dict, models_dict
     from igel.hyperparams import hyperparameter_search
@@ -30,25 +38,47 @@ try:
     )
     from igel.model_registry import ModelRegistry
 except ImportError:
-    from igel.utils import (
-        read_yaml,
-        create_yaml,
-        extract_params,
-        _reshape,
-        read_json,
-    )
-    from data import evaluate_model
-    from configs import configs
-    from data import models_dict, metrics_dict
-    from preprocessing import update_dataset_props
-    from preprocessing import (
-        handle_missing_values,
-        encode,
-        normalize,
-        read_data_to_df,
-    )
-    from hyperparams import hyperparameter_search
-    from model_registry import ModelRegistry
+    try:
+        # Try relative imports for backward compatibility
+        from .configs import configs
+        from .data import evaluate_model, metrics_dict, models_dict
+        from .hyperparams import hyperparameter_search
+        from .preprocessing import (
+            encode,
+            handle_missing_values,
+            normalize,
+            read_data_to_df,
+            update_dataset_props,
+        )
+        from .utils import (
+            _reshape,
+            create_yaml,
+            extract_params,
+            read_json,
+            read_yaml,
+        )
+        from .model_registry import ModelRegistry
+    except ImportError:
+        # Final fallback for very old versions
+        from igel.utils import (
+            read_yaml,
+            create_yaml,
+            extract_params,
+            _reshape,
+            read_json,
+        )
+        from data import evaluate_model
+        from configs import configs
+        from data import models_dict, metrics_dict
+        from preprocessing import update_dataset_props
+        from preprocessing import (
+            handle_missing_values,
+            encode,
+            normalize,
+            read_data_to_df,
+        )
+        from hyperparams import hyperparameter_search
+        from model_registry import ModelRegistry
 
 from sklearn.model_selection import cross_validate, train_test_split
 from sklearn.multioutput import MultiOutputClassifier, MultiOutputRegressor

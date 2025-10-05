@@ -419,12 +419,48 @@ def update(model_id: str, metadata: str) -> None:
     default="classification",
     help="Type of problem (classification or regression)",
 )
-def compare_models(model_a_path: str, model_b_path: str, test_data: str, problem_type: str) -> None:
+@click.option(
+    "--confidence_level",
+    "-cl",
+    type=float,
+    default=0.95,
+    help="Confidence level for statistical tests (default: 0.95)",
+)
+@click.option(
+    "--target_column",
+    "-tc",
+    default="target",
+    help="Name of the target column in the dataset (default: 'target')",
+)
+@click.option(
+    "--export_results",
+    "-er",
+    help="Path to export results as JSON file",
+)
+@click.option(
+    "--visualize",
+    "-v",
+    is_flag=True,
+    help="Generate visualization plots",
+)
+@click.option(
+    "--save_plot",
+    "-sp",
+    help="Path to save visualization plot",
+)
+@click.option(
+    "--legacy_mode",
+    is_flag=True,
+    help="Use legacy A/B testing mode for backward compatibility",
+)
+def compare_models(model_a_path: str, model_b_path: str, test_data: str, problem_type: str,
+                  confidence_level: float, target_column: str, export_results: str, 
+                  visualize: bool, save_plot: str, legacy_mode: bool) -> None:
     """
-    Compare two trained models using A/B testing framework.
+    Compare two trained models using enhanced A/B testing framework.
     
     This command loads two trained models and compares their performance using
-    statistical tests to determine if there are significant differences.
+    comprehensive statistical tests to determine if there are significant differences.
     """
     try:
         from igel.ab_testing import ModelComparison
@@ -437,18 +473,39 @@ def compare_models(model_a_path: str, model_b_path: str, test_data: str, problem
         
         # Load test data
         test_df = pd.read_csv(test_data)
-        X_test = test_df.drop(columns=['target']).values  # Assuming 'target' is the label column
-        y_test = test_df['target'].values
+        if target_column not in test_df.columns:
+            raise ValueError(f"Target column '{target_column}' not found in dataset. Available columns: {list(test_df.columns)}")
+        
+        X_test = test_df.drop(columns=[target_column]).values
+        y_test = test_df[target_column].values
         
         # Initialize comparison
         comparison = ModelComparison(model_a, model_b, test_type=problem_type)
         
-        # Run comparison
-        results = comparison.compare_predictions(X_test, y_test)
-        
-        # Generate and print report
-        report = comparison.generate_report(results)
-        print("\n" + report + "\n")
+        if legacy_mode:
+            # Use legacy mode for backward compatibility
+            results = comparison.compare_predictions(X_test, y_test)
+            # Legacy report format
+            report = comparison.generate_report(results)
+            print("\n" + report + "\n")
+        else:
+            # Enhanced mode with new features
+            results = comparison.compare_predictions(X_test, y_test, confidence_level=confidence_level)
+            
+            # Generate and print report
+            report = comparison.generate_report(results)
+            print("\n" + report + "\n")
+            
+            # Export results if requested
+            if export_results:
+                comparison.export_results(results, export_results)
+                print(f"Results exported to: {export_results}")
+            
+            # Generate visualization if requested
+            if visualize or save_plot:
+                comparison.visualize_comparison(results, save_path=save_plot)
+                if not save_plot:
+                    print("Visualization displayed.")
         
     except Exception as e:
         logger.exception(f"Error during model comparison: {e}")
