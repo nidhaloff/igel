@@ -955,6 +955,79 @@ def optimize_model(model_path, data_path, optimization_goal, output_path, valida
         raise click.ClickException(str(e))
 
 @cli.command(context_settings=CONTEXT_SETTINGS)
+@click.option('--model_path', required=True, help='Path to the trained model')
+@click.option('--data_path', required=True, help='Path to dataset for explanation')
+@click.option('--explanation_types', default='feature_importance,partial_dependence,shap_values',
+              help='Comma-separated list of explanation types')
+@click.option('--output_path', default='explanation_report', help='Output path for explanation report')
+@click.option('--create_dashboard', is_flag=True, help='Create visual explanation dashboard')
+@click.option('--dashboard_path', help='Path to save dashboard image')
+@click.option('--interactive_dashboard', is_flag=True, help='Launch interactive dashboard')
+@click.option('--port', default=8050, help='Port for interactive dashboard')
+def explain_model(model_path, data_path, explanation_types, output_path, create_dashboard, 
+                  dashboard_path, interactive_dashboard, port):
+    """
+    Generate comprehensive model explanations and create explainability dashboard.
+    
+    Example:
+        igel explain-model --model_path=model.joblib --data_path=data.csv --create_dashboard
+    """
+    try:
+        from igel.explainability import ModelExplainer, ExplainabilityDashboard
+        import pandas as pd
+        import joblib
+        
+        # Load model
+        model = joblib.load(model_path)
+        
+        # Load data
+        df = pd.read_csv(data_path)
+        target_col = 'target'
+        if target_col in df.columns:
+            X = df.drop(columns=[target_col]).values
+            y = df[target_col].values
+        else:
+            X = df.values
+            y = None
+        
+        # Get feature names
+        feature_names = list(df.columns) if target_col in df.columns else [f'feature_{i}' for i in range(df.shape[1])]
+        
+        # Create explainer
+        explainer = ModelExplainer(model, feature_names)
+        
+        # Parse explanation types
+        exp_types = [exp.strip() for exp in explanation_types.split(',')]
+        
+        # Generate explanations
+        print("Generating model explanations...")
+        explanations = explainer.explain_model(X, y, explanation_types=exp_types)
+        
+        # Generate and print report
+        report = explainer.generate_explanation_report()
+        print("\n" + report + "\n")
+        
+        # Save explanations
+        explainer.save_explanations(output_path)
+        print(f"Explanations saved to {output_path}_explanations.json")
+        
+        # Create static dashboard
+        if create_dashboard:
+            dashboard_save_path = dashboard_path or f"{output_path}_dashboard.png"
+            explainer.create_explanation_dashboard(X, y, save_path=dashboard_save_path)
+            print(f"Dashboard saved to {dashboard_save_path}")
+        
+        # Launch interactive dashboard
+        if interactive_dashboard:
+            print(f"Launching interactive dashboard on port {port}...")
+            dashboard = ExplainabilityDashboard(explainer)
+            dashboard.launch_dashboard(X, y, port=port)
+        
+    except Exception as e:
+        logger.exception(f"Error explaining model: {e}")
+        raise click.ClickException(str(e))
+
+@cli.command(context_settings=CONTEXT_SETTINGS)
 @click.option('--source_model', required=True, help='Path to pre-trained source model')
 @click.option('--target_data', required=True, help='Path to target data')
 @click.option('--method', default='feature_extraction',
