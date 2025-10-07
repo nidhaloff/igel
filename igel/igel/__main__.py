@@ -1028,6 +1028,161 @@ def explain_model(model_path, data_path, explanation_types, output_path, create_
         raise click.ClickException(str(e))
 
 @cli.command(context_settings=CONTEXT_SETTINGS)
+@click.option('--data_paths', required=True, help='Comma-separated paths to client datasets')
+@click.option('--problem_type', default='classification',
+              type=click.Choice(['classification', 'regression']),
+              help='Type of problem to solve')
+@click.option('--model_type', default='logistic_regression',
+              type=click.Choice(['logistic_regression', 'linear_regression', 'random_forest']),
+              help='Type of model to use')
+@click.option('--aggregation_method', default='fedavg',
+              type=click.Choice(['fedavg', 'fedprox']),
+              help='Federated aggregation method')
+@click.option('--num_rounds', default=10, help='Number of federated training rounds')
+@click.option('--epochs_per_round', default=1, help='Number of local epochs per round')
+@click.option('--client_fraction', default=1.0, type=float, help='Fraction of clients per round')
+@click.option('--output_path', default='federated_model', help='Output path for federated model')
+def federated_train(data_paths, problem_type, model_type, aggregation_method, 
+                   num_rounds, epochs_per_round, client_fraction, output_path):
+    """
+    Train a model using federated learning across multiple clients.
+    
+    Example:
+        igel federated-train --data_paths=client1.csv,client2.csv,client3.csv --num_rounds=20
+    """
+    try:
+        from igel.federated_learning import FederatedLearningManager
+        import pandas as pd
+        import numpy as np
+        
+        # Parse data paths
+        data_path_list = [path.strip() for path in data_paths.split(',')]
+        
+        # Create federated learning manager
+        fl_manager = FederatedLearningManager(problem_type=problem_type)
+        
+        # Create global model
+        if problem_type == "classification":
+            if model_type == "random_forest":
+                from sklearn.ensemble import RandomForestClassifier
+                global_model = RandomForestClassifier(n_estimators=10, random_state=42)
+            else:
+                from sklearn.linear_model import LogisticRegression
+                global_model = LogisticRegression(random_state=42)
+        else:
+            if model_type == "random_forest":
+                from sklearn.ensemble import RandomForestRegressor
+                global_model = RandomForestRegressor(n_estimators=10, random_state=42)
+            else:
+                from sklearn.linear_model import LinearRegression
+                global_model = LinearRegression()
+        
+        # Create federation
+        fl_manager.create_federation(global_model, aggregation_method)
+        
+        # Add client data
+        print(f"Loading data from {len(data_path_list)} clients...")
+        for i, data_path in enumerate(data_path_list):
+            df = pd.read_csv(data_path)
+            target_col = 'target'
+            
+            if target_col in df.columns:
+                X = df.drop(columns=[target_col]).values
+                y = df[target_col].values
+            else:
+                # Assume last column is target
+                X = df.iloc[:, :-1].values
+                y = df.iloc[:, -1].values
+            
+            client_id = f"client_{i+1}"
+            fl_manager.add_client_data(client_id, X, y, model_type)
+            print(f"Added {client_id} with {len(X)} samples")
+        
+        # Run federated training
+        print(f"Starting federated training with {num_rounds} rounds...")
+        training_results = fl_manager.run_federated_training(
+            num_rounds=num_rounds,
+            epochs_per_round=epochs_per_round,
+            client_fraction=client_fraction
+        )
+        
+        # Generate and print report
+        if fl_manager.server:
+            report = fl_manager.server.get_training_report()
+            print("\n" + report + "\n")
+            
+            # Save federated model
+            fl_manager.server.save_federated_model(output_path)
+            print(f"Federated model saved to {output_path}")
+        
+        # Print final metrics
+        if 'final_metrics' in training_results:
+            print("Final Model Performance:")
+            for metric, value in training_results['final_metrics'].items():
+                print(f"  {metric}: {value:.4f}")
+        
+    except Exception as e:
+        logger.exception(f"Error in federated training: {e}")
+        raise click.ClickException(str(e))
+
+@cli.command(context_settings=CONTEXT_SETTINGS)
+@click.option('--federated_model_path', required=True, help='Path to saved federated model')
+@click.option('--test_data', required=True, help='Path to test dataset')
+@click.option('--output_predictions', help='Path to save predictions')
+def federated_predict(federated_model_path, test_data, output_predictions):
+    """
+    Make predictions using a federated model.
+    
+    Example:
+        igel federated-predict --federated_model_path=federated_model --test_data=test.csv
+    """
+    try:
+        import joblib
+        import pandas as pd
+        import numpy as np
+        
+        # Load federated model
+        global_model = joblib.load(f"{federated_model_path}_global_model.joblib")
+        
+        # Load test data
+        test_df = pd.read_csv(test_data)
+        target_col = 'target'
+        
+        if target_col in test_df.columns:
+            X_test = test_df.drop(columns=[target_col]).values
+            y_true = test_df[target_col].values
+        else:
+            X_test = test_df.values
+            y_true = None
+        
+        # Make predictions
+        predictions = global_model.predict(X_test)
+        
+        print(f"Federated model predictions completed. Shape: {predictions.shape}")
+        
+        # Calculate metrics if true labels available
+        if y_true is not None:
+            from sklearn.metrics import accuracy_score, mean_squared_error, r2_score
+            
+            if hasattr(global_model, 'predict_proba'):
+                accuracy = accuracy_score(y_true, predictions)
+                print(f"Accuracy: {accuracy:.4f}")
+            else:
+                mse = mean_squared_error(y_true, predictions)
+                r2 = r2_score(y_true, predictions)
+                print(f"MSE: {mse:.4f}, R²: {r2:.4f}")
+        
+        # Save predictions if requested
+        if output_predictions:
+            pred_df = pd.DataFrame({'predictions': predictions})
+            pred_df.to_csv(output_predictions, index=False)
+            print(f"Predictions saved to {output_predictions}")
+        
+    except Exception as e:
+        logger.exception(f"Error making federated predictions: {e}")
+        raise click.ClickException(str(e))
+
+@cli.command(context_settings=CONTEXT_SETTINGS)
 @click.option('--source_model', required=True, help='Path to pre-trained source model')
 @click.option('--target_data', required=True, help='Path to target data')
 @click.option('--method', default='feature_extraction',
