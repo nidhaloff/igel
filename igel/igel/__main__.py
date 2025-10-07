@@ -1183,6 +1183,110 @@ def federated_predict(federated_model_path, test_data, output_predictions):
         raise click.ClickException(str(e))
 
 @cli.command(context_settings=CONTEXT_SETTINGS)
+@click.option('--model_paths', required=True, help='Comma-separated paths to model files')
+@click.option('--test_data', required=True, help='Path to test dataset')
+@click.option('--problem_type', default='classification',
+              type=click.Choice(['classification', 'regression']),
+              help='Type of problem')
+@click.option('--leaderboard_name', default='default', help='Name of the leaderboard')
+@click.option('--output_path', default='leaderboard', help='Output path for leaderboard')
+@click.option('--top_n', default=10, help='Number of top models to show')
+def create_leaderboard(model_paths, test_data, problem_type, leaderboard_name, output_path, top_n):
+    """
+    Create a model comparison leaderboard.
+    
+    Example:
+        igel create-leaderboard --model_paths=model1.joblib,model2.joblib --test_data=test.csv
+    """
+    try:
+        from igel.model_leaderboard import ModelLeaderboard
+        import pandas as pd
+        import numpy as np
+        
+        # Parse model paths
+        model_path_list = [path.strip() for path in model_paths.split(',')]
+        
+        # Load test data
+        test_df = pd.read_csv(test_data)
+        target_col = 'target'
+        
+        if target_col in test_df.columns:
+            X_test = test_df.drop(columns=[target_col]).values
+            y_test = test_df[target_col].values
+        else:
+            X_test = test_df.iloc[:, :-1].values
+            y_test = test_df.iloc[:, -1].values
+        
+        # Create leaderboard
+        leaderboard = ModelLeaderboard(leaderboard_name)
+        
+        # Add models to leaderboard
+        print(f"Adding {len(model_path_list)} models to leaderboard...")
+        for i, model_path in enumerate(model_path_list):
+            model_id = f"model_{i+1}"
+            model_name = Path(model_path).stem
+            leaderboard.add_model(model_id, model_path, model_name)
+        
+        # Evaluate all models
+        print("Evaluating models...")
+        for model_id in leaderboard.models.keys():
+            metrics = leaderboard.evaluate_model(model_id, X_test, y_test, problem_type)
+            print(f"Model {model_id}: {metrics}")
+        
+        # Rank models
+        rankings = leaderboard.rank_models()
+        
+        # Generate and print report
+        report = leaderboard.generate_leaderboard_report()
+        print("\n" + report + "\n")
+        
+        # Show top models table
+        df = leaderboard.get_leaderboard_table(top_n=top_n)
+        if not df.empty:
+            print("Top Models:")
+            print(df.to_string(index=False))
+        
+        # Save leaderboard
+        leaderboard.save_leaderboard(output_path)
+        print(f"Leaderboard saved to {output_path}_leaderboard.json")
+        
+    except Exception as e:
+        logger.exception(f"Error creating leaderboard: {e}")
+        raise click.ClickException(str(e))
+
+@cli.command(context_settings=CONTEXT_SETTINGS)
+@click.option('--leaderboard_path', required=True, help='Path to saved leaderboard')
+@click.option('--top_n', default=10, help='Number of top models to show')
+def show_leaderboard(leaderboard_path, top_n):
+    """
+    Display a saved leaderboard.
+    
+    Example:
+        igel show-leaderboard --leaderboard_path=leaderboard --top_n=5
+    """
+    try:
+        from igel.model_leaderboard import ModelLeaderboard
+        
+        # Load leaderboard
+        leaderboard = ModelLeaderboard.load_leaderboard(leaderboard_path)
+        
+        # Generate and print report
+        report = leaderboard.generate_leaderboard_report()
+        print("\n" + report + "\n")
+        
+        # Show top models table
+        df = leaderboard.get_leaderboard_table(top_n=top_n)
+        if not df.empty:
+            print("Top Models:")
+            print(df.to_string(index=False))
+        else:
+            print("No models in leaderboard")
+        
+    except Exception as e:
+        logger.exception(f"Error displaying leaderboard: {e}")
+        raise click.ClickException(str(e))
+
+@cli.command(context_settings=CONTEXT_SETTINGS)
 @click.option('--source_model', required=True, help='Path to pre-trained source model')
 @click.option('--target_data', required=True, help='Path to target data')
 @click.option('--method', default='feature_extraction',
