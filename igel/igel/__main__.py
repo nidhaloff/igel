@@ -1287,6 +1287,73 @@ def show_leaderboard(leaderboard_path, top_n):
         raise click.ClickException(str(e))
 
 @cli.command(context_settings=CONTEXT_SETTINGS)
+@click.option('--data_path', required=True, help='Path to time series data')
+@click.option('--method', default='isolation_forest',
+              type=click.Choice(['isolation_forest', 'dbscan', 'statistical', 'lstm_autoencoder']),
+              help='Anomaly detection method')
+@click.option('--contamination', default=0.1, type=float, help='Expected proportion of anomalies')
+@click.option('--output_path', default='anomaly_results', help='Output path for results')
+@click.option('--true_labels', help='Path to true anomaly labels for evaluation')
+def detect_anomalies(data_path, method, contamination, output_path, true_labels):
+    """
+    Detect anomalies in time series data.
+    
+    Example:
+        igel detect-anomalies --data_path=timeseries.csv --method=isolation_forest
+    """
+    try:
+        from igel.time_series_anomaly import TimeSeriesAnomalyDetector
+        import pandas as pd
+        import numpy as np
+        
+        # Load time series data
+        df = pd.read_csv(data_path)
+        
+        # Assume first column is time, rest are features
+        if 'time' in df.columns:
+            time_col = 'time'
+            feature_cols = [col for col in df.columns if col != 'time']
+        else:
+            time_col = df.columns[0]
+            feature_cols = df.columns[1:]
+        
+        # Extract features
+        X = df[feature_cols].values
+        
+        # Create anomaly detector
+        detector = TimeSeriesAnomalyDetector(method=method)
+        
+        # Fit detector
+        print(f"Fitting {method} anomaly detector...")
+        detector.fit(X, contamination=contamination)
+        
+        # Detect anomalies
+        print("Detecting anomalies...")
+        results = detector.detect_anomalies(X, return_scores=True)
+        
+        # Generate and print report
+        report = detector.generate_report()
+        print("\n" + report + "\n")
+        
+        # Evaluate if true labels provided
+        if true_labels:
+            true_df = pd.read_csv(true_labels)
+            if 'anomaly' in true_df.columns:
+                y_true = true_df['anomaly'].values
+                evaluation = detector.evaluate_detection(y_true)
+                print("Evaluation Results:")
+                for metric, value in evaluation.items():
+                    print(f"  {metric}: {value:.4f}")
+        
+        # Save results
+        detector.save_results(output_path)
+        print(f"Anomaly detection results saved to {output_path}")
+        
+    except Exception as e:
+        logger.exception(f"Error detecting anomalies: {e}")
+        raise click.ClickException(str(e))
+
+@cli.command(context_settings=CONTEXT_SETTINGS)
 @click.option('--source_model', required=True, help='Path to pre-trained source model')
 @click.option('--target_data', required=True, help='Path to target data')
 @click.option('--method', default='feature_extraction',
