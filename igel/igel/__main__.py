@@ -1429,6 +1429,52 @@ def export_pmml(model_path, output_path, model_name):
         raise click.ClickException(str(e))
 
 @cli.command(context_settings=CONTEXT_SETTINGS)
+@click.option('--data_path', required=True, help='Path to dataset')
+@click.option('--output_path', help='Path to save optimized data')
+@click.option('--chunk_size', default=10000, help='Chunk size for large datasets')
+def optimize_memory(data_path, output_path, chunk_size):
+    """
+    Optimize memory usage for large datasets.
+    
+    Example:
+        igel optimize-memory --data_path=large_dataset.csv --output_path=optimized_data.csv
+    """
+    try:
+        from igel.memory_optimizer import MemoryOptimizer
+        import pandas as pd
+        
+        # Load data
+        print("Loading data...")
+        df = pd.read_csv(data_path)
+        
+        # Create optimizer
+        optimizer = MemoryOptimizer()
+        
+        # Get initial memory usage
+        initial_memory = optimizer.get_memory_usage()
+        print(f"Initial memory usage: {initial_memory['rss_mb']:.2f} MB")
+        
+        # Optimize DataFrame
+        print("Optimizing DataFrame...")
+        optimized_df = optimizer.optimize_dataframe(df)
+        
+        # Generate report
+        report = optimizer.get_optimization_report()
+        print("\n" + report)
+        
+        # Save optimized data if output path provided
+        if output_path:
+            optimized_df.to_csv(output_path, index=False)
+            print(f"Optimized data saved to: {output_path}")
+        
+        # Clear memory
+        optimizer.clear_memory()
+        
+    except Exception as e:
+        logger.exception(f"Error optimizing memory: {e}")
+        raise click.ClickException(str(e))
+
+@cli.command(context_settings=CONTEXT_SETTINGS)
 @click.option('--source_model', required=True, help='Path to pre-trained source model')
 @click.option('--target_data', required=True, help='Path to target data')
 @click.option('--method', default='feature_extraction',
