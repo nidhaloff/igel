@@ -1391,6 +1391,44 @@ def quantum_ml(data_path, n_qubits, backend):
         raise click.ClickException(str(e))
 
 @cli.command(context_settings=CONTEXT_SETTINGS)
+@click.option('--model_path', required=True, help='Path to trained model')
+@click.option('--output_path', required=True, help='Path to save PMML file')
+@click.option('--model_name', default='Model', help='Name for the model in PMML')
+def export_pmml(model_path, output_path, model_name):
+    """
+    Export a trained model to PMML format.
+    
+    Example:
+        igel export-pmml --model_path=model.joblib --output_path=model.pmml
+    """
+    try:
+        from igel.pmml_export import PMMLExporter
+        
+        # Load model
+        model = joblib.load(model_path)
+        
+        # Create exporter
+        exporter = PMMLExporter()
+        
+        # Check if model is supported
+        if not exporter.is_model_supported(model):
+            print(f"Model type {type(model).__name__} not supported for PMML export")
+            print(f"Supported models: {exporter.get_supported_models()}")
+            return
+        
+        # Export to PMML
+        success = exporter.export_to_pmml(model, output_path, model_name)
+        
+        if success:
+            print(f"Model successfully exported to PMML: {output_path}")
+        else:
+            print("PMML export failed. Check logs for details.")
+        
+    except Exception as e:
+        logger.exception(f"Error exporting to PMML: {e}")
+        raise click.ClickException(str(e))
+
+@cli.command(context_settings=CONTEXT_SETTINGS)
 @click.option('--source_model', required=True, help='Path to pre-trained source model')
 @click.option('--target_data', required=True, help='Path to target data')
 @click.option('--method', default='feature_extraction',
