@@ -1503,6 +1503,76 @@ def optimize_memory(data_path, output_path, chunk_size):
         raise click.ClickException(str(e))
 
 @cli.command(context_settings=CONTEXT_SETTINGS)
+@click.option('--model_path', required=True, help='Path to model to serialize')
+@click.option('--output_path', required=True, help='Output path for serialized model')
+@click.option('--format', default='joblib', 
+              type=click.Choice(['joblib', 'pickle', 'json', 'numpy']),
+              help='Serialization format')
+@click.option('--compress', is_flag=True, help='Compress the serialized model')
+def serialize_model(model_path, output_path, format, compress):
+    """
+    Serialize a model in efficient format.
+    
+    Example:
+        igel serialize-model --model_path=model.joblib --output_path=model.pkl --format=pickle
+    """
+    try:
+        from igel.serialization import ModelSerializer
+        
+        # Load model
+        serializer = ModelSerializer()
+        model = serializer.load_model(model_path, 'joblib')  # Assume input is joblib
+        
+        # Save in specified format
+        success = serializer.save_model(model, output_path, format, compress)
+        
+        if success:
+            size = serializer.get_file_size(output_path)
+            print(f"Model serialized successfully: {output_path}")
+            print(f"File size: {size} bytes ({size/1024/1024:.2f} MB)")
+        else:
+            print("Serialization failed")
+        
+    except Exception as e:
+        logger.exception(f"Error serializing model: {e}")
+        raise click.ClickException(str(e))
+
+@cli.command(context_settings=CONTEXT_SETTINGS)
+@click.option('--model_path', required=True, help='Path to model to test')
+@click.option('--output_path', help='Base path for comparison files')
+def compare_serialization(model_path, output_path):
+    """
+    Compare different serialization formats for a model.
+    
+    Example:
+        igel compare-serialization --model_path=model.joblib
+    """
+    try:
+        from igel.serialization import ModelSerializer
+        
+        # Load model
+        serializer = ModelSerializer()
+        model = serializer.load_model(model_path, 'joblib')
+        
+        # Use provided output path or default
+        base_path = output_path or 'model_comparison'
+        
+        # Compare formats
+        results = serializer.compare_formats(model, base_path)
+        
+        print("Serialization Format Comparison:")
+        print("=" * 40)
+        for fmt, result in results.items():
+            if result['success']:
+                print(f"{fmt:10}: {result['size_mb']:.2f} MB")
+            else:
+                print(f"{fmt:10}: Failed - {result.get('error', 'Unknown error')}")
+        
+    except Exception as e:
+        logger.exception(f"Error comparing serialization: {e}")
+        raise click.ClickException(str(e))
+
+@cli.command(context_settings=CONTEXT_SETTINGS)
 @click.option('--source_model', required=True, help='Path to pre-trained source model')
 @click.option('--target_data', required=True, help='Path to target data')
 @click.option('--method', default='feature_extraction',
