@@ -1354,6 +1354,43 @@ def detect_anomalies(data_path, method, contamination, output_path, true_labels)
         raise click.ClickException(str(e))
 
 @cli.command(context_settings=CONTEXT_SETTINGS)
+@click.option('--data_path', required=True, help='Path to dataset')
+@click.option('--n_qubits', default=4, help='Number of qubits for quantum circuit')
+@click.option('--backend', default='simulator', help='Quantum backend')
+def quantum_ml(data_path, n_qubits, backend):
+    """
+    Basic quantum machine learning demonstration.
+    
+    Example:
+        igel quantum-ml --data_path=data.csv --n_qubits=4
+    """
+    try:
+        from igel.quantum_ml import QuantumML
+        import pandas as pd
+        
+        # Load data
+        df = pd.read_csv(data_path)
+        X = df.values
+        
+        # Initialize quantum ML
+        qml = QuantumML(backend=backend)
+        qml.initialize_quantum_circuit(n_qubits)
+        
+        # Apply quantum feature map
+        quantum_features = qml.quantum_feature_map(X)
+        
+        # Get circuit info
+        circuit_info = qml.get_quantum_circuit_info()
+        
+        print("Quantum ML Results:")
+        print(f"Quantum Circuit Info: {circuit_info}")
+        print(f"Quantum Features Shape: {quantum_features.shape}")
+        
+    except Exception as e:
+        logger.exception(f"Error in quantum ML: {e}")
+        raise click.ClickException(str(e))
+
+@cli.command(context_settings=CONTEXT_SETTINGS)
 @click.option('--source_model', required=True, help='Path to pre-trained source model')
 @click.option('--target_data', required=True, help='Path to target data')
 @click.option('--method', default='feature_extraction',
