@@ -92,13 +92,41 @@ def init(model_type: str, model_name: str, target: str) -> None:
     required=True,
     help="Path to your igel configuration file (yaml or json file)",
 )
-def fit(data_path: str, yaml_path: str) -> None:
+@click.option(
+    "--dry-run",
+    is_flag=True,
+    help="Show what would be done without executing"
+)
+def fit(data_path: str, yaml_path: str, dry_run: bool) -> None:
     """
     Fit/train a machine learning model.
 
     Example:
         igel fit --data_path=data/train.csv --yaml_path=config.yaml
+        igel fit --data_path=data/train.csv --yaml_path=config.yaml --dry-run
     """
+    if dry_run:
+        print("DRY RUN MODE - No actual training will be performed")
+        print(f"Data path: {data_path}")
+        print(f"Config path: {yaml_path}")
+        
+        # Load and display config
+        import yaml
+        with open(yaml_path, 'r') as f:
+            config = yaml.safe_load(f)
+        print(f"Configuration: {config}")
+        
+        # Check if data exists
+        if os.path.exists(data_path):
+            df = pd.read_csv(data_path)
+            print(f"Dataset shape: {df.shape}")
+            print(f"Dataset columns: {list(df.columns)}")
+        else:
+            print(f"Warning: Data file {data_path} not found")
+        
+        print("Dry run completed - no model was trained")
+        return
+    
     Igel(cmd="fit", data_path=data_path, yaml_path=yaml_path)
 
 
