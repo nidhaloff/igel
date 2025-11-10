@@ -22,23 +22,38 @@ def create_yaml(data, f):
 
 
 def read_yaml(f):
-    with open(f) as stream:
-        try:
-            res = yaml.safe_load(stream)
-        except yaml.YAMLError as exc:
-            logger.exception(exc)
-        else:
-            return res
+    """
+    Reads a YAML file safely.
+    If the file is missing or invalid, logs a clear error instead of crashing.
+    """
+    try:
+        with open(f, "r") as stream:
+            return yaml.safe_load(stream)
+    except FileNotFoundError:
+        logger.error(f"YAML file not found: {f}")
+        return None
+    except yaml.YAMLError as exc:
+        logger.exception(f"Error parsing YAML file: {exc}")
+        return None
 
 
 def read_json(f):
+    """
+    Reads a JSON file safely.
+    If the file is missing or corrupted, logs a clear message instead of crashing.
+    """
     try:
-        with open(f) as file:
-            data = json.load(file)
+        with open(f, "r") as file:
+            return json.load(file)
+    except FileNotFoundError:
+        logger.error(f"JSON file not found: {f}")
+        return None
+    except json.JSONDecodeError as e:
+        logger.error(f"Error decoding JSON file {f}: {e}")
+        return None
     except Exception as e:
-        logger.exception(e.args)
-    else:
-        return data
+        logger.exception(f"Unexpected error while reading JSON: {e}")
+        return None
 
 
 def extract_params(config):
