@@ -255,3 +255,132 @@ def info():
         operating system:       independent
     """
     )
+
+
+@cli.command(context_settings=CONTEXT_SETTINGS)
+@click.option(
+    "--model1_dir",
+    "-m1",
+    required=True,
+    help="Path to first model results directory",
+)
+@click.option(
+    "--model2_dir",
+    "-m2",
+    required=True,
+    help="Path to second model results directory",
+)
+def compare_models(model1_dir: str, model2_dir: str) -> None:
+    """
+    Compare two trained models side by side
+    """
+    import json
+    from datetime import datetime
+    
+    def load_model_info(model_dir: str) -> dict:
+        """Load model information from a results directory."""
+        model_path = Path(model_dir)
+        description_file = model_path / "description.json"
+        evaluation_file = model_path / "evaluation.json"
+        
+        info = {
+            "dir": model_dir,
+            "description": None,
+            "evaluation": None,
+            "model_file": None,
+            "exists": description_file.exists()
+        }
+        
+        if description_file.exists():
+            try:
+                with open(description_file, 'r') as f:
+                    info["description"] = json.load(f)
+            except Exception as e:
+                logger.warning(f"Could not load description from {model_dir}: {e}")
+        
+        if evaluation_file.exists():
+            try:
+                with open(evaluation_file, 'r') as f:
+                    info["evaluation"] = json.load(f)
+            except Exception as e:
+                logger.warning(f"Could not load evaluation from {model_dir}: {e}")
+        
+        model_file = model_path / "model.pkl"
+        if model_file.exists():
+            info["model_file"] = {
+                "size_mb": model_file.stat().st_size / (1024 * 1024),
+                "modified": datetime.fromtimestamp(model_file.stat().st_mtime)
+            }
+        
+        return info
+    
+    model1_info = load_model_info(model1_dir)
+    model2_info = load_model_info(model2_dir)
+    
+    if not model1_info["exists"]:
+        click.echo(f"❌ Model 1 directory not found: {model1_dir}")
+        return
+    
+    if not model2_info["exists"]:
+        click.echo(f"❌ Model 2 directory not found: {model2_dir}")
+        return
+    
+    click.echo("\n📊 Model Comparison\n")
+    click.echo("=" * 70)
+    
+    # Model Type Comparison
+    click.echo("\n🔹 Model Configuration:")
+    desc1 = model1_info.get("description", {})
+    desc2 = model2_info.get("description", {})
+    
+    model_type1 = desc1.get("type", "N/A")
+    model_type2 = desc2.get("type", "N/A")
+    click.echo(f"  Model 1 Type:     {model_type1}")
+    click.echo(f"  Model 2 Type:     {model_type2}")
+    
+    # Algorithm Comparison
+    algo1 = desc1.get("model_props", {}).get("algorithm", "N/A")
+    algo2 = desc2.get("model_props", {}).get("algorithm", "N/A")
+    click.echo(f"  Model 1 Algorithm: {algo1}")
+    click.echo(f"  Model 2 Algorithm: {algo2}")
+    
+    # Performance Metrics Comparison
+    eval1 = model1_info.get("evaluation", {})
+    eval2 = model2_info.get("evaluation", {})
+    
+    if eval1 and eval2:
+        click.echo("\n🔹 Performance Metrics:")
+        click.echo(f"{'Metric':<25} {'Model 1':<20} {'Model 2':<20} {'Winner':<10}")
+        click.echo("-" * 75)
+        
+        # Get all unique metrics
+        all_metrics = set(eval1.keys()) | set(eval2.keys())
+        
+        for metric in sorted(all_metrics):
+            val1 = eval1.get(metric, None)
+            val2 = eval2.get(metric, None)
+            
+            if val1 is None or val2 is None:
+                continue
+            
+            if isinstance(val1, (int, float)) and isinstance(val2, (int, float)):
+                # Determine winner (higher is better for most metrics)
+                # For regression, lower is better for MSE, MAE, etc.
+                if "mse" in metric.lower() or "mae" in metric.lower() or "error" in metric.lower():
+                    winner = "Model 1" if val1 < val2 else "Model 2" if val2 < val1 else "Tie"
+                else:
+                    winner = "Model 1" if val1 > val2 else "Model 2" if val2 > val1 else "Tie"
+                
+                click.echo(f"{metric:<25} {val1:<20.4f} {val2:<20.4f} {winner:<10}")
+    
+    # File Size Comparison
+    if model1_info.get("model_file") and model2_info.get("model_file"):
+        click.echo("\n🔹 Model File Information:")
+        size1 = model1_info["model_file"]["size_mb"]
+        size2 = model2_info["model_file"]["size_mb"]
+        click.echo(f"  Model 1 Size:     {size1:.2f} MB")
+        click.echo(f"  Model 2 Size:     {size2:.2f} MB")
+        click.echo(f"  Size Difference: {abs(size1 - size2):.2f} MB")
+    
+    click.echo("\n" + "=" * 70)
+    click.echo()
