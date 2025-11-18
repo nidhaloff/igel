@@ -1,5 +1,6 @@
 import json
 import logging
+from typing import Callable, Dict, Any
 
 import joblib
 import pandas as pd
@@ -8,6 +9,13 @@ from igel.configs import configs
 from igel.data import metrics_dict, models_dict
 
 logger = logging.getLogger(__name__)
+
+# Global registry for custom metrics
+_custom_metrics_registry: Dict[str, Dict[str, Callable]] = {
+    "regression": {},
+    "classification": {},
+    "clustering": {}
+}
 
 
 def create_yaml(data, f):
@@ -225,3 +233,81 @@ def print_models_overview():
 
     df = tableize(df_algs)
     print(df)
+
+
+def register_custom_metric(
+    metric_name: str,
+    metric_function: Callable,
+    model_type: str = "regression"
+) -> bool:
+    """
+    Register a custom metric function for use in model evaluation.
+    
+    Args:
+        metric_name (str): Name of the custom metric
+        metric_function (Callable): Function that takes (y_true, y_pred) and returns a float
+        model_type (str): Type of model ('regression', 'classification', or 'clustering')
+        
+    Returns:
+        bool: True if registration was successful, False otherwise
+        
+    Example:
+        >>> def custom_mape(y_true, y_pred):
+        ...     return np.mean(np.abs((y_true - y_pred) / y_true)) * 100
+        >>> register_custom_metric("mape", custom_mape, "regression")
+        True
+    """
+    if model_type not in _custom_metrics_registry:
+        logger.error(f"Invalid model_type: {model_type}. Must be one of {list(_custom_metrics_registry.keys())}")
+        return False
+    
+    if not callable(metric_function):
+        logger.error(f"metric_function must be callable")
+        return False
+    
+    _custom_metrics_registry[model_type][metric_name] = metric_function
+    logger.info(f"Registered custom metric '{metric_name}' for {model_type}")
+    return True
+
+
+def get_custom_metrics(model_type: str) -> Dict[str, Callable]:
+    """
+    Get all registered custom metrics for a given model type.
+    
+    Args:
+        model_type (str): Type of model ('regression', 'classification', or 'clustering')
+        
+    Returns:
+        Dict[str, Callable]: Dictionary mapping metric names to their functions
+    """
+    return _custom_metrics_registry.get(model_type, {}).copy()
+
+
+def list_custom_metrics(model_type: str = None) -> Dict[str, Dict[str, str]]:
+    """
+    List all registered custom metrics.
+    
+    Args:
+        model_type (str, optional): Filter by model type. If None, returns all metrics.
+        
+    Returns:
+        Dict[str, Dict[str, str]]: Dictionary of model types and their custom metrics
+    """
+    if model_type:
+        if model_type in _custom_metrics_registry:
+            return {
+                model_type: {
+                    name: func.__name__ 
+                    for name, func in _custom_metrics_registry[model_type].items()
+                }
+            }
+        return {}
+    
+    return {
+        mt: {
+            name: func.__name__ 
+            for name, func in metrics.items()
+        }
+        for mt, metrics in _custom_metrics_registry.items()
+        if metrics
+    }
