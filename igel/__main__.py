@@ -3,6 +3,7 @@ import logging
 import os
 import subprocess
 from pathlib import Path
+import yaml
 
 import click
 import igel
@@ -65,10 +66,45 @@ def init(model_type: str, model_name: str, target: str) -> None:
     required=True,
     help="Path to your igel configuration file (yaml or json file)",
 )
-def fit(data_path: str, yaml_path: str) -> None:
+@click.option(
+    "--dry-run",
+    is_flag=True,
+    default=False,
+    help="Show what would be done without actually training the model",
+)
+def fit(data_path: str, yaml_path: str, dry_run: bool) -> None:
     """
     fit/train a machine learning model
     """
+    if dry_run:
+        click.echo("🔍 DRY RUN MODE - No actual training will be performed\n")
+        click.echo(f"📁 Data path: {data_path}")
+        click.echo(f"⚙️  Config path: {yaml_path}\n")
+        
+        # Load and display config
+        try:
+            with open(yaml_path, 'r') as f:
+                config = yaml.safe_load(f)
+            click.echo("📋 Configuration:")
+            click.echo(yaml.dump(config, default_flow_style=False))
+        except Exception as e:
+            click.echo(f"⚠️  Warning: Could not load config file: {e}\n")
+        
+        # Check if data exists
+        if os.path.exists(data_path):
+            try:
+                df = pd.read_csv(data_path)
+                click.echo(f"✅ Dataset found")
+                click.echo(f"   Shape: {df.shape[0]} rows × {df.shape[1]} columns")
+                click.echo(f"   Columns: {', '.join(df.columns.tolist())}")
+            except Exception as e:
+                click.echo(f"⚠️  Warning: Could not read data file: {e}")
+        else:
+            click.echo(f"⚠️  Warning: Data file not found at {data_path}")
+        
+        click.echo("\n✅ Dry run completed - no model was trained")
+        return
+    
     Igel(cmd="fit", data_path=data_path, yaml_path=yaml_path)
 
 
