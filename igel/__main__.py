@@ -255,3 +255,93 @@ def info():
         operating system:       independent
     """
     )
+
+
+@cli.command(context_settings=CONTEXT_SETTINGS)
+@click.option(
+    "--model_results_dir",
+    "-res_dir",
+    default="model_results",
+    help="Path to your model results directory",
+)
+def model_version(model_results_dir: str) -> None:
+    """
+    Display version information and metadata for a trained model
+    """
+    import json
+    from datetime import datetime
+    
+    model_results_path = Path(model_results_dir)
+    description_file = model_results_path / "description.json"
+    
+    if not description_file.exists():
+        click.echo(f"❌ Model description file not found at {description_file}")
+        click.echo("   Make sure you have trained a model first using 'igel fit'")
+        return
+    
+    try:
+        with open(description_file, 'r') as f:
+            description = json.load(f)
+        
+        click.echo("\n📦 Model Version Information\n")
+        click.echo("=" * 50)
+        
+        # Model ID
+        if "model_id" in description:
+            click.echo(f"Model ID:        {description['model_id']}")
+        
+        # Model Type
+        if "type" in description:
+            click.echo(f"Model Type:      {description['type']}")
+        
+        # Target
+        if "target" in description:
+            target = description['target']
+            if isinstance(target, list):
+                click.echo(f"Target(s):       {', '.join(target)}")
+            else:
+                click.echo(f"Target:          {target}")
+        
+        # Model Properties
+        if "model_props" in description and description["model_props"]:
+            model_props = description["model_props"]
+            if "algorithm" in model_props:
+                click.echo(f"Algorithm:      {model_props['algorithm']}")
+            if "arguments" in model_props:
+                click.echo(f"Arguments:      {model_props['arguments']}")
+        
+        # Dataset Properties
+        if "dataset_props" in description and description["dataset_props"]:
+            dataset_props = description["dataset_props"]
+            if "type" in dataset_props:
+                click.echo(f"Dataset Type:    {dataset_props['type']}")
+        
+        # Check for evaluation results
+        evaluation_file = model_results_path / "evaluation.json"
+        if evaluation_file.exists():
+            try:
+                with open(evaluation_file, 'r') as f:
+                    evaluation = json.load(f)
+                click.echo("\n📊 Performance Metrics:")
+                for metric, value in evaluation.items():
+                    if isinstance(value, (int, float)):
+                        click.echo(f"  {metric}: {value:.4f}")
+            except Exception:
+                pass
+        
+        # Model file info
+        model_file = model_results_path / "model.pkl"
+        if model_file.exists():
+            file_size = model_file.stat().st_size / (1024 * 1024)  # Size in MB
+            mod_time = datetime.fromtimestamp(model_file.stat().st_mtime)
+            click.echo(f"\n💾 Model File:")
+            click.echo(f"  Path:          {model_file}")
+            click.echo(f"  Size:          {file_size:.2f} MB")
+            click.echo(f"  Modified:      {mod_time.strftime('%Y-%m-%d %H:%M:%S')}")
+        
+        click.echo("=" * 50)
+        click.echo()
+        
+    except Exception as e:
+        click.echo(f"❌ Error reading model information: {e}")
+        logger.exception(e)
