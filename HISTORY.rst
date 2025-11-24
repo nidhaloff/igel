@@ -6,7 +6,7 @@ History
 -------------------
 
 * Added a possibility to serve a trained model using FastAPI
-* Updated cli
+* Updated CLI
 * Fixed bugs
 * Added more unit tests
 * migrated to gh actions
