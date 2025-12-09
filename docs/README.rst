@@ -95,6 +95,9 @@ Installation
 
     $ pip install -U igel
 
+- NOTE: igel depends on older versions of pandas and numpy that only support Python <= 3.8.
+To avoid installation errors, please install and run igel using Python 3.8 or earlier.
+
 Models
 -------
 
@@ -857,8 +860,8 @@ the best model will be stored in the current working dir.
 TextClassification
 ####################
 
-First, create or modify a text dataset that are categorized into sub-folders based on the text label/class
-For example, if you are have a text dataset of positive and negative feedbacks, then you will need 2 sub-folders:
+First, create or modify a text dataset that are categorized into sub-folders based on the text label/class.
+For example, if you have a text dataset of positive and negative feedbacks, then you will need 2 sub-folders:
 
 - folder 0, which contains negative feedbacks (here the label 0 indicates a negative one)
 - folder 1, which contains positive feedbacks (here the label 1 indicates a positive one)
@@ -892,7 +895,7 @@ Running with Docker
 
 - Use the official image (recommended):
 
-You can pull the image first from docker hub
+First, pull the image from docker hub
 
 .. code-block:: console
 
@@ -905,7 +908,7 @@ Then use it:
     $ docker run -it --rm -v $(pwd):/data nidhaloff/igel fit -yml 'your_file.yaml' -dp 'your_dataset.csv'
 
 
-- Alternatively, you can create your own image locally if you want:
+- Alternatively, you can create your own image locally if you want to:
 
 You can run igel inside of docker by first building the image:
 
@@ -913,7 +916,7 @@ You can run igel inside of docker by first building the image:
 
     $ docker build -t igel .
 
-And then running it and attaching your current directory (does not need to be the igel directory) as /data (the workdir) inside of the container:
+And then running it and attaching your current directory (does not need to be the igel directory) as /data (the workdir) inside the container:
 
 .. code-block:: console
 
@@ -946,10 +949,10 @@ You can always help the development of this project by:
 Contributions
 --------------
 
-You think this project is useful and you want to bring new ideas, new features, bug fixes, extend the docs?
+Do you think this project is useful and want to bring new ideas, features, bug fixes, and/or extend the docs?
 
 Contributions are always welcome.
-Make sure you read `the guidelines <https://igel.readthedocs.io/en/latest/contributing.html>`_ first
+Make sure you read `the guidelines <https://igel.readthedocs.io/en/latest/contributing.html>`_ first.
 
 License
 --------
