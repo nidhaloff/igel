@@ -7,7 +7,7 @@ igel
 .. image:: https://img.shields.io/pypi/v/igel?color=green
         :alt: PyPI
         :target: https://pypi.python.org/pypi/igel
-.. image:: https://img.shields.io/github/workflow/status/nidhaloff/igel/build
+.. image:: https://img.shields.io/github/actions/workflow/status/nidhaloff/igel/build.yml?branch=main
         :target: https://github.com/nidhaloff/igel/actions/workflows/build.yml
         :alt: GitHub Workflow Status
 .. image:: https://pepy.tech/badge/igel
