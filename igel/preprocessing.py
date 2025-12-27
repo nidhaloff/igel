@@ -18,59 +18,49 @@ def read_data_to_df(data_path: str, **read_data_options):
     """
     read data depending on its extension and convert it to a pandas dataframe
     """
-    file_ext = data_path.split(".")[-1]
-    if file_ext == "csv" or file_ext == "txt":
-        return (
-            pd.read_csv(data_path, **read_data_options)
-            if read_data_options
-            else pd.read_csv(data_path)
-        )
-    elif file_ext == "xlsx":
-        return (
-            pd.read_excel(data_path, **read_data_options)
-            if read_data_options
-            else pd.read_excel(data_path)
-        )
-    elif file_ext == "json":
-        return (
-            pd.read_json(data_path, **read_data_options)
-            if read_data_options
-            else pd.read_json(data_path)
-        )
-    elif file_ext == "html":
-        return (
-            pd.read_html(data_path, **read_data_options)
-            if read_data_options
-            else pd.read_html(data_path)
-        )
+    file_ext = data_path.split(".")[-1].lower()  # Ensure case-insensitivity
+    read_funcs = {
+        "csv": pd.read_csv,
+        "txt": pd.read_csv,
+        "xlsx": pd.read_excel,
+        "json": pd.read_json,
+        "html": pd.read_html
+    }
+
+    if file_ext in read_funcs:
+        read_func = read_funcs[file_ext]
+        return read_func(data_path, **read_data_options) if read_data_options else read_func(data_path)
+    else:
+        raise ValueError(f"Unsupported file extension: {file_ext}")
 
 
 def update_dataset_props(dataset_props: dict, default_dataset_props: dict):
-    for key1 in default_dataset_props.keys():
-        if key1 in dataset_props.keys():
-            for key2 in default_dataset_props[key1].keys():
-                if key2 in dataset_props[key1].keys():
-                    default_dataset_props[key1][key2] = dataset_props[key1][
-                        key2
-                    ]
+    for group_key, group_props in default_dataset_props.items():
+        if group_key in dataset_props:
+            for prop_key, prop_value in group_props.items():
+                if prop_key in dataset_props[group_key]:
+                    dataset_props[group_key][prop_key] = dataset_props[group_key].get(prop_key, prop_value)
+    
+    return dataset_props
 
-    return default_dataset_props
 
 
 def handle_missing_values(df, fill_value=np.nan, strategy="mean"):
-    logger.info(
-        f"Check for missing values in the dataset ...  \n"
-        f"{df.isna().sum()}  \n "
-        f"{'-'*100}"
-    )
+    logger.info(f"Checking for missing values... \n{df.isna().sum()} \n{'-'*100}")
 
     if strategy.lower() == "drop":
+        logger.info("Dropping rows with missing values...")
         return df.dropna()
 
-    cleaner = SimpleImputer(fill_value=fill_value, strategy=strategy)
+    if strategy.lower() not in ["mean", "median", "most_frequent"]:
+        raise ValueError(f"Unsupported strategy: {strategy}. Use 'mean', 'median', or 'most_frequent'.")
+
+    logger.info(f"Filling missing values with strategy: {strategy}")
+    cleaner = SimpleImputer(strategy=strategy, fill_value=fill_value)
     cleaned = cleaner.fit_transform(df)
 
     return pd.DataFrame(cleaned, columns=df.columns)
+
 
 
 def encode(df, encoding_type="onehotencoding", column=None):
@@ -110,15 +100,16 @@ def encode(df, encoding_type="onehotencoding", column=None):
 
 
 def normalize(x, y=None, method="standard"):
-    methods = ("minmax", "standard")
+    scalers = {
+        "minmax": MinMaxScaler(),
+        "standard": StandardScaler(),
+    }
 
-    if method not in methods:
-        raise Exception(
-            f"Please choose one of the available scaling methods => {methods}"
-        )
-    logger.info(f"performing a {method} scaling ...")
-    scaler = MinMaxScaler() if method == "minmax" else StandardScaler()
-    if not y:
-        return scaler.fit_transform(X=x)
-    else:
-        return scaler.fit_transform(X=x, y=y)
+    if method not in scalers:
+        raise ValueError(f"Please choose one of the available scaling methods: {list(scalers.keys())}")
+
+    logger.info(f"Performing {method} scaling...")
+    scaler = scalers[method]
+    if y is None:
+        return scaler.fit_transform(x)
+    return scaler.fit_transform(x, y)
