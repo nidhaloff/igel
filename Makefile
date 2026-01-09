@@ -3,7 +3,16 @@ SHELL := /usr/bin/env bash
 IMAGE := igel
 VERSION := latest
 
-#! An ugly hack to create individual flags
+#-----------------------------------------------------------------------
+#Conditional configuration for tool command flags
+#
+#When STRICT=1, all tools run in strict mode(no dash prefix)
+#When STRICT is unset, dash-prefixed flags(-) are used to disable strict checks
+#This approach ensures comaptibility across Poetry, Pip, Safety, Bandit, and other tools.
+#
+#Note: Make does not support dynamic variable creation in a portable way,
+#so flags are defined explicitly below clarity
+#------------------------------------------------------------------------
 ifeq ($(STRICT), 1)
 	POETRY_COMMAND_FLAG =
 	PIP_COMMAND_FLAG =
