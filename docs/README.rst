@@ -957,3 +957,7 @@ License
 MIT license
 
 Copyright (c) 2020-present, Nidhal Baccouri
+Contributors
+------------
+
+- *SounuVani* (First open-source contribution 🎉)
