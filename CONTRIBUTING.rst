@@ -92,6 +92,25 @@ Ready to contribute? Here's how to set up `igel` for local development.
 
 7. Submit a pull request through the GitHub website.
 
+
+Code Style & Best Practices
+---------------------------
+
+To keep the codebase clean, maintainable, and consistent, contributors are encouraged to follow these best practices when making changes to igel:
+
+- Follow PEP 8 for Python code style.
+- Write clear, descriptive variable and function names.
+- Prefer small, focused functions over large, complex ones.
+- Add type hints where appropriate to improve readability and tooling support.
+- Write docstrings for all public functions and classes.
+- Keep commits small and focused on a single change or fix.
+- Avoid unrelated refactoring in the same pull request.
+- Ensure new code is covered by tests whenever possible.
+- Run the test suite locally before submitting a pull request.
+
+Following these guidelines helps reviewers provide faster feedback and keeps igel easy to maintain over time.
+
+
 Pull Request Guidelines
 -----------------------
 
