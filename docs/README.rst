@@ -49,21 +49,18 @@ A delightful machine learning tool that allows you to train/fit, test and use mo
 Introduction
 ------------------
 
-The goal of the project is to provide machine learning for **everyone**, both technical and non-technical
-users.
+The goal of the project is to provide machine learning to **everyone**, both technical and non-technical
 
-I needed a tool sometimes, which I can use to fast create a machine learning prototype. Whether to build
+Sometimes I needed a tool that I could use to quickly create a machine learning prototype. Whether to build
 some proof of concept, create a fast draft model to prove a point or use auto ML. I find myself often stuck at writing
 boilerplate code and thinking too much where to start. Therefore, I decided to create this tool.
 
-igel is built on top of other ML frameworks. It provides a simple way to use machine learning without writing
-a **single line of code**. Igel is **highly customizable**, but only if you want to. Igel does not force you to
-customize anything. Besides default values, igel can use auto-ml features to figure out a model that can work great with your data.
+Igel is built on top of other ML frameworks. It provides a simple way to use machine learning without writing
+a **single line of code**. Igel is **highly customizable**, but only if you want to. Igel does not force you to customize anything. Besides default values, Igel can use auto-ML features to find a model that works well with your data.
+All you need is a **YAML** (or **JSON**) file where you describe what you want to do. That's it!
 
-All you need is a **yaml** (or **json**) file, where you need to describe what you are trying to do. That's it!
-
-Igel supports regression, classification and clustering.
-Igel's supports auto-ml features like ImageClassification and TextClassification
+Igel supports regression, classification, and clustering.
+Igel supports auto-ML features like ImageClassification and TextClassification
 
 Igel supports most used dataset types in the data science field. For instance, your input dataset can be
 a csv, txt, excel sheet, json or even html file that you want to fetch. If you are using auto-ml features, then you can even
